@@ -16,8 +16,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException{
+        
 
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoggedInMainPage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoggedInSidebar.fxml"));
         
         Scene scene = new Scene(root, Color.LIGHTYELLOW);
 
