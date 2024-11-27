@@ -1,0 +1,9 @@
+.text {
+    -fx-font-family: "Inter Regular", sans-serif;
+    -fx-text-fill: #C2C2C2;
+    -fx-font-size: 20;
+}
+
+.bold {
+    -fx-font-weight: bold;
+}
