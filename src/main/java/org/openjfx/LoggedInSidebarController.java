@@ -24,6 +24,7 @@ public class LoggedInSidebarController {
     @FXML
     private Label usernameLabel;
 
+
     private void makeClickable(ImageView button) {
         button.setCursor(Cursor.HAND);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {

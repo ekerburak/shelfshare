@@ -16,19 +16,17 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException{
-        
+
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoggedInSidebar.fxml"));
-        
-        Scene scene = new Scene(root, Color.LIGHTYELLOW);
 
+        Scene scene = new Scene(root, Color.LIGHTYELLOW);
 
         stage.setScene(scene);
         stage.show();
+
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
+    public static void main(String[] args) {launch();}
 
 }
