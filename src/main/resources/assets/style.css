@@ -7,3 +7,13 @@
 .bold {
     -fx-font-weight: bold;
 }
+
+.italic {
+    -fx-font-style: italic;
+}
+
+.greenButton {
+    -fx-background-color: #B7E8B9;
+    -fx-text-fill: #282828;
+    -fx-font-weight: bold;
+}
