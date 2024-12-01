@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -14,23 +15,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class LoggedInSidebarController {
-
-    @FXML
-    private ImageView createShelfButton;
+public class UnLoggedInSidebarController {
 
     @FXML
     private ImageView seeRecommendedShelvesButton;
 
     @FXML
-    private ImageView seeYourShelvesButton;
-
-    @FXML
-    private ImageView settingsButton;
-
-    @FXML
-    private Label usernameLabel;
-
+    private Button loginSignupButton;
 
     private void makeClickable(ImageView button) {
         button.setCursor(Cursor.HAND);
@@ -42,13 +33,30 @@ public class LoggedInSidebarController {
         });
     }
 
+    private void addLoginPopUp(Button button) {
+        button.setCursor(Cursor.HAND);
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/logIn.fxml"));
+
+                    Scene scene = new Scene(root);
+                    Stage newStage = new Stage();
+
+                    newStage.setScene(scene);
+                    newStage.show();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     @FXML
     public void initialize() {
-        makeClickable(createShelfButton);
         makeClickable(seeRecommendedShelvesButton);
-        makeClickable(seeYourShelvesButton);
-        makeClickable(settingsButton);
-        usernameLabel.setText("burak");
+        addLoginPopUp(loginSignupButton);
     }
 
 }
