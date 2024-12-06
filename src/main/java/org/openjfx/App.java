@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -16,7 +15,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/unLoggedInSidebar.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/YourShelves.fxml"));
 
         Scene scene = new Scene(root);
 

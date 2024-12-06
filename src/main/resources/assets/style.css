@@ -4,6 +4,20 @@
     -fx-font-size: 20;
 }
 
+.green_text {
+    -fx-font-family: "Inter Regular", sans-serif;
+    -fx-text-fill: #B7E8B9;
+    -fx-font-size: 30;
+    -fx-font-weight: bold;
+}
+
+.header {
+    -fx-font-family: "Inter Regular", sans-serif;
+    -fx-text-fill: #C2C2C2;
+    -fx-font-size: 60;
+    -fx-font-weight: bold;
+}
+
 .bold {
     -fx-font-weight: bold;
 }
