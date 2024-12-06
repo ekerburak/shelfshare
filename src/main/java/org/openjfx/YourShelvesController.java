@@ -6,6 +6,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
@@ -18,6 +19,9 @@ public class YourShelvesController {
 
     @FXML
     private TextField filterField;
+
+    @FXML
+    private SplitPane sidebarSplitPane;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final String[] shelves = {"Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak"};

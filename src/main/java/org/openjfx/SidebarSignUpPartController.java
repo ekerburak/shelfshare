@@ -7,31 +7,15 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class UnLoggedInSidebarController {
-
-    @FXML
-    private ImageView seeRecommendedShelvesButton;
+public class SidebarSignUpPartController {
 
     @FXML
     private Button loginSignupButton;
-
-    private void makeClickable(ImageView button) {
-        button.setCursor(Cursor.HAND);
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("Clicked");
-            }
-        });
-    }
 
     private void addLoginPopUp(Button button) {
         button.setCursor(Cursor.HAND);
@@ -55,8 +39,6 @@ public class UnLoggedInSidebarController {
 
     @FXML
     public void initialize() {
-        makeClickable(seeRecommendedShelvesButton);
         addLoginPopUp(loginSignupButton);
     }
-
 }

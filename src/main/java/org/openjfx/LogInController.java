@@ -7,29 +7,21 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class LogInController {
 
     @FXML
-    private Button CherryIn;
+    private Button cherryIn;
 
     @FXML
-    private Button JoinNow;
+    private Button joinNow;
 
-    private void makeClickable(Button button) {
-        button.setCursor(Cursor.HAND);
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("Clicked");
-            }
-        });
-    }
+    @FXML
+    private TextField usernameField, passwordField;
 
     private void addSignInPopUp(Button button) {
         button.setCursor(Cursor.HAND);
@@ -37,7 +29,11 @@ public class LogInController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/signUp.fxml"));
+                    // Close the current stage (login popup)
+                    Stage currentStage = (Stage) button.getScene().getWindow();
+                    currentStage.close();
+
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/signIn.fxml"));
 
                     Scene scene = new Scene(root);
                     Stage newStage = new Stage();
@@ -51,12 +47,30 @@ public class LogInController {
         });
     }
 
+    private void addLogInMechanishm(Button button) {
+        button.setCursor(Cursor.HAND);
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // Close the current stage (login popup)
+                Stage currentStage = (Stage) button.getScene().getWindow();
+                currentStage.close();
+
+                System.out.println("Log in!");
+                // Close the sign-in popup
+                Stage stage = (Stage) cherryIn.getScene().getWindow();
+                stage.close();
+                SidebarController.username = usernameField.getText();
+                CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")),
+                        new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")));
+            }
+        });
+    }
+
     @FXML
     public void initialize() {
-        makeClickable(JoinNow);
-        addSignInPopUp(JoinNow);
-        makeClickable(CherryIn);
-        addSignInPopUp(CherryIn);
+        addSignInPopUp(joinNow);
+        addLogInMechanishm(cherryIn);
     }
 
 }

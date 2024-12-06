@@ -1,27 +1,20 @@
 package org.openjfx;
 
-import java.io.IOException;
-
 import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.fxml.*;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
-/**
- * JavaFX App
- */
+import java.io.IOException;
+
 public class App extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/YourShelves.fxml"));
-
-        Scene scene = new Scene(root);
-
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) {
+        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")),
+                new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")));
     }
 
-    public static void main(String[] args) {launch();}
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
