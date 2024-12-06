@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="598.0" style="-fx-background-color: #474747;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label id="welcomeLabel" blendMode="ADD" layoutX="56.0" layoutY="87.0" prefHeight="30.0" prefWidth="386.0" style="-fx-text-fill: #bc3a3a;" text="Invite others to Fantastic Readers " textAlignment="CENTER" textFill="#bc3a3a">
+         <font>
+            <Font name="Tahoma" size="18.0" />
+         </font>
+         <styleClass>
+            <String fx:value="bold" />
+            <String fx:value="text" />
+         </styleClass>
+      </Label>
+      <Button id="cherryInButton" layoutX="497.0" layoutY="413.0" mnemonicParsing="false" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="DONE" />
+      <VBox layoutX="30.0" layoutY="140.0" prefHeight="210.0" prefWidth="510.0">
+         <children>
+            <Label id="emailLabel" style="-fx-text-fill: #C2C2C2;" text="This code allo users to only view" />
+            <TextField id="emailTextField" prefHeight="26.0" prefWidth="480.0" style="-fx-background-color: #f2f2f2;" text="ASDKadkaskcxvk1AHMET2321KS2213ISINERFKS.YhasdSEWAL2!214123VOLKITOLKI2k" />
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <Label id="passwordLabel" style="-fx-text-fill: C2C2C2;" text="This code allows users edit and view:" />
+            <TextField id="passwordTextField" prefHeight="26.0" prefWidth="480.0" style="-fx-background-color: #f1f1f1;" text="ASDKadkaskcxvk1AHMET2321KS2213ISINERFKS.YhasdSEWAL2!214123VOLKITOLKI2k" />
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="34.0" layoutY="7.0" prefHeight="41.0" prefWidth="618.0" style="-fx-text-fill: #FFFFFF;" text="Others can join to the shelf by entering the codes via “join” button from the shelves menu." />
+               </children></Pane>
+         </children>
+      </VBox>
+      <ImageView fitHeight="41.0" fitWidth="25.0" layoutX="572.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@content_copy_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="549.0" layoutY="157.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" style="-fx-background-color: #333333;" textFill="#722323" />
+      <ImageView fitHeight="26.0" fitWidth="25.0" layoutX="555.0" layoutY="159.0">
+         <image>
+            <Image url="@../Desktop/copy.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="549.0" layoutY="243.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" style="-fx-background-color: #333333;" textFill="#722323" />
+      <ImageView fitHeight="26.0" fitWidth="25.0" layoutX="555.0" layoutY="245.0">
+         <image>
+            <Image url="@../Desktop/copy.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>
