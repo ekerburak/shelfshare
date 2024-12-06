@@ -32,15 +32,12 @@ public class YourShelvesController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf_list_element.fxml"));
                 Pane pane = loader.load();
-
                 // Get the controller of the loaded FXML
                 ShelfListElementController controller = loader.getController();
                 // Set the shelf name label
                 controller.setShelfName(shelf);
-
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);
-
                 items.add(pane);
             } catch (IOException e) {
                 e.printStackTrace();
