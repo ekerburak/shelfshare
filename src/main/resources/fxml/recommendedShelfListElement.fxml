@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER" maxWidth="1400.0" minWidth="800.0" prefHeight="91.0" prefWidth="1200.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.RecommendedShelfListElementController">
+   <padding>
+      <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+   </padding>
+   <children>
+      <HBox alignment="CENTER" prefHeight="56.0" prefWidth="721.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="51.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/shelf_icon.png" />
+               </image>
+            </ImageView>
+            <Label id="shelfName" fx:id="shelfNameLabel" prefHeight="26.0" prefWidth="205.0" styleClass="text" stylesheets="@../assets/style.css" text="Fantastic Readers">
+               <font>
+                  <Font size="24.0" />
+               </font></Label>
+            <Pane prefHeight="56.0" prefWidth="326.0" />
+            <HBox prefHeight="56.0" prefWidth="123.0">
+               <children>
+                  <ImageView fitHeight="50.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/groupMembers.png" />
+                     </image>
+                  </ImageView>
+                  <Label id="numberOfMember" fx:id="numberOfMember" prefHeight="56.0" prefWidth="56.0" style="-fx-text-fill: #c6c6c6;" text="x0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" spacing="20.0" />
+      <Pane prefHeight="51.0" prefWidth="59.0" />
+      <ImageView id="firstStar" fx:id="firstStar" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/emptyStar.png" />
+         </image>
+      </ImageView>
+      <ImageView id="secondStar" fx:id="secondStar" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/emptyStar.png" />
+         </image>
+      </ImageView>
+      <ImageView id="thirdStar" fx:id="thirdStar" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/emptyStar.png" />
+         </image>
+      </ImageView>
+      <ImageView id="forthStar" fx:id="forthStar" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/emptyStar.png" />
+         </image>
+      </ImageView>
+      <ImageView id="fifthStar" fx:id="fifthStar" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/emptyStar.png" />
+         </image>
+      </ImageView>
+      <Pane prefHeight="56.0" prefWidth="57.0" />
+      <Button id="joinButton" fx:id="joinButton" mnemonicParsing="false" prefHeight="36.0" prefWidth="123.0" style="-fx-background-color: #B7E8B9;" text="JOIN">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</HBox>
