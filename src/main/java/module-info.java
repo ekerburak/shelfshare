@@ -1,10 +1,17 @@
-module org.openjfx {
+module cherryontop {
+
     requires javafx.controls;
-    exports org.openjfx;
     requires transitive javafx.graphics;
     requires javafx.fxml;
     requires java.desktop;
+    requires org.mongodb.bson;
+    requires org.mongodb.driver.core;
+    requires org.mongodb.driver.sync.client;
 
-    opens org.openjfx to javafx.fxml; // Replace 'org.openjfx' with your package name
 
+    exports controller;
+    opens controller to javafx.fxml; // Replace 'org.openjfx' with your package name
+
+    exports model;
+    opens model to javafx.fxml;
 }

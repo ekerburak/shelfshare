@@ -1,4 +1,4 @@
-package org.openjfx;
+package controller;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

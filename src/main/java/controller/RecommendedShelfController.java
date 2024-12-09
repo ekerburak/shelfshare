@@ -1,4 +1,4 @@
-package org.openjfx;
+package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
