@@ -30,20 +30,11 @@
                            </styleClass>
                         </Label>
                         <Region prefHeight="39.0" prefWidth="90.0" HBox.hgrow="SOMETIMES" />
-                        <HBox spacing="5.0">
-                           <children>
-                              <ImageView fx:id="createShelfButton" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/add.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fx:id="seeYourShelvesButton" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/open_in_new.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                        </HBox>
+                        <ImageView fx:id="seeYourShelvesButton" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/open_in_new.png" />
+                           </image>
+                        </ImageView>
                      </children>
                      <opaqueInsets>
                         <Insets />
