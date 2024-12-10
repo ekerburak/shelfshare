@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sidebarVBox" maxWidth="400.0" minWidth="400.0" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.SidebarController">
+<VBox fx:id="sidebarVBox" maxWidth="400.0" minWidth="400.0" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
    <children>
       <SplitPane dividerPositions="0.39277736411020103" orientation="VERTICAL" style="-fx-background-color: #222222;" VBox.vgrow="ALWAYS">
          <items>

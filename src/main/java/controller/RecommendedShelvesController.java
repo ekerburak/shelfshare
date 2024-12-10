@@ -1,4 +1,4 @@
-package org.openjfx;
+package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,22 +6,18 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
-public class RecommendedShelfController {
+public class RecommendedShelvesController {
 
     @FXML
-    private ListView<Pane> recommendedShelvesList;
+    private ListView<Pane> shelvesList;
 
     @FXML
     private TextField recommendedFilterField;
-
-    @FXML
-    private SplitPane sidebarSplitPane;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final String[] shelves = {"Ahmet", "Burak", "Can", "Sevval", "Ahmet", "Toprak", "Volkan", "Sinan"};
@@ -34,7 +30,7 @@ public class RecommendedShelfController {
                 Pane pane = loader.load();
 
                 // Get the controller of the loaded FXML
-                ShelfListElementController controller = loader.getController();
+                RecommendedShelfListElementController controller = loader.getController();
                 // Set the shelf name label
                 controller.setShelfName(shelf);
 
@@ -48,11 +44,11 @@ public class RecommendedShelfController {
         }
 
         FilteredList<Pane> filteredItems = new FilteredList<>(items, p -> true);
-        recommendedShelvesList.setItems(filteredItems);
+        shelvesList.setItems(filteredItems);
 
         recommendedFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredItems.setPredicate(pane -> {
-                ShelfListElementController controller = (ShelfListElementController) pane.getUserData();
+                RecommendedShelfListElementController controller = (RecommendedShelfListElementController) pane.getUserData();
                 return controller.getShelfName().toLowerCase().contains(newValue.toLowerCase());
             });
         });

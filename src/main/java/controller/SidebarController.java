@@ -1,17 +1,12 @@
-package org.openjfx;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class SidebarController {
@@ -54,8 +49,8 @@ public class SidebarController {
         try {
             if(username == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarSignUpPart.fxml"));
-//                Pane profilePart = loader.load();
-//                sidebarVBox.getChildren().add(profilePart);
+                Pane profilePart = loader.load();
+                sidebarVBox.getChildren().add(profilePart);
             } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarProfilePart.fxml"));
                 Pane profilePart = loader.load();

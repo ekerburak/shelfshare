@@ -1,4 +1,4 @@
-package org.openjfx;
+package controller;
 
 public class ShelfSettingsController {
 
