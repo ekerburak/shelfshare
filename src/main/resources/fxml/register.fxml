@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="598.0" style="-fx-background-color: #474747;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SignInController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="598.0" style="-fx-background-color: #474747;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
    <children>
       <Label id="welcomeLabel" blendMode="ADD" layoutX="187.0" layoutY="41.0" prefHeight="30.0" prefWidth="331.0" style="-fx-text-fill: #C2C2C2;" text="Welcome to ShelfShare !" textAlignment="CENTER" textFill="#e1e1e1">
          <font>
@@ -20,7 +21,7 @@
             <String fx:value="text" />
          </styleClass>
       </Label>
-      <Button id="cherryInButton" fx:id="cherryUp" layoutX="467.0" layoutY="441.0" mnemonicParsing="false" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="Cherry Up" />
+      <Button id="cherryUp" fx:id="cherryUp" layoutX="466.0" layoutY="464.0" mnemonicParsing="false" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="Cherry Up" />
       <VBox layoutX="30.0" layoutY="93.0" prefHeight="210.0" prefWidth="541.0" spacing="5.0">
          <children>
             <Label id="emailLabel" style="-fx-text-fill: #C2C2C2;" text="Enter your email:" />
@@ -34,6 +35,11 @@
             <PasswordField fx:id="passwordField" style="-fx-background-color: #2a2a2a;" styleClass="text" />
             <Label id="passwordLabel" style="-fx-text-fill: C2C2C2;" text="Password again:" />
             <PasswordField fx:id="passwordAgainField" style="-fx-background-color: #2a2a2a;" styleClass="text" />
+            <Label fx:id="registerStatusLabel" alignment="CENTER" text="dasdkjadsjlad" textFill="RED" visible="false">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </Label>
          </children>
       </VBox>
    </children>
