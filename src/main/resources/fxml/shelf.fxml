@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.Shelf">
+   <children>
+      <Pane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: rgba(51, 51, 51, 1);">
+         <children>
+            <Label layoutX="41.0" layoutY="35.0" prefHeight="31.0" prefWidth="174.0" text="Fantastic Readers" textFill="#c1c0c0">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+            <Button layoutX="433.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="26.0" text="Book">
+               <font>
+                  <Font size="6.0" />
+               </font>
+            </Button>
+            <Button layoutX="505.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="26.0" text="Settings">
+               <font>
+                  <Font size="5.0" />
+               </font>
+            </Button>
+            <Button layoutX="469.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="26.0" text="Add">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </Button>
+            <TextField layoutX="308.0" layoutY="72.0" prefHeight="25.0" prefWidth="174.0" promptText="Search for books..." style="-fx-background-color: #cfcfcfc;" />
+            <ChoiceBox layoutX="495.0" layoutY="72.0" prefHeight="25.0" prefWidth="50.0" />
+            <ScrollPane layoutX="41.0" layoutY="108.0" prefHeight="137.0" prefWidth="506.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+              </content>
+            </ScrollPane>
+            <Label layoutX="55.0" layoutY="299.0" prefHeight="25.0" prefWidth="108.0" text="Forum" textFill="#bcb6b6">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
