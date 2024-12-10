@@ -29,7 +29,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField id="textfieldOfShelfName" />
+            <TextField id="textfieldOfShelfName" text="Settings of Fantastic Readers" />
             <Pane prefHeight="200.0" prefWidth="200.0" />
             <RadioButton id="MakePublicRB" mnemonicParsing="false" style="-fx-text-fill: #c6c6c6;" text="Make Public">
                <font>
