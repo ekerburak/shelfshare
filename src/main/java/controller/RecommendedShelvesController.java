@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import model.Shelf;
+import model.ShelfCollection;
 
 import java.io.IOException;
 
@@ -20,11 +22,13 @@ public class RecommendedShelvesController {
     private TextField recommendedFilterField;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
-    private final String[] shelves = {"Ahmet", "Burak", "Can", "Sevval", "Ahmet", "Toprak", "Volkan", "Sinan"};
+    private final Shelf[] shelves = ShelfCollection.getRecommendedShelves(10).toArray(new Shelf[0]);
 
     @FXML
     public void initialize() {
-        for (String shelf : shelves) {
+
+
+        for (Shelf shelf : shelves) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RecommendedShelfListElement.fxml"));
                 Pane pane = loader.load();
@@ -32,7 +36,7 @@ public class RecommendedShelvesController {
                 // Get the controller of the loaded FXML
                 RecommendedShelfListElementController controller = loader.getController();
                 // Set the shelf name label
-                controller.setShelfName(shelf);
+                controller.setShelfName(shelf.getName());
 
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);

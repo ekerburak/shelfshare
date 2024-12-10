@@ -12,6 +12,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.LoggedInUser;
+import model.Shelf;
 
 import java.io.IOException;
 
@@ -27,7 +29,7 @@ public class YourShelvesController {
     private Label createAShelfLabel;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
-    private final String[] shelves = {"Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak"};
+    private Shelf[] shelves;
 
     private void setCreateAShelfLabel() {
         createAShelfLabel.setCursor(javafx.scene.Cursor.HAND);
@@ -48,14 +50,17 @@ public class YourShelvesController {
     public void initialize() {
         setCreateAShelfLabel();
 
-        for (String shelf : shelves) {
+        shelves = LoggedInUser.getAddedShelves();
+
+
+        for (Shelf shelf : shelves) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf_list_element.fxml"));
                 Pane pane = loader.load();
                 // Get the controller of the loaded FXML
                 ShelfListElementController controller = loader.getController();
                 // Set the shelf name label
-                controller.setShelfName(shelf);
+                controller.setShelfName(shelf.getName());
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);
                 items.add(pane);

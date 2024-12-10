@@ -1,14 +1,17 @@
 package model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoggedInUser extends User {
-    private static String[] addedShelvesIDs; //for dynamic UI
+    private static ArrayList<String> addedShelvesIDs; //for dynamic UI
     private static LoggedInUser instance;
 
     //the only non-static method. for singleton pattern purposes.
     private LoggedInUser(String ID, String email, String username, int profilePictureOption, String about, String[] addedShelvesIDs) {
         super(ID, email, username, profilePictureOption, about);
-        LoggedInUser.addedShelvesIDs = addedShelvesIDs;
+        LoggedInUser.addedShelvesIDs = new ArrayList<String>(List.of(addedShelvesIDs));
     }
 
     private static void ensureLogIn() {
@@ -24,7 +27,7 @@ public class LoggedInUser extends User {
         instance = new LoggedInUser(ID, email, username, profilePictureOption, about, addedShelvesIDs);
     }
 
-    protected static String[] getAddedShelvesIDs() {
+    protected static ArrayList<String> getAddedShelvesIDs() {
         ensureLogIn();
         return addedShelvesIDs;
     }
@@ -41,7 +44,7 @@ public class LoggedInUser extends User {
 
     public static Shelf[] getAddedShelves() {
         ensureLogIn();
-        return ShelfCollection.getShelvesWithIDs(addedShelvesIDs);
+        return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new String[0]));
     }
 
     @Override
@@ -66,6 +69,8 @@ public class LoggedInUser extends User {
         ensureLogIn();
         Shelf shelf = ShelfCollection.getShelfWithInvitation(invitation);
         shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
+        LoggedInUser.addedShelvesIDs.add(shelf.getID());
+        UserCollection.updateLoggedInUser();
     }
     public static void leaveShelf(Shelf shelf) {
         ensureLogIn();

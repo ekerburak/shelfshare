@@ -35,9 +35,10 @@ public class CurrentView {
 
             node = new SplitPane();
             ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
+            ((SplitPane)node).setDividerPositions(0.2);
 
             showInStage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

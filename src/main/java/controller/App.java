@@ -19,6 +19,7 @@ public class App extends Application {
         ShelfCollection.setup();
         ChatCollection.setup();
         BookCollection.setup();
+
         launch(args);
     }
 }
