@@ -14,9 +14,6 @@ public class SidebarController {
     static String username;
 
     @FXML
-    private ImageView createShelfButton;
-
-    @FXML
     private ImageView seeRecommendedShelvesButton;
 
     @FXML
@@ -42,7 +39,6 @@ public class SidebarController {
 
     @FXML
     public void initialize() {
-        makeClickable(createShelfButton);
         openRecommendedPage(seeRecommendedShelvesButton);
         openYourShelvesPage(seeYourShelvesButton);
 

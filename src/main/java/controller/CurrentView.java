@@ -14,27 +14,18 @@ import java.io.IOException;
 public class CurrentView {
 
     private static Node node;
+    private static Stage stage;
 
     private CurrentView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
         loadView(sidebarLoader, mainLoader);
     }
 
     public static void updateView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
-        closeView();
         loadView(sidebarLoader, mainLoader);
     }
 
     public static void updateView(FXMLLoader mainLoader) {
-        closeView();
         loadView(mainLoader);
-    }
-
-    private static void closeView() {
-        if (node == null) {
-            return;
-        }
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
     }
 
     private static void loadView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
@@ -45,7 +36,7 @@ public class CurrentView {
             node = new SplitPane();
             ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
 
-            showInNewStage();
+            showInStage();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,15 +49,13 @@ public class CurrentView {
             node = new VBox();
             ((VBox)node).getChildren().add(mainContent);
 
-            showInNewStage();
+            showInStage();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    public static void showInNewStage() {
-        Stage stage = new Stage();
+    private static void getScene() {
         Scene scene;
         if(node instanceof SplitPane) {
             scene = new Scene((SplitPane) node, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
@@ -74,6 +63,25 @@ public class CurrentView {
             scene = new Scene((Pane) node, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
         }
         stage.setScene(scene);
-        stage.show();
+    }
+
+    private static void showInStage() {
+        Scene scene;
+        if (stage == null) {
+            stage = new Stage();
+            getScene();
+            stage.show();
+        } else {
+            scene = stage.getScene();
+            if (scene == null) {
+                getScene();
+            } else {
+                if (node instanceof SplitPane) {
+                    scene.setRoot((SplitPane) node);
+                } else {
+                    scene.setRoot((Pane) node);
+                }
+            }
+        }
     }
 }
