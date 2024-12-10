@@ -10,7 +10,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                new FXMLLoader(getClass().getResource("/fxml/shelf.fxml")));
+                new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
 //        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/settingsAccount.fxml")));
     }
 

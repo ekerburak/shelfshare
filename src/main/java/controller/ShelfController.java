@@ -39,6 +39,26 @@ public class ShelfController {
         shelfName.setText(name);
     }
 
+    private void setAddIcon() {
+        addIcon.setCursor(javafx.scene.Cursor.HAND);
+//        addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                try {
+//                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/addBook.fxml"));
+//
+//                    Scene scene = new Scene(root);
+//                    Stage newStage = new Stage();
+//
+//                    newStage.setScene(scene);
+//                    newStage.show();
+//                } catch(IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+    }
+
     private void setAddPersonIcon() {
         addPersonIcon.setCursor(javafx.scene.Cursor.HAND);
         addPersonIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -83,6 +103,7 @@ public class ShelfController {
     public void initialize() {
         // Set the shelf name
         setShelfName("Ahmet's Shelf");
+        setAddIcon();
         setAddPersonIcon();
         setSettingsIcon();
 

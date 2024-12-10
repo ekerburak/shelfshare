@@ -5,10 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -20,11 +23,31 @@ public class YourShelvesController {
     @FXML
     private TextField filterField;
 
+    @FXML
+    private Label createAShelfLabel;
+
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final String[] shelves = {"Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak"};
 
+    private void setCreateAShelfLabel() {
+        createAShelfLabel.setCursor(javafx.scene.Cursor.HAND);
+        createAShelfLabel.setOnMouseClicked(e -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/fxml/createAShelf.fxml"));
+                Scene scene = new Scene(root);
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
     @FXML
     public void initialize() {
+        setCreateAShelfLabel();
+
         for (String shelf : shelves) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf_list_element.fxml"));
