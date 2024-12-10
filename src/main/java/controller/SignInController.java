@@ -27,8 +27,8 @@ public class SignInController {
                 Stage stage = (Stage) cherryUp.getScene().getWindow();
                 stage.close();
                 SidebarController.username = usernameField.getText();
-                CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")),
-                        new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")));
+                CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                        new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")));
             }
         });
     }

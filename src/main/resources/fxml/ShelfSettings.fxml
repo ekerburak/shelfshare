@@ -2,64 +2,55 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="598.0" style="-fx-background-color: #474747;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ShelfSettingsController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="723.0" prefWidth="598.0" style="-fx-background-color: #474747;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ShelfSettingsController">
    <children>
-      <Label id="title" blendMode="ADD" layoutX="43.0" layoutY="51.0" prefHeight="30.0" prefWidth="331.0" style="-fx-text-fill: #C2C2C2;" text="Settings of Fantastic Readers" textAlignment="CENTER" textFill="#e1e1e1">
-         <font>
-            <Font name="Tahoma" size="24.0" />
-         </font>
-         <styleClass>
-            <String fx:value="bold" />
-            <String fx:value="text" />
-         </styleClass>
-      </Label>
-      <Button id="saveButton" layoutX="505.0" layoutY="439.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="65.0" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="Save" />
-      <Button id="leaveButton" layoutX="43.0" layoutY="439.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="65.0" style="-fx-background-color: bc2626; -fx-text-fill: #111111;" text="Leave" textFill="#bc2626" />
-      <VBox id="settingsPane" layoutX="43.0" layoutY="115.0" prefHeight="262.0" prefWidth="382.0">
+      <HBox layoutX="43.0" layoutY="51.0">
+         <children>
+            <Label id="title" blendMode="ADD" prefHeight="30.0" prefWidth="108.0" style="-fx-text-fill: #C2C2C2;" text="Settings of " textAlignment="CENTER" textFill="#e1e1e1">
+               <font>
+                  <Font name="Tahoma" size="24.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="bold" />
+                  <String fx:value="text" />
+               </styleClass>
+            </Label>
+            <Label id="title" fx:id="shelfName" blendMode="ADD" prefHeight="30.0" prefWidth="108.0" style="-fx-text-fill: #C2C2C2;" text="ShelfName" textAlignment="CENTER" textFill="#e1e1e1">
+               <font>
+                  <Font name="Tahoma" size="24.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="bold" />
+                  <String fx:value="text" />
+               </styleClass>
+            </Label>
+         </children>
+      </HBox>
+      <Button id="saveButton" fx:id="save" layoutX="447.0" layoutY="645.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="Save" />
+      <Button id="leaveButton" fx:id="leave" layoutX="43.0" layoutY="645.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: bc2626; -fx-text-fill: #111111;" text="Leave" textFill="#bc2626" />
+      <VBox id="settingsPane" layoutX="43.0" layoutY="115.0" prefHeight="466.0" prefWidth="515.0" spacing="20.0">
          <children>
             <Label id="nameLabel" style="-fx-text-fill: #c6c6c6;" text="Name">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField id="textfieldOfShelfName" text="Settings of Fantastic Readers" />
-            <Pane prefHeight="200.0" prefWidth="200.0" />
-            <RadioButton id="MakePublicRB" mnemonicParsing="false" style="-fx-text-fill: #c6c6c6;" text="Make Public">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </RadioButton>
-            <Pane prefHeight="200.0" prefWidth="200.0" />
-            <RadioButton id="canAddBookRB" mnemonicParsing="false" style="-fx-text-fill: #c6c6c6;" text="Users can add books to shelf">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </RadioButton>
-            <Pane prefHeight="200.0" prefWidth="200.0" />
-            <RadioButton id="canAnnotateRB" mnemonicParsing="false" style="-fx-text-fill: #c6c6c6;" text="Users can annotate the books">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </RadioButton>
-            <Pane prefHeight="200.0" prefWidth="200.0" />
-            <RadioButton id="leaveCommentsRB" mnemonicParsing="false" style="-fx-text-fill: #c6c6c6;" text="Users can leave comments on the book">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </RadioButton>
-            <Pane prefHeight="200.0" prefWidth="200.0" />
-            <RadioButton id="canInviteOthersRB" mnemonicParsing="false" style="-fx-text-fill: #c6c6c6;" text="Users can invite others to join the shelf">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </RadioButton>
+            <TextField id="textfieldOfShelfName" fx:id="nameField" />
+            <CheckBox fx:id="makePublic" mnemonicParsing="false" styleClass="text" text="Make Public" />
+            <CheckBox fx:id="addBooks" mnemonicParsing="false" styleClass="text" text="Users can add books to shelf" />
+            <CheckBox fx:id="annotate" mnemonicParsing="false" styleClass="text" text="Users can annotate the books" />
+            <CheckBox fx:id="comment" mnemonicParsing="false" styleClass="text" text="Users can leave comments on the book" />
+            <CheckBox fx:id="invite" mnemonicParsing="false" styleClass="text" text="Users can invite others to join the shelf" />
+            <ListView fx:id="listView" prefHeight="145.0" prefWidth="515.0" />
          </children>
       </VBox>
    </children>

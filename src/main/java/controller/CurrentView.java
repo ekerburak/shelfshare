@@ -15,13 +15,13 @@ public class CurrentView {
 
     private static Node node;
 
-    private CurrentView(FXMLLoader mainLoader, FXMLLoader sidebarLoader) {
-        loadView(mainLoader, sidebarLoader);
+    private CurrentView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
+        loadView(sidebarLoader, mainLoader);
     }
 
-    public static void updateView(FXMLLoader mainLoader, FXMLLoader sidebarLoader) {
+    public static void updateView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
         closeView();
-        loadView(mainLoader, sidebarLoader);
+        loadView(sidebarLoader, mainLoader);
     }
 
     public static void updateView(FXMLLoader mainLoader) {
@@ -37,10 +37,10 @@ public class CurrentView {
         stage.close();
     }
 
-    private static void loadView(FXMLLoader mainLoader, FXMLLoader sidebarLoader) {
+    private static void loadView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
         try {
-            Pane mainContent = mainLoader.load();
             Pane sidebarContent = sidebarLoader.load();
+            Pane mainContent = mainLoader.load();
 
             node = new SplitPane();
             ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
