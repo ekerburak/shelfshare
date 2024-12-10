@@ -61,8 +61,8 @@ public class LogInController {
                 Stage stage = (Stage) cherryIn.getScene().getWindow();
                 stage.close();
                 SidebarController.username = usernameField.getText();
-                CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")),
-                        new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")));
+                CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                        new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")));
             }
         });
     }
