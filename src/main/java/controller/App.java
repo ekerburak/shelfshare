@@ -8,9 +8,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-//        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")),
+//        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/RecommendedShelves.fxml")),
 //                new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")));
-        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/bookEditing.fxml")));
+        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/ShelfSettings.fxml")));
     }
 
     public static void main(String[] args) {

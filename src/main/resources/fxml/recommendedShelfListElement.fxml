@@ -21,7 +21,7 @@
                   <Image url="@../assets/shelf_icon.png" />
                </image>
             </ImageView>
-            <Label id="shelfName" fx:id="shelfNameLabel" prefHeight="26.0" prefWidth="205.0" styleClass="text" stylesheets="@../assets/style.css" text="Fantastic Readers">
+            <Label id="shelfName" fx:id="shelfName" prefHeight="26.0" prefWidth="205.0" styleClass="text" stylesheets="@../assets/style.css" text="Fantastic Readers">
                <font>
                   <Font size="24.0" />
                </font></Label>

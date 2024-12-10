@@ -49,8 +49,8 @@ public class SidebarController {
         try {
             if(username == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarSignUpPart.fxml"));
-//                Pane profilePart = loader.load();
-//                sidebarVBox.getChildren().add(profilePart);
+                Pane profilePart = loader.load();
+                sidebarVBox.getChildren().add(profilePart);
             } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarProfilePart.fxml"));
                 Pane profilePart = loader.load();

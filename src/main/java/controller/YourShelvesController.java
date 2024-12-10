@@ -20,9 +20,6 @@ public class YourShelvesController {
     @FXML
     private TextField filterField;
 
-    @FXML
-    private SplitPane sidebarSplitPane;
-
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final String[] shelves = {"Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak", "Ahmet", "Burak"};
 
