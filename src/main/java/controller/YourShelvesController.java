@@ -101,7 +101,6 @@ public class YourShelvesController {
                         Pane shelfPane = loader2.load();
                         ShelfController controller2 = loader2.getController();
                         controller2.setShelf(shelf);
-                        controller2.setShelfName(shelf.getName());
                         CurrentView.updateView(
                                 new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
                                 shelfPane

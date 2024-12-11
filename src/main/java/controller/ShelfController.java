@@ -16,9 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Book;
+import model.LoggedInUser;
 import model.Shelf;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ShelfController {
     Shelf shelf;
@@ -36,7 +39,7 @@ public class ShelfController {
     private ListView<Pane> bookList;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
-    private final String[] books = {"lotr", "cancna", "tutku"};
+    private ArrayList<Book> books;
 
     public void setShelfName(String name) {
         shelfName.setText(name);
@@ -45,6 +48,25 @@ public class ShelfController {
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
         setShelfName(shelf.getName());
+        books = shelf.getBooks();
+
+        for (Book book : books) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book.fxml"));
+                Pane pane = loader.load();
+
+                // Get the controller of the loaded FXML
+                BookController controller = loader.getController();
+                // Set the shelf name label
+                controller.setBook(book);
+                // Set the controller as user data for the pane
+                pane.setUserData(controller);
+
+                items.add(pane);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void setAddIcon() {
@@ -112,26 +134,6 @@ public class ShelfController {
         setAddIcon();
         setAddPersonIcon();
         setSettingsIcon();
-
-        for (String book : books) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book.fxml"));
-                Pane pane = loader.load();
-
-                // Get the controller of the loaded FXML
-                BookController controller = loader.getController();
-                // Set the shelf name label
-                controller.setBookName(book);
-                controller.setUploaderName("Ahmet");
-
-                // Set the controller as user data for the pane
-                pane.setUserData(controller);
-
-                items.add(pane);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
         FilteredList<Pane> filteredItems = new FilteredList<>(items, p -> true);
         bookList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
