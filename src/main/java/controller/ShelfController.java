@@ -16,10 +16,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Shelf;
 
 import java.io.IOException;
 
 public class ShelfController {
+    Shelf shelf;
+
     @FXML
     private Label shelfName;
 
@@ -35,8 +38,13 @@ public class ShelfController {
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final String[] books = {"lotr", "cancna", "tutku"};
 
-    private void setShelfName(String name) {
+    public void setShelfName(String name) {
         shelfName.setText(name);
+    }
+
+    public void setShelf(Shelf shelf) {
+        this.shelf = shelf;
+        setShelfName(shelf.getName());
     }
 
     private void setAddIcon() {
@@ -101,8 +109,6 @@ public class ShelfController {
 
     @FXML
     public void initialize() {
-        // Set the shelf name
-        setShelfName("Ahmet's Shelf");
         setAddIcon();
         setAddPersonIcon();
         setSettingsIcon();

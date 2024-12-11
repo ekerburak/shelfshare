@@ -50,8 +50,12 @@ public class YourShelvesController {
     public void initialize() {
         setCreateAShelfLabel();
 
-        shelves = LoggedInUser.getAddedShelves();
-
+        if (LoggedInUser.isLoggedIn()) {
+            shelves = LoggedInUser.getAddedShelves();
+            System.out.println(shelves.length);
+        } else {
+            shelves = new Shelf[0];
+        }
 
         for (Shelf shelf : shelves) {
             try {
@@ -63,6 +67,24 @@ public class YourShelvesController {
                 controller.setShelfName(shelf.getName());
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);
+
+                pane.setCursor(javafx.scene.Cursor.HAND);
+                pane.setOnMouseClicked(e -> {
+                    try {
+                        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));
+                        Pane shelfPane = loader2.load();
+                        ShelfController controller2 = loader2.getController();
+                        controller2.setShelf(shelf);
+                        controller2.setShelfName(shelf.getName());
+                        CurrentView.updateView(
+                                new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                                shelfPane
+                        );
+                    } catch(IOException ie) {
+                        ie.printStackTrace();
+                    }
+                });
+
                 items.add(pane);
             } catch (IOException e) {
                 e.printStackTrace();
