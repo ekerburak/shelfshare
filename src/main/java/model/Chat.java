@@ -1,13 +1,15 @@
 package model;
 
+import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 
 public class Chat implements ChatListener {
-    private final String ID;
+    private final ObjectId ID;
     private final ArrayList<Message> messages;
     private final ArrayList<ChatListener> listeners;
 
-    protected Chat(String ID, ArrayList<Message> messages) {
+    protected Chat(ObjectId ID, ArrayList<Message> messages) {
         this.ID = ID;
         listeners = new ArrayList<>();
         this.messages = messages;
@@ -30,7 +32,7 @@ public class Chat implements ChatListener {
     }
 
 
-    public String getID() {
+    public ObjectId getID() {
         return ID;
     }
 

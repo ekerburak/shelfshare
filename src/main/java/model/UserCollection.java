@@ -30,17 +30,16 @@ public class UserCollection {
 
     private static User convertMongoUserToUser(Document mongoUser) {
         return new User(
-                mongoUser.get("_id").toString(),
+                mongoUser.getObjectId("_id"),
                 mongoUser.getString("email"),
                 mongoUser.getString("username"),
                 mongoUser.getInteger("profilePictureOption"),
                 mongoUser.getString("about")
         );
     }
-    protected static User getUser(String userID) {
-        ObjectId documentID = new ObjectId(userID);
+    protected static User getUser(ObjectId userID) {
         Document mongoUser = collection.find(
-                Filters.eq("_id", documentID)
+                Filters.eq("_id", userID)
         ).first();
         if(mongoUser == null) {
             throw new RuntimeException("Getting user by id failed");
@@ -50,7 +49,7 @@ public class UserCollection {
     protected static void updateLoggedInUser() {
         LoggedInUser user = LoggedInUser.getInstance();
         collection.updateOne(
-                new Document().append("_id", new ObjectId(user.getID())),
+                new Document().append("_id", user.getID()),
                 Updates.combine(
                         Updates.set("username", user.getUsername()),
                         Updates.set("email", user.getEmail()),
@@ -96,19 +95,17 @@ public class UserCollection {
             return false;
         }
         LoggedInUser.createInstance(
-                mongoUser.get("_id").toString(),
+                mongoUser.getObjectId("_id"),
                 mongoUser.getString("email"),
                 mongoUser.getString("username"),
                 mongoUser.getInteger("profilePictureOption"),
                 mongoUser.getString("about"),
-                mongoUser.getList("addedShelvesIDs", String.class).toArray(new String[0])
+                mongoUser.getList("addedShelvesIDs", ObjectId.class).toArray(new ObjectId[0])
         );
         return true;
     }
 
     public static void main(String[] args) {
         setup();
-        System.out.println(getUser("6752c7e785056b3e0756ae25"));
-
     }
 }

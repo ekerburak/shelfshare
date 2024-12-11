@@ -26,7 +26,7 @@ admin (user) (multiple people)
 
 
 public class Shelf {
-    private String ID;
+    private ObjectId ID;
     private String name;
     private boolean isPublic;
     private boolean allowBookAdd;
@@ -37,13 +37,13 @@ public class Shelf {
     private String standardInvitation;
     private String adminInvitation;
 
-    private String forumChatID;
-    private ArrayList<String> addedBooksIDs;
-    private ArrayList<String> participantsIDs;
-    private ArrayList<String> adminsIDs;
+    private ObjectId forumChatID;
+    private ArrayList<ObjectId> addedBooksIDs;
+    private ArrayList<ObjectId> participantsIDs;
+    private ArrayList<ObjectId> adminsIDs;
 
     public Shelf(
-            String ID,
+            ObjectId ID,
             String name,
             boolean isPublic,
             boolean allowBookAdd,
@@ -53,10 +53,10 @@ public class Shelf {
             int popularity,
             String adminInvitation,
             String standardInvitation,
-            String forumChatID,
-            ArrayList<String> addedBooksIDs,
-            ArrayList<String> participantsIDs,
-            ArrayList<String> adminsIDs
+            ObjectId forumChatID,
+            ArrayList<ObjectId> addedBooksIDs,
+            ArrayList<ObjectId> participantsIDs,
+            ArrayList<ObjectId> adminsIDs
     ) {
         this.ID = ID;
         this.name = name;
@@ -73,7 +73,8 @@ public class Shelf {
         this.participantsIDs = participantsIDs;
         this.adminsIDs = adminsIDs;
     }
-    public String getID() {
+
+    public ObjectId getID() {
         return ID;
     }
 
@@ -101,19 +102,19 @@ public class Shelf {
         return allowInvitation;
     }
 
-    public String getForumChatID() {
+    public ObjectId getForumChatID() {
         return forumChatID;
     }
 
-    public ArrayList<String> getAddedBooksIDs() {
+    public ArrayList<ObjectId> getAddedBooksIDs() {
         return addedBooksIDs;
     }
 
-    public ArrayList<String> getParticipantsIDs() {
+    public ArrayList<ObjectId> getParticipantsIDs() {
         return participantsIDs;
     }
 
-    public ArrayList<String> getAdminsIDs() {
+    public ArrayList<ObjectId> getAdminsIDs() {
         return adminsIDs;
     }
 
@@ -144,7 +145,7 @@ public class Shelf {
         this.allowInvitation = allowInvitation;
     }
 
-    public void addUser(String userID, boolean asAdmin) {
+    public void addUser(ObjectId userID, boolean asAdmin) {
         participantsIDs.add(userID);
         if(asAdmin) {
             adminsIDs.add(userID);
@@ -152,7 +153,7 @@ public class Shelf {
         ShelfCollection.updateShelf(this);
     }
 
-    public void kickUser(String userID) {
+    public void kickUser(ObjectId userID) {
         if(!participantsIDs.contains(userID)) {
             throw new IllegalArgumentException("User is not a participant of this shelf");
         }
@@ -162,7 +163,7 @@ public class Shelf {
     }
 
     public void addBook(boolean isDownloadable, String[] base64Pages) {
-        String bookID = BookCollection.addBook(isDownloadable, base64Pages);
+        ObjectId bookID = BookCollection.addBook(isDownloadable, base64Pages);
         this.addedBooksIDs.add(bookID);
         ShelfCollection.updateShelf(this);
     }
@@ -172,7 +173,7 @@ public class Shelf {
     }
 
     //TODO
-    public void removeBook(String bookID) {
+    public void removeBook(ObjectId bookID) {
         throw new RuntimeException("NOT IMPLEMENTED!!!");
     }
 

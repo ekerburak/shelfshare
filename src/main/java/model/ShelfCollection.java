@@ -40,7 +40,7 @@ public class ShelfCollection {
 
     private static Shelf convertMongoShelfToShelf(Document mongoShelf) {
         return new Shelf(
-                mongoShelf.get("_id").toString(),
+                mongoShelf.getObjectId("_id"),
                 mongoShelf.getString("name"),
                 mongoShelf.getBoolean("isPublic"),
                 mongoShelf.getBoolean("allowBookAdd"),
@@ -50,18 +50,16 @@ public class ShelfCollection {
                 mongoShelf.getInteger("popularity"),
                 mongoShelf.getString("adminInvitation"),
                 mongoShelf.getString("standardInvitation"),
-                mongoShelf.getString("forumChatID"),
-                new ArrayList<String>(mongoShelf.getList("addedBooksIDs", String.class)),
-                new ArrayList<String>(mongoShelf.getList("participantsIDs", String.class)),
-                new ArrayList<String>(mongoShelf.getList("adminsIDs", String.class))
+                mongoShelf.getObjectId("forumChatID"),
+                new ArrayList<ObjectId>(mongoShelf.getList("addedBooksIDs", ObjectId.class)),
+                new ArrayList<ObjectId>(mongoShelf.getList("participantsIDs", ObjectId.class)),
+                new ArrayList<ObjectId>(mongoShelf.getList("adminsIDs", ObjectId.class))
         );
     }
 
-    protected static Shelf[] getShelvesWithIDs(String[] IDs) {
+    protected static Shelf[] getShelvesWithIDs(ObjectId[] IDs) {
         ArrayList<ObjectId> objectIDs = new ArrayList<>(IDs.length);
-        for(String ID : IDs) {
-            objectIDs.add(new ObjectId(ID));
-        }
+        Collections.addAll(objectIDs, IDs);
         FindIterable<Document> mongoShelves = collection.find(
                 Filters.in("_id", objectIDs)
         );
@@ -90,7 +88,7 @@ public class ShelfCollection {
 
     protected static void updateShelf(Shelf shelf) {
         collection.updateOne(
-                new Document().append("_id", new ObjectId(shelf.getID())),
+                new Document().append("_id", shelf.getID()),
                 Updates.combine(
                         Updates.set("name", shelf.getName()),
                         Updates.set("isPublic", shelf.getIsPublic()),
@@ -116,7 +114,7 @@ public class ShelfCollection {
             boolean allowBookAnnotate,
             boolean allowDiscussion,
             boolean allowInvitation) {
-        String forumChatID = ChatCollection.createChat();
+        ObjectId forumChatID = ChatCollection.createChat();
         Document mongoShelf = new Document()
                 .append("name", name)
                 .append("isPublic", isPublic)
@@ -127,18 +125,18 @@ public class ShelfCollection {
                 .append("popularity", 0)
                 .append("adminInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase())
                 .append("standardInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase())
-                .append("addedBooksIDs", new ArrayList<String>())
-                .append("participantsIDs", new ArrayList<String>())
-                .append("adminsIDs", new ArrayList<String>())
+                .append("addedBooksIDs", new ArrayList<ObjectId>())
+                .append("participantsIDs", new ArrayList<ObjectId>())
+                .append("adminsIDs", new ArrayList<ObjectId>())
                 .append("forumChatID", forumChatID);
         collection.insertOne(mongoShelf);
         LoggedInUser.joinShelf(mongoShelf.get("adminInvitation").toString());
         return convertMongoShelfToShelf(mongoShelf);
     }
 
-    public static void deleteShelf(String shelfID) {
+    public static void deleteShelf(ObjectId shelfID) {
         DeleteResult result = collection.deleteOne(
-                new Document().append("_id", new ObjectId(shelfID)));
+                new Document().append("_id", shelfID));
         if(result.getDeletedCount() == 0) {
             throw new RuntimeException("Invalid shelf id");
         }

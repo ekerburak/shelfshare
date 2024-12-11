@@ -1,15 +1,16 @@
 package model;
 
+import org.bson.types.ObjectId;
+
 public class User {
-    //UserID
+    private ObjectId ID;
     private String
-            ID,
             email,
             username,
             about;
     private int profilePictureOption;
 
-    protected User(String ID, String email, String username, int profilePictureOption, String about) {
+    protected User(ObjectId ID, String email, String username, int profilePictureOption, String about) {
         this.ID = ID;
         this.email = email;
         this.username = username;
@@ -38,7 +39,7 @@ public class User {
                 + profilePictureOption + ">";
     }
 
-    public String getID() {
+    public ObjectId getID() {
         return ID;
     }
 

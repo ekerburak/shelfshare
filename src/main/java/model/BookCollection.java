@@ -50,19 +50,19 @@ public class BookCollection {
 
     private static Book convertMongoBookToBook(Document mongoBook) {
         return new Book(
-                mongoBook.getObjectId("_id").toString(),
+                mongoBook.getObjectId("_id"),
                 mongoBook.getString("name"),
                 mongoBook.getString("uploaderName"),
                 mongoBook.getBoolean("isDownloadable"),
                 mongoBook.getInteger("pageCount"),
-                mongoBook.getString("discussionChatID")
+                mongoBook.getObjectId("discussionChatID")
         );
     }
 
-    protected static ArrayList<Book> getAddedBooksByIDs(ArrayList<String> IDs) {
+    protected static ArrayList<Book> getAddedBooksByIDs(ArrayList<ObjectId> IDs) {
         ArrayList<ObjectId> objectIDs = new ArrayList<>();
-        for(String ID : IDs) {
-            objectIDs.add(new ObjectId(ID));
+        for(ObjectId ID : IDs) {
+            objectIDs.add(ID);
         }
         MongoIterable<Document> mongoBooks = collection.find(
                 Filters.in("_id", objectIDs)
@@ -83,7 +83,7 @@ public class BookCollection {
                 .append("lineCoordinates", page.getLineCoordinates())
                 .append("lineColorStrings", page.getLineColorStrings());
         collection.updateOne(
-                new Document().append("_id", new ObjectId(book.getID())),
+                new Document().append("_id", book.getID()),
                 Updates.set("pages." + page.getPageNumber() + ".content", mongoPage)
         );
     }
@@ -91,7 +91,7 @@ public class BookCollection {
 
     protected static void updateProperties(Book book) {
         collection.updateOne(
-                new Document().append("_id", new ObjectId(book.getID())),
+                new Document().append("_id", book.getID()),
                 Updates.combine(
                         Updates.set("isDownloadable", book.getIsDownloadable())
                         //ADD CHAT ID HERE!!
@@ -100,9 +100,9 @@ public class BookCollection {
     }
 
     //gets all the pages from pageLow to pageHigh (inclusive)
-    protected static ArrayList<Page> getPages(String bookID, int pageLow, int pageHigh) {
+    protected static ArrayList<Page> getPages(ObjectId bookID, int pageLow, int pageHigh) {
         Document mongoBook = collection.aggregate(List.of(
-                Filters.eq("_id", new ObjectId(bookID)),
+                Filters.eq("_id", bookID),
                 Projections.slice("pages", pageLow, pageHigh - pageLow + 1)
         )).first();
 
@@ -126,7 +126,7 @@ public class BookCollection {
     }
 
     //returns the mongo id of the added book
-    protected static String addBook(
+    protected static ObjectId addBook(
             boolean isDownloadable,
             String[] pageImages
     ) {
@@ -144,17 +144,17 @@ public class BookCollection {
                     .append("lineColorStrings", page.getLineColorStrings());
             mongoPages.add(mongoPage);
         }
-        String discussionChatID = ChatCollection.createChat();
+        ObjectId discussionChatID = ChatCollection.createChat();
         Document mongoBook = new Document()
                 .append("isDownloadable", isDownloadable)
                 .append("pages", mongoPages)
                 .append("pageCount", pageImages.length)
                 .append("discussionChatID", discussionChatID); //MUST CHANGE WITH OBJECTID
         collection.insertOne(mongoBook);
-        return mongoBook.getObjectId("_id").toString();
+        return mongoBook.getObjectId("_id");
     }
 
-    protected static void deleteBook(String bookID) {
-        collection.deleteOne(new Document("_id", new ObjectId(bookID)));
+    protected static void deleteBook(ObjectId bookID) {
+        collection.deleteOne(new Document("_id", bookID));
     }
 }

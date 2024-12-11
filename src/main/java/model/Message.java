@@ -8,12 +8,14 @@ package model;
 //senderID
 //content,
 
+import org.bson.types.ObjectId;
+
 public class Message {
-    private String timestamp;
-    private String sender;
-    private String senderID;
-    private String content;
-    public Message(String timestamp, String sender, String senderID, String content) {
+    private final String timestamp;
+    private final String sender;
+    private final ObjectId senderID;
+    private final String content;
+    public Message(String timestamp, String sender, ObjectId senderID, String content) {
         this.timestamp = timestamp;
         this.sender = sender;
         this.senderID = senderID;
@@ -28,7 +30,7 @@ public class Message {
                 + content + ">";
     }
 
-    public String getSenderID() {
+    public ObjectId getSenderID() {
         return senderID;
     }
 

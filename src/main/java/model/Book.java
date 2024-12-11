@@ -1,14 +1,16 @@
 package model;
 
+import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 
 public class Book {
-    private final String ID;
+    private final ObjectId ID;
     private String name;
     private final String uploaderName;
     private boolean isDownloadable;
     private final int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
-    private final String discussionChatID;
+    private final ObjectId discussionChatID;
 
 
     private static final int MAX_BUFFER_SIZE = 11; //must be odd-numbered for simplicity
@@ -25,7 +27,7 @@ public class Book {
         }
     }
 
-    public String getID() {
+    public ObjectId getID() {
         return ID;
     }
 
@@ -45,7 +47,7 @@ public class Book {
         return pageCount;
     }
 
-    public String getDiscussionChatID() {
+    public ObjectId getDiscussionChatID() {
         return discussionChatID;
     }
 
@@ -63,7 +65,7 @@ public class Book {
         BookCollection.updateProperties(this);
     }
 
-    protected Book(String ID, String name, String uploaderName, boolean isDownloadable, int pageCount, String discussionChatID) {
+    protected Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID) {
         this.ID = ID;
         this.name = name;
         this.uploaderName = LoggedInUser.getInstance().getUsername();

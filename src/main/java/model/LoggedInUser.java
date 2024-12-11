@@ -1,17 +1,19 @@
 package model;
 
 
+import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoggedInUser extends User {
-    private static ArrayList<String> addedShelvesIDs; //for dynamic UI
+    private static ArrayList<ObjectId> addedShelvesIDs; //for dynamic UI
     private static LoggedInUser instance;
 
     //the only non-static method. for singleton pattern purposes.
-    private LoggedInUser(String ID, String email, String username, int profilePictureOption, String about, String[] addedShelvesIDs) {
+    private LoggedInUser(ObjectId ID, String email, String username, int profilePictureOption, String about, ObjectId[] addedShelvesIDs) {
         super(ID, email, username, profilePictureOption, about);
-        LoggedInUser.addedShelvesIDs = new ArrayList<String>(List.of(addedShelvesIDs));
+        LoggedInUser.addedShelvesIDs = new ArrayList<ObjectId>(List.of(addedShelvesIDs));
     }
 
     private static void ensureLogIn() {
@@ -20,14 +22,14 @@ public class LoggedInUser extends User {
         }
     }
 
-    protected static void createInstance(String ID, String email, String username, int profilePictureOption, String about, String[] addedShelvesIDs) {
+    protected static void createInstance(ObjectId ID, String email, String username, int profilePictureOption, String about, ObjectId[] addedShelvesIDs) {
         if(isLoggedIn()) {
             throw new RuntimeException("Already logged in");
         }
         instance = new LoggedInUser(ID, email, username, profilePictureOption, about, addedShelvesIDs);
     }
 
-    protected static ArrayList<String> getAddedShelvesIDs() {
+    protected static ArrayList<ObjectId> getAddedShelvesIDs() {
         ensureLogIn();
         return addedShelvesIDs;
     }
@@ -44,7 +46,7 @@ public class LoggedInUser extends User {
 
     public static Shelf[] getAddedShelves() {
         ensureLogIn();
-        return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new String[0]));
+        return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new ObjectId[0]));
     }
 
     @Override
@@ -76,9 +78,15 @@ public class LoggedInUser extends User {
         ensureLogIn();
 
     }
+
+    //TODO: implement changePassword
     public static void changePassword(String oldPassword, String newPassword) {
+
         ensureLogIn();
+        throw new RuntimeException("NOT IMPLEMENTED!!!");
     }
+
+    //TODO: implement logOUt
     public static void logOut() {
         ensureLogIn();
     }

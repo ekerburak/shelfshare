@@ -32,11 +32,11 @@ public class ChatCollection {
         collection = DatabaseConnector.getCollection("chat");
     }
 
-    public static String createChat() {
+    public static ObjectId createChat() {
         Document mongoChat = new Document()
                 .append("messages", new ArrayList<Document>());
         collection.insertOne(mongoChat);
-        return mongoChat.getObjectId("_id").toString();
+        return mongoChat.getObjectId("_id");
     }
 
     private static Chat convertMongoChatToChat(Document mongoChat) {
@@ -46,20 +46,20 @@ public class ChatCollection {
             Message message = new Message(
                     mongoMessage.getString("timestamp"),
                     mongoMessage.getString("sender"),
-                    mongoMessage.getString("senderID"),
+                    mongoMessage.getObjectId("senderID"),
                     mongoMessage.getString("content")
             );
             messages.add(message);
         }
         return new Chat(
-                mongoChat.getObjectId("_id").toString(),
+                mongoChat.getObjectId("_id"),
                 messages
         );
     }
 
-    public static Chat getChat(String chatID) {
+    public static Chat getChat(ObjectId chatID) {
         Document mongoChat = collection.find(
-                Filters.eq("_id", new ObjectId(chatID) )
+                Filters.eq("_id", chatID )
         ).first();
         if(mongoChat == null) {
             throw new IllegalArgumentException("Invalid chat id");
@@ -75,16 +75,16 @@ public class ChatCollection {
                 .append("content", message.getContent());
     }
 
-    protected static void sendMessageUtil(String chatID, Message msg) {
+    protected static void sendMessageUtil(ObjectId chatID, Message msg) {
         collection.updateOne(
-                Filters.eq("_id", new ObjectId(chatID)),
+                Filters.eq("_id", chatID),
                 Updates.push("messages", convertMessageToMongoMessage(msg))
         );
     }
 
     //invoked ONLY when a shelf or book is deleted. cannot be invoked manually.
-    protected static void deleteChat(String chatID) {
-        DeleteResult result = collection.deleteOne(new Document("_id", new ObjectId(chatID)));
+    protected static void deleteChat(ObjectId chatID) {
+        DeleteResult result = collection.deleteOne(new Document("_id", chatID));
         if(result.getDeletedCount() == 0) {
             throw new IllegalArgumentException("Invalid chat id");
         }
@@ -95,7 +95,7 @@ public class ChatCollection {
            List<Bson> pipeline = Arrays.asList(
                    Aggregates.match(
                            Filters.and(
-                                   Filters.eq("documentKey._id", new ObjectId(chat.getID())),
+                                   Filters.eq("documentKey._id", chat.getID()),
                                    Filters.eq("operationType", "update")
                            )
                    )
@@ -121,7 +121,7 @@ public class ChatCollection {
                    Message message = new Message(
                            mongoMessage.getString("timestamp").getValue(),
                            mongoMessage.getString("sender").getValue(),
-                           mongoMessage.getString("senderID").getValue(),
+                           mongoMessage.getObjectId("senderID").getValue(),
                            mongoMessage.getString("content").getValue()
                    );
 
