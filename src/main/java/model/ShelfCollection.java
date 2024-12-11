@@ -125,13 +125,14 @@ public class ShelfCollection {
                 .append("allowDiscussion", allowDiscussion)
                 .append("allowInvitation", allowInvitation)
                 .append("popularity", 0)
-                .append("adminInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 10))
-                .append("standardInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 10))
-                .append("addedBooksIDs", new ArrayList<String>(List.of(LoggedInUser.getInstance().getID())))
-                .append("participantsIDs", new ArrayList<String>(List.of(LoggedInUser.getInstance().getID())))
+                .append("adminInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase())
+                .append("standardInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase())
+                .append("addedBooksIDs", new ArrayList<String>())
+                .append("participantsIDs", new ArrayList<String>())
                 .append("adminsIDs", new ArrayList<String>())
                 .append("forumChatID", forumChatID);
         collection.insertOne(mongoShelf);
+        LoggedInUser.joinShelf(mongoShelf.get("adminInvitation").toString());
         return convertMongoShelfToShelf(mongoShelf);
     }
 

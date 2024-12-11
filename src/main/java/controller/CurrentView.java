@@ -14,59 +14,57 @@ import java.io.IOException;
 public class CurrentView {
 
     private static Node node;
+    private static Stage stage;
 
-    private CurrentView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
-        loadView(sidebarLoader, mainLoader);
+    private static Pane loadFXML(FXMLLoader mainLoader) {
+        try {
+            return mainLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void showPopUp(FXMLLoader loader) {
+        try {
+            Pane pane = loader.load();
+            Scene scene = new Scene(pane);
+            Stage newStage = new Stage();
+            newStage.setScene(scene);
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void updateView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
-        closeView();
-        loadView(sidebarLoader, mainLoader);
+        loadView(loadFXML(sidebarLoader), loadFXML(mainLoader));
+    }
+    public static void updateView(FXMLLoader sidebarLoader, Pane mainLoader) {
+        loadView(loadFXML(sidebarLoader), mainLoader);
     }
 
     public static void updateView(FXMLLoader mainLoader) {
-        closeView();
-        loadView(mainLoader);
-    }
-
-    private static void closeView() {
-        if (node == null) {
-            return;
-        }
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
-    }
-
-    private static void loadView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
-        try {
-            Pane sidebarContent = sidebarLoader.load();
-            Pane mainContent = mainLoader.load();
-
-            node = new SplitPane();
-            ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
-
-            showInNewStage();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void loadView(FXMLLoader mainLoader) {
-        try {
-            Pane mainContent = mainLoader.load();
-
-            node = new VBox();
-            ((VBox)node).getChildren().add(mainContent);
-
-            showInNewStage();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadView(loadFXML(mainLoader));
     }
 
 
-    public static void showInNewStage() {
-        Stage stage = new Stage();
+    private static void loadView(Pane sidebarContent, Pane mainContent) {
+        node = new SplitPane();
+        ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
+        ((SplitPane)node).setDividerPositions(0.2);
+
+        showInStage();
+    }
+
+    private static void loadView(Pane mainContent) {
+        node = new VBox();
+        ((VBox)node).getChildren().add(mainContent);
+
+        showInStage();
+    }
+
+    private static void getScene() {
         Scene scene;
         if(node instanceof SplitPane) {
             scene = new Scene((SplitPane) node, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
@@ -74,6 +72,25 @@ public class CurrentView {
             scene = new Scene((Pane) node, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
         }
         stage.setScene(scene);
-        stage.show();
+    }
+
+    private static void showInStage() {
+        Scene scene;
+        if (stage == null) {
+            stage = new Stage();
+            getScene();
+            stage.show();
+        } else {
+            scene = stage.getScene();
+            if (scene == null) {
+                getScene();
+            } else {
+                if (node instanceof SplitPane) {
+                    scene.setRoot((SplitPane) node);
+                } else {
+                    scene.setRoot((Pane) node);
+                }
+            }
+        }
     }
 }

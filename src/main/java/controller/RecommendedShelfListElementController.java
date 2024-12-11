@@ -72,13 +72,13 @@ public class RecommendedShelfListElementController {
     public ImageView getFifthStar() {
         return fifthStar;
     }
+
     public void setJoinButtonAction(Runnable action) {
         joinButton.setOnAction(event -> action.run());
     }
+
     public void makeClickable(ImageView button) {
         button.setCursor(javafx.scene.Cursor.HAND);
         button.setOnMouseClicked(event -> System.out.println("Clicked"));
     }
-
-
 }

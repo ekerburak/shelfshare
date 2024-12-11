@@ -3,15 +3,16 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.LoggedInUser;
 
 import java.io.IOException;
 
 public class SidebarController {
-
-    static String username;
 
     @FXML
     private ImageView seeRecommendedShelvesButton;
@@ -21,6 +22,12 @@ public class SidebarController {
 
     @FXML
     private VBox sidebarVBox;
+
+    @FXML
+    private VBox yourShelvesPart;
+
+    @FXML
+    private SplitPane splitPane;
 
     private void makeClickable(ImageView button) {
         button.setCursor(Cursor.HAND);
@@ -43,16 +50,27 @@ public class SidebarController {
         openYourShelvesPage(seeYourShelvesButton);
 
         try {
-            if(username == null) {
+            if(!LoggedInUser.isLoggedIn()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarSignUpPart.fxml"));
                 Pane profilePart = loader.load();
                 sidebarVBox.getChildren().add(profilePart);
+                yourShelvesPart.setVisible(false);
+                yourShelvesPart.setManaged(false);
+                splitPane.setDividerPositions(0.0);
+                Node divider = splitPane.lookup(".split-pane-divider");
+                if(divider!=null){
+                    divider.setStyle("-fx-padding: 0;");
+                }
+
+
             } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarProfilePart.fxml"));
                 Pane profilePart = loader.load();
                 SidebarProfilePartController controller = loader.getController();
-                controller.setUsername(username);
+                controller.setUsername(LoggedInUser.getInstance().getUsername());
                 sidebarVBox.getChildren().add(profilePart);
+                yourShelvesPart.setManaged(true);
+                yourShelvesPart.setVisible(true);
             }
         } catch (IOException e) {
             e.printStackTrace();

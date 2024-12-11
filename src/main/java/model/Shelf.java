@@ -165,6 +165,7 @@ public class Shelf {
         ShelfCollection.updateShelf(this);
     }
 
+    //TODO
     public void removeBook(String bookID) {
         throw new RuntimeException("NOT IMPLEMENTED!!!");
     }
@@ -173,6 +174,6 @@ public class Shelf {
         throw new RuntimeException("NOT IMPLEMENTED!!");
     }
     public int getPopularity() {
-        throw new RuntimeException("NOT IMPLEMENTED!!");
+        return popularity;
     }
 }

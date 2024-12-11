@@ -16,10 +16,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Shelf;
 
 import java.io.IOException;
 
 public class ShelfController {
+    Shelf shelf;
+
     @FXML
     private Label shelfName;
 
@@ -35,8 +38,33 @@ public class ShelfController {
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final String[] books = {"lotr", "cancna", "tutku"};
 
-    private void setShelfName(String name) {
+    public void setShelfName(String name) {
         shelfName.setText(name);
+    }
+
+    public void setShelf(Shelf shelf) {
+        this.shelf = shelf;
+        setShelfName(shelf.getName());
+    }
+
+    private void setAddIcon() {
+        addIcon.setCursor(javafx.scene.Cursor.HAND);
+//        addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                try {
+//                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/addBook.fxml"));
+//
+//                    Scene scene = new Scene(root);
+//                    Stage newStage = new Stage();
+//
+//                    newStage.setScene(scene);
+//                    newStage.show();
+//                } catch(IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     private void setAddPersonIcon() {
@@ -81,8 +109,7 @@ public class ShelfController {
 
     @FXML
     public void initialize() {
-        // Set the shelf name
-        setShelfName("Ahmet's Shelf");
+        setAddIcon();
         setAddPersonIcon();
         setSettingsIcon();
 
