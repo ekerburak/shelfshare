@@ -1,5 +1,7 @@
 package model;
 
+import com.mongodb.client.MongoIterable;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -163,6 +165,10 @@ public class Shelf {
         String bookID = BookCollection.addBook(isDownloadable, base64Pages);
         this.addedBooksIDs.add(bookID);
         ShelfCollection.updateShelf(this);
+    }
+
+    public ArrayList<Book> getBooks() {
+        return BookCollection.getAddedBooksByIDs(addedBooksIDs);
     }
 
     //TODO

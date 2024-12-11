@@ -2,6 +2,7 @@ package model;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
@@ -34,6 +35,43 @@ public class BookCollection {
             throw new RuntimeException("Collection already set");
         }
         collection = DatabaseConnector.getCollection("book");
+    }
+
+    /**
+     *  private final String ID;
+     *     private String name;
+     *     private final String uploaderName;
+     *     private boolean isDownloadable;
+     *     private final int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
+     *     private final String discussionChatID;
+     * @param mongoBook
+     * @return
+     */
+
+    private static Book convertMongoBookToBook(Document mongoBook) {
+        return new Book(
+                mongoBook.getObjectId("_id").toString(),
+                mongoBook.getString("name"),
+                mongoBook.getString("uploaderName"),
+                mongoBook.getBoolean("isDownloadable"),
+                mongoBook.getInteger("pageCount"),
+                mongoBook.getString("discussionChatID")
+        );
+    }
+
+    protected static ArrayList<Book> getAddedBooksByIDs(ArrayList<String> IDs) {
+        ArrayList<ObjectId> objectIDs = new ArrayList<>();
+        for(String ID : IDs) {
+            objectIDs.add(new ObjectId(ID));
+        }
+        MongoIterable<Document> mongoBooks = collection.find(
+                Filters.in("_id", objectIDs)
+        );
+        ArrayList<Book> books = new ArrayList<Book>();
+        for(Document mongoBook : mongoBooks) {
+            books.add(convertMongoBookToBook(mongoBook));
+        }
+        return books;
     }
 
     //can't implement a generic updateBook method, because book objects are too large

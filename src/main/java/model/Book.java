@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Book {
     private final String ID;
+    private String name;
+    private final String uploaderName;
     private boolean isDownloadable;
     private final int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
     private final String discussionChatID;
@@ -31,6 +33,10 @@ public class Book {
         return isDownloadable;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Page getCurrentPage() {
         return pageBuffer.get(currentPageIndex);
     }
@@ -43,13 +49,24 @@ public class Book {
         return discussionChatID;
     }
 
+    public String getUploaderName() {
+        return uploaderName;
+    }
+
     public void setIsDownloadable(boolean isDownloadable) {
         this.isDownloadable = isDownloadable;
         BookCollection.updateProperties(this);
     }
 
-    public Book(String ID, boolean isDownloadable, String discussionChatID, int pageCount) {
+    public void setName(String name) {
+        this.name = name;
+        BookCollection.updateProperties(this);
+    }
+
+    protected Book(String ID, String name, String uploaderName, boolean isDownloadable, int pageCount, String discussionChatID) {
         this.ID = ID;
+        this.name = name;
+        this.uploaderName = LoggedInUser.getInstance().getUsername();
         this.isDownloadable = isDownloadable;
         this.pageCount = pageCount;
         this.discussionChatID = discussionChatID;
