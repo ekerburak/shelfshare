@@ -10,7 +10,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
+                new FXMLLoader(getClass().getResource("/fxml/shelf.fxml")));
 //        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/settingsAccount.fxml")));
     }
 
@@ -19,7 +19,6 @@ public class App extends Application {
         ShelfCollection.setup();
         ChatCollection.setup();
         BookCollection.setup();
-
         launch(args);
     }
 }

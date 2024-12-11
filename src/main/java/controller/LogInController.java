@@ -70,8 +70,8 @@ public class LogInController {
                 // Close the sign-in popup
                 Stage stage = (Stage) cherryIn.getScene().getWindow();
                 stage.close();
+                SidebarController.username = LoggedInUser.getInstance().getUsername();
 
-                //TODO: change yourShelves.fxml to mainPage.fxml
                 CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
                         new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
             }

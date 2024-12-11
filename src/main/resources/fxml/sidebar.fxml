@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sidebarVBox" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
+<VBox fx:id="sidebarVBox" maxWidth="400.0" minWidth="400.0" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
    <children>
-      <SplitPane fx:id="splitPane" dividerPositions="0.39277736411020103" orientation="VERTICAL" style="-fx-background-color: #222222;" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.39277736411020103" orientation="VERTICAL" style="-fx-background-color: #222222;" VBox.vgrow="ALWAYS">
          <items>
-            <VBox fx:id="yourShelvesPart" alignment="BOTTOM_LEFT" prefWidth="398.0">
+            <VBox alignment="BOTTOM_LEFT" prefWidth="398.0">
                <children>
                   <HBox alignment="CENTER_LEFT" style="-fx-background-color: #222222;">
                      <children>

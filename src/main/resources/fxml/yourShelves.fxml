@@ -29,7 +29,7 @@
          <children>
             <Label styleClass="green_text" text="Join a  shelf" />
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Label fx:id="createAShelfLabel" styleClass="green_text" text="Create a new shelf" />
+            <Label styleClass="green_text" text="Create a new shelf" />
          </children>
       </HBox>
    </children>

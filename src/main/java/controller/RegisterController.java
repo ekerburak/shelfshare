@@ -58,6 +58,7 @@ public class RegisterController {
                 UserCollection.logIn(emailField.getText(), passwordField.getText());
                 stage.close();
 
+                SidebarController.username = LoggedInUser.getInstance().getUsername();
                 CurrentView.updateView(
                         new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
                         new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml"))
