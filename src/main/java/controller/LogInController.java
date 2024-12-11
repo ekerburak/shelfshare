@@ -73,7 +73,7 @@ public class LogInController {
 
                 //TODO: change yourShelves.fxml to mainPage.fxml
                 CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                        new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")));
+                        new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
             }
         });
     }
