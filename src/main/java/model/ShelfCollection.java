@@ -159,9 +159,19 @@ public class ShelfCollection {
      * the basis of their popularity.
      */
     public static ArrayList<Shelf> getRecommendedShelves(int limit) {
-        FindIterable<Document> allMongoShelves = collection.find(
-                Filters.eq("isPublic", true)
-        );
+        FindIterable<Document> allMongoShelves;
+        if(!LoggedInUser.isLoggedIn()) {
+            allMongoShelves = collection.find(
+                    Filters.eq("isPublic", true)
+            );
+        } else {
+            allMongoShelves = collection.find(
+                    Filters.and(
+                            Filters.eq("isPublic", true),
+                            Filters.nin("participantsIDs", LoggedInUser.getInstance().getID())
+                    )
+            );
+        }
         ArrayList<Shelf> sortList = new ArrayList<Shelf>();
         for(Document mongoShelf: allMongoShelves) {
             sortList.add(convertMongoShelfToShelf(mongoShelf));
