@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="652.0" prefWidth="627.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingsController">
    <children>
       <VBox layoutX="10.0" layoutY="10.0" AnchorPane.rightAnchor="60.0">
@@ -52,6 +51,11 @@
                         <PasswordField fx:id="repeatedPassword" />
                      </children>
                   </VBox>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="saveButton" layoutX="28.0" layoutY="177.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" style="-fx-background-color: #23bc23; -fx-text-fill: #ffffff;" text="Save" />
+                     </children>
+                  </Pane>
                </children>
             </HBox>
             <Label style="-fx-text-fill: #c2c2c2;" text="Profile Settings">

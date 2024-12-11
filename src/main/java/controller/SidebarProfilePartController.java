@@ -26,25 +26,18 @@ public class SidebarProfilePartController {
     public void setUsername(String username) {
         usernameLabel.setText(username);
     }
-    private void openSettings(ImageView button) {
-        button.setCursor(Cursor.HAND);
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+    private void openSettings() {
+        settingsIcon.setCursor(Cursor.HAND);
+        settingsIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/setting.fxml"));
-
-                    Scene scene = new Scene(root);
-                    Stage newStage = new Stage();
-
-                    newStage.setScene(scene);
-                    newStage.show();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                }
+                CurrentView.showPopUp(new FXMLLoader(getClass().getResource("/fxml/setting.fxml")));
             }
         });
     }
     @FXML
-    public void initialize() {openSettings(settingsIcon);}
+    public void initialize() {
+        openSettings();
+    }
 }
