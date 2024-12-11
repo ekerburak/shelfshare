@@ -16,52 +16,44 @@ public class CurrentView {
     private static Node node;
     private static Stage stage;
 
-    private static Pane loadFXML(FXMLLoader mainLoader) {
-        try {
-            return mainLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static void showPopUp(FXMLLoader loader) {
-        try {
-            Pane pane = loader.load();
-            Scene scene = new Scene(pane);
-            Stage newStage = new Stage();
-            newStage.setScene(scene);
-            newStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private CurrentView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
+        loadView(sidebarLoader, mainLoader);
     }
 
     public static void updateView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
-        loadView(loadFXML(sidebarLoader), loadFXML(mainLoader));
-    }
-    public static void updateView(FXMLLoader sidebarLoader, Pane mainLoader) {
-        loadView(loadFXML(sidebarLoader), mainLoader);
+        loadView(sidebarLoader, mainLoader);
     }
 
     public static void updateView(FXMLLoader mainLoader) {
-        loadView(loadFXML(mainLoader));
+        loadView(mainLoader);
     }
 
+    private static void loadView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {
+        try {
+            Pane sidebarContent = sidebarLoader.load();
+            Pane mainContent = mainLoader.load();
 
-    private static void loadView(Pane sidebarContent, Pane mainContent) {
-        node = new SplitPane();
-        ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
-        ((SplitPane)node).setDividerPositions(0.2);
+            node = new SplitPane();
+            ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
+            ((SplitPane)node).setDividerPositions(0.2);
 
-        showInStage();
+            showInStage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void loadView(Pane mainContent) {
-        node = new VBox();
-        ((VBox)node).getChildren().add(mainContent);
+    private static void loadView(FXMLLoader mainLoader) {
+        try {
+            Pane mainContent = mainLoader.load();
 
-        showInStage();
+            node = new VBox();
+            ((VBox)node).getChildren().add(mainContent);
+
+            showInStage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getScene() {
