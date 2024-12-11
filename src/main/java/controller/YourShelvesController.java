@@ -52,11 +52,15 @@ public class YourShelvesController {
         createAShelfLabel.setCursor(javafx.scene.Cursor.HAND);
         createAShelfLabel.setOnMouseClicked(e -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("/fxml/createAShelf.fxml"));
-                Scene scene = new Scene(root);
-                Stage newStage = new Stage();
-                newStage.setScene(scene);
-                newStage.show();
+                if(LoggedInUser.isLoggedIn()) {
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/createAShelf.fxml"));
+                    Scene scene = new Scene(root);
+                    Stage newStage = new Stage();
+                    newStage.setScene(scene);
+                    newStage.show();
+                } else {
+                    CurrentView.showPopUp(new FXMLLoader(getClass().getResource("/fxml/logIn.fxml")));
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

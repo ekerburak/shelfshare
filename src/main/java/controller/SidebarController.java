@@ -47,7 +47,6 @@ public class SidebarController {
     @FXML
     public void initialize() {
         openRecommendedPage(seeRecommendedShelvesButton);
-        openYourShelvesPage(seeYourShelvesButton);
 
         try {
             if(!LoggedInUser.isLoggedIn()) {
@@ -64,6 +63,7 @@ public class SidebarController {
 
 
             } else {
+                openYourShelvesPage(seeYourShelvesButton);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sidebarProfilePart.fxml"));
                 Pane profilePart = loader.load();
                 SidebarProfilePartController controller = loader.getController();

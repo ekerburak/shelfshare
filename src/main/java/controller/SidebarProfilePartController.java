@@ -10,8 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.LoggedInUser;
 
 
 import java.io.IOException;
@@ -22,6 +24,9 @@ public class SidebarProfilePartController {
 
     @FXML
     private Label usernameLabel;
+
+    @FXML
+    private HBox profileBox;
 
     public void setUsername(String username) {
         usernameLabel.setText(username);
@@ -36,8 +41,29 @@ public class SidebarProfilePartController {
             }
         });
     }
+
+    private void profileBoxFunction() {
+        profileBox.setCursor(Cursor.HAND);
+        profileBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profilePage.fxml"));
+                    Pane pane = loader.load();
+                    ProfilePageController controller = loader.getController();
+                    controller.setUser(LoggedInUser.getInstance());
+                    CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                            pane);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     @FXML
     public void initialize() {
         openSettings();
+        profileBoxFunction();
     }
 }
