@@ -36,7 +36,7 @@ public class SidebarController {
     private void openRecommendedPage(ImageView button) {
         button.setCursor(Cursor.HAND);
         button.setOnMouseClicked(event ->  CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                new FXMLLoader(getClass().getResource("/fxml/RecommendedShelves.fxml"))));
+                new FXMLLoader(getClass().getResource("/fxml/recommendedShelves.fxml"))));
     }
     private void openYourShelvesPage(ImageView button) {
         button.setCursor(Cursor.HAND);

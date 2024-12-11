@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.LoggedInUser;
@@ -28,8 +29,21 @@ public class YourShelvesController {
     @FXML
     private Label createAShelfLabel;
 
+    @FXML
+    private ImageView backIcon;
+
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private Shelf[] shelves;
+
+    private void setBackIcon() {
+        backIcon.setCursor(javafx.scene.Cursor.HAND);
+        backIcon.setOnMouseClicked(e -> {
+            CurrentView.updateView(
+                new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml"))
+            );
+        });
+    }
 
     private void setCreateAShelfLabel() {
         createAShelfLabel.setCursor(javafx.scene.Cursor.HAND);
@@ -48,6 +62,7 @@ public class YourShelvesController {
 
     @FXML
     public void initialize() {
+        setBackIcon();
         setCreateAShelfLabel();
 
         if (LoggedInUser.isLoggedIn()) {

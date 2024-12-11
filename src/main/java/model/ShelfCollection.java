@@ -70,7 +70,8 @@ public class ShelfCollection {
             shelves.add(convertMongoShelfToShelf(mongoShelf));
         }
         if(shelves.size() != IDs.length) {
-            throw new RuntimeException("Some IDs do not correspond to concrete documents");
+//            throw new RuntimeException("Some IDs do not correspond to concrete documents");
+            System.out.println("Some IDs do not correspond to concrete documents");
         }
         return shelves.toArray(new Shelf[0]);
     }

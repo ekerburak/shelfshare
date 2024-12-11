@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.LoggedInUser;
@@ -25,11 +27,25 @@ public class RecommendedShelvesController {
     @FXML
     private TextField recommendedFilterField;
 
+    @FXML
+    private ImageView backIcon;
+
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
     private final Shelf[] shelves = ShelfCollection.getRecommendedShelves(10).toArray(new Shelf[0]);
 
+    private void setBackIcon() {
+        backIcon.setCursor(javafx.scene.Cursor.HAND);
+        backIcon.setOnMouseClicked(e -> {
+            CurrentView.updateView(
+                    new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                    new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml"))
+            );
+        });
+    }
+
     @FXML
     public void initialize() {
+        setBackIcon();
         for (Shelf shelf : shelves) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RecommendedShelfListElement.fxml"));

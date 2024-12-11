@@ -32,7 +32,7 @@ public class MainPageController {
         explorePublicShelves.setCursor(javafx.scene.Cursor.HAND);
         explorePublicShelves.setOnMouseClicked(event -> {
             CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                    new FXMLLoader(getClass().getResource("/fxml/publicShelves.fxml")));
+                    new FXMLLoader(getClass().getResource("/fxml/recommendedShelves.fxml")));
         });
     }
 
