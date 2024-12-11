@@ -44,6 +44,9 @@ public class Page {
 
 
     private static ArrayList<ArrayList<Integer>> convertMongoCoordinatesToCoordinates(List<?> mongoCoordinates) {
+        if(mongoCoordinates == null) {
+            return new ArrayList<>();
+        }
         ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
         for(Object coordinate : mongoCoordinates) {
             if(!(coordinate instanceof List)) {
@@ -62,6 +65,9 @@ public class Page {
     }
 
     private static ArrayList<String> convertMongoColorStringsToColorStrings(List<?> mongoColorStrings) {
+        if(mongoColorStrings == null) {
+            return new ArrayList<>();
+        }
         ArrayList<String> result = new ArrayList<String>();
         for(Object colorString : mongoColorStrings) {
             if(!(colorString instanceof String)) {

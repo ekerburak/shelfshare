@@ -68,7 +68,7 @@ public class Book {
     protected Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID) {
         this.ID = ID;
         this.name = name;
-        this.uploaderName = LoggedInUser.getInstance().getUsername();
+        this.uploaderName = uploaderName;
         this.isDownloadable = isDownloadable;
         this.pageCount = pageCount;
         this.discussionChatID = discussionChatID;

@@ -101,10 +101,14 @@ public class BookCollection {
 
     //gets all the pages from pageLow to pageHigh (inclusive)
     protected static ArrayList<Page> getPages(ObjectId bookID, int pageLow, int pageHigh) {
-        Document mongoBook = collection.aggregate(List.of(
-                Filters.eq("_id", bookID),
-                Projections.slice("pages", pageLow, pageHigh - pageLow + 1)
-        )).first();
+//        Document mongoBook = collection.aggregate(List.of(
+//                Filters.eq("_id", bookID)
+//                //Projections.slice("pages", pageLow, pageHigh - pageLow + 1)
+//        )).first();
+
+        Document mongoBook = collection.find(Filters.eq("_id", bookID))
+                .projection(Projections.fields(Projections.slice("pages", pageLow, pageHigh - pageLow + 1)))
+                .first();
 
         if(mongoBook == null) {
             throw new RuntimeException("Book not found");
@@ -156,5 +160,9 @@ public class BookCollection {
 
     protected static void deleteBook(ObjectId bookID) {
         collection.deleteOne(new Document("_id", bookID));
+    }
+
+    public static void main(String[] args) {
+        setup();
     }
 }
