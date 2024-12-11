@@ -53,7 +53,7 @@
                   </VBox>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="saveButton" layoutX="28.0" layoutY="177.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" style="-fx-background-color: #23bc23; -fx-text-fill: #ffffff;" text="Save" />
+                        <Button fx:id="passwordSaveButton" layoutX="29.0" layoutY="177.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" style="-fx-background-color: #23bc23; -fx-text-fill: #ffffff;" text="Save" />
                      </children>
                   </Pane>
                </children>
@@ -80,6 +80,11 @@
                   <Pane prefHeight="200.0" prefWidth="347.0">
                      <children>
                         <TextArea fx:id="biographyText" layoutY="6.0" prefHeight="177.0" prefWidth="352.0" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="biographySaveButton" layoutX="28.0" layoutY="177.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" style="-fx-background-color: #23bc23; -fx-text-fill: #ffffff;" text="Save" />
                      </children>
                   </Pane>
                </children>
