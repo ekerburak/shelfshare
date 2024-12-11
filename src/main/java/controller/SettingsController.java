@@ -4,6 +4,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.Cursor;
@@ -20,6 +21,9 @@ public class SettingsController {
 
     @FXML
     TextArea biographyText;
+
+    @FXML
+    Label passwordChangeStatusLabel;
 
     private void logOut() {
         LoggedInUser.logOut();
@@ -48,10 +52,21 @@ public class SettingsController {
         passwordSaveButton.setCursor(Cursor.HAND);
         passwordSaveButton.setOnMouseClicked(e -> {
             if(newPassword.getText().equals(repeatedPassword.getText())){
-                LoggedInUser.changePassword(oldPassword.getText(), newPassword.getText());
+                boolean successfulPasswordChange = LoggedInUser.changePassword(oldPassword.getText(), newPassword.getText());
+                if(successfulPasswordChange) {
+                    passwordChangeStatusLabel.setStyle("-fx-text-fill: green;");
+                    passwordChangeStatusLabel.setText("Password change successful!");
+                } else {
+                    passwordChangeStatusLabel.setStyle("-fx-text-fill: red;");
+                    passwordChangeStatusLabel.setText("Old password is incorrect!");
+                }
+                passwordChangeStatusLabel.setVisible(true);
             }
-            else
-                throw new RuntimeException("your new passwords do not match");
+            else {
+                passwordChangeStatusLabel.setStyle("-fx-text-fill: red;");
+                passwordChangeStatusLabel.setText("Repeated password does not match new password!");
+                passwordChangeStatusLabel.setVisible(true);
+            }
         });
     }
     @FXML

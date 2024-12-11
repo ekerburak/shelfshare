@@ -49,6 +49,7 @@
                         <PasswordField fx:id="newPassword" />
                         <Label style="-fx-text-fill: #C2c2c2;" text="Repeated new Password" />
                         <PasswordField fx:id="repeatedPassword" />
+                        <Label fx:id="passwordChangeStatusLabel" text="Password change successful!" textFill="LIME" visible="false" />
                      </children>
                   </VBox>
                   <Pane prefHeight="200.0" prefWidth="200.0">

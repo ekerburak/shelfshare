@@ -80,15 +80,23 @@ public class LoggedInUser extends User {
     }
 
     //TODO: implement changePassword
-    public static void changePassword(String oldPassword, String newPassword) {
-
+    public static boolean changePassword(String oldPassword, String newPassword) {
         ensureLogIn();
-        throw new RuntimeException("NOT IMPLEMENTED!!!");
+        if(oldPassword.equals(newPassword)) {
+            return false;
+        }
+        if(UserCollection.checkPassword(oldPassword)) {
+            UserCollection.updatePassword(newPassword);
+
+            return true;
+        }
+        return false;
     }
 
-    //TODO: implement logOUt
     public static void logOut() {
         ensureLogIn();
+        addedShelvesIDs = null;
+        instance = null;
     }
 
 

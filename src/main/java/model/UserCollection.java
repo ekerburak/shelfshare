@@ -11,6 +11,7 @@ package model;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -103,6 +104,20 @@ public class UserCollection {
                 mongoUser.getList("addedShelvesIDs", ObjectId.class).toArray(new ObjectId[0])
         );
         return true;
+    }
+
+    protected static boolean checkPassword(String claimedPassword) {
+        String realPassword = collection.find(Filters.eq("_id", LoggedInUser.getInstance().getID()))
+                .projection(Projections.include("password"))
+                .first().getString("password");
+        return claimedPassword.equals(realPassword);
+    }
+
+    protected static void updatePassword(String newPassword) {
+        collection.updateOne(
+                Filters.eq("_id", LoggedInUser.getInstance().getID()),
+                Updates.set("password", newPassword)
+        );
     }
 
     public static void main(String[] args) {
