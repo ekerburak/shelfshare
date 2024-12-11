@@ -81,6 +81,4 @@ public class RecommendedShelfListElementController {
         button.setCursor(javafx.scene.Cursor.HAND);
         button.setOnMouseClicked(event -> System.out.println("Clicked"));
     }
-
-
 }
