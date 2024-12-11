@@ -27,6 +27,9 @@ public class YourShelvesController {
     private TextField filterField;
 
     @FXML
+    private Label joinLabel;
+
+    @FXML
     private Label createAShelfLabel;
 
     @FXML
@@ -60,10 +63,18 @@ public class YourShelvesController {
         });
     }
 
+    private void openInvitation(){
+        joinLabel.setCursor(javafx.scene.Cursor.HAND);
+        joinLabel.setOnMouseClicked(e -> {
+
+        });
+    }
+
     @FXML
     public void initialize() {
         setBackIcon();
         setCreateAShelfLabel();
+        openInvitation();
 
         if (LoggedInUser.isLoggedIn()) {
             shelves = LoggedInUser.getAddedShelves();
