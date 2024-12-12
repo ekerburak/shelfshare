@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JoinAShelfController">
     <children>
         <Label prefHeight="96.0" prefWidth="458.0" text="Join a Shelf" textFill="#f5f5f5" VBox.vgrow="ALWAYS">
             <font>
@@ -29,7 +28,7 @@
                         <Font size="23.0" />
                     </font>
                 </Label>
-                <TextField prefHeight="60.0" prefWidth="477.0">
+                <TextField fx:id="invitationCodeText" prefHeight="60.0" prefWidth="477.0">
                     <padding>
                         <Insets left="20.0" right="20.0" />
                     </padding>
@@ -37,6 +36,11 @@
                         <Font size="25.0" />
                     </font>
                 </TextField>
+            <Label fx:id="warningLabel" alignment="CENTER" prefHeight="87.0" prefWidth="563.0" style="-fx-text-fill: #ffffff;" text="&quot;Every new shelf opens new clean pages in your life.&quot;" textAlignment="RIGHT">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
             </children>
             <padding>
                 <Insets left="20.0" right="20.0" />
@@ -44,7 +48,7 @@
         </VBox>
         <HBox alignment="BOTTOM_RIGHT" prefHeight="85.0" prefWidth="560.0" VBox.vgrow="ALWAYS">
             <children>
-                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="34.0" prefWidth="97.0" style="-fx-background-color: #B7E8B9;" text="Join" textAlignment="JUSTIFY">
+                <Button fx:id="JoinButton" alignment="CENTER" mnemonicParsing="false" prefHeight="34.0" prefWidth="97.0" style="-fx-background-color: #B7E8B9;" text="Join" textAlignment="JUSTIFY">
                     <font>
                         <Font size="29.0" />
                     </font>

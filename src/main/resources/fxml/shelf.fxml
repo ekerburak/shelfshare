@@ -29,6 +29,11 @@
                         <Region maxWidth="1.7976931348623157E308" prefHeight="0.0" HBox.hgrow="ALWAYS" />
                         <HBox spacing="20.0">
                            <children>
+                               <ImageView fx:id="rateIcon" fitHeight="69.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
+                                   <image>
+                                       <Image url="@../assets/rate_star.png" />
+                                   </image>
+                               </ImageView>
                               <ImageView fx:id="addIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../assets/add.png" />
