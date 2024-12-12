@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10.0" style="-fx-background-color: #292929;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MessageController">
+   <children>
+      <Label fx:id="usernameLabel" styleClass="green_text" text="username" />
+      <HBox>
+         <children>
+            <Label fx:id="messageLabel" styleClass="text" text="message" wrapText="true" />
+         </children>
+         <VBox.margin>
+            <Insets left="15.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

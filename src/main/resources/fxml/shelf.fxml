@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,45 +13,59 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox spacing="20.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ShelfController">
+<HBox maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ShelfController">
    <children>
-      <HBox>
-         <children>
-            <Label fx:id="shelfName" style="-fx-font-size: 48;" styleClass="header" stylesheets="@../assets/style.css" text="Shelf Name" textFill="#ddd6d6">
-               <font>
-                  <Font size="57.0" />
-               </font>
-            </Label>
-            <Region prefHeight="0.0" prefWidth="233.0" HBox.hgrow="ALWAYS" />
-            <HBox spacing="20.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+         <content>
+            <VBox fx:id="mainBox" maxWidth="1.7976931348623157E308" spacing="30.0" style="-fx-background-color: #222222;">
                <children>
-                  <ImageView fx:id="addIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/add.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="addPersonIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/person_add.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="settingsIcon" fitHeight="72.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/settings.png" />
-                     </image>
-                  </ImageView>
+                  <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="shelfName" style="-fx-font-size: 48;" styleClass="header" stylesheets="@../assets/style.css" text="Shelf Name" textFill="#ddd6d6">
+                           <font>
+                              <Font size="57.0" />
+                           </font>
+                        </Label>
+                        <Region maxWidth="1.7976931348623157E308" prefHeight="0.0" HBox.hgrow="ALWAYS" />
+                        <HBox spacing="20.0">
+                           <children>
+                              <ImageView fx:id="addIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/add.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="addPersonIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/person_add.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="settingsIcon" fitHeight="72.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/settings.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="filterField" promptText="Search for shelves..." />
+                     </children>
+                  </HBox>
+                  <ListView fx:id="bookList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="400.0" VBox.vgrow="ALWAYS" />
+                  <Region prefHeight="40.0" prefWidth="200.0" />
+                  <Label fx:id="shelfName1" style="-fx-font-size: 48;" styleClass="header" stylesheets="@../assets/style.css" text="Forum" textFill="#ddd6d6">
+                     <font>
+                        <Font size="57.0" />
+                     </font>
+                  </Label>
                </children>
-            </HBox>
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="1760.0">
-         <children>
-            <TextField fx:id="filterField" promptText="Search for shelves..." />
-         </children>
-      </HBox>
-      <ListView fx:id="bookList" />
+               <padding>
+                  <Insets bottom="80.0" left="80.0" right="80.0" top="80.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
    </children>
-   <padding>
-      <Insets bottom="80.0" left="80.0" right="80.0" top="80.0" />
-   </padding>
-</VBox>
+</HBox>

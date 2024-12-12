@@ -43,7 +43,6 @@ public class CurrentView {
     public static void updateView(FXMLLoader sidebarLoader, Pane mainLoader) {
         loadView(loadFXML(sidebarLoader), mainLoader);
     }
-
     public static void updateView(FXMLLoader mainLoader) {
         loadView(loadFXML(mainLoader));
     }
@@ -52,7 +51,8 @@ public class CurrentView {
     private static void loadView(Pane sidebarContent, Pane mainContent) {
         node = new SplitPane();
         ((SplitPane)node).getItems().addAll(sidebarContent, mainContent);
-        ((SplitPane)node).setDividerPositions(0.2);
+        ((SplitPane)node).setDividerPositions(0.2, 1.0);
+        mainContent.setMaxWidth(Double.MAX_VALUE);
 
         showInStage();
     }

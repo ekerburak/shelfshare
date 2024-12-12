@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Book;
 import model.LoggedInUser;
@@ -28,6 +29,9 @@ public class ShelfController {
 
     @FXML
     private Label shelfName;
+
+    @FXML
+    private VBox mainBox;
 
     @FXML
     private ImageView addIcon, addPersonIcon, settingsIcon;
@@ -134,6 +138,16 @@ public class ShelfController {
         setAddIcon();
         setAddPersonIcon();
         setSettingsIcon();
+
+        // add chat.fxml to mainBox
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
+            Pane pane = loader.load();
+            ChatContoller controller = loader.getController();
+            mainBox.getChildren().add(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         FilteredList<Pane> filteredItems = new FilteredList<>(items, p -> true);
         bookList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
