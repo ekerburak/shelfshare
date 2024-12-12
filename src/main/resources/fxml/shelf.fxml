@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox spacing="20.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ShelfController">
    <children>
       <HBox>
@@ -24,6 +23,11 @@
             <Region prefHeight="0.0" prefWidth="233.0" HBox.hgrow="ALWAYS" />
             <HBox spacing="20.0">
                <children>
+                  <ImageView fx:id="rateIcon" fitHeight="69.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/rate_star.png" />
+                     </image>
+                  </ImageView>
                   <ImageView fx:id="addIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/add.png" />
