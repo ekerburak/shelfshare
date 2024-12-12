@@ -3,14 +3,17 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.LoggedInUser;
@@ -69,10 +72,14 @@ public class YourShelvesController {
 
     private void openInvitation(){
         joinLabel.setCursor(javafx.scene.Cursor.HAND);
-        joinLabel.setOnMouseClicked(e -> {
-
+        joinLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                CurrentView.showPopUp(new FXMLLoader(getClass().getResource("/fxml/joinAShelf.fxml")));
+            }
         });
     }
+
 
     @FXML
     public void initialize() {
