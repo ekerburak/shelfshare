@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #474747;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LogInController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="600.0" style="-fx-background-color: #474747;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LogInController">
     <children>
         <TextField fx:id="emailField" layoutX="61.0" layoutY="133.0" prefHeight="26.0" prefWidth="480.0" />
         <Label layoutX="61.0" layoutY="107.0" style="-fx-text-fill: #FFFFFF;" text="Enter your email:" />
         <Label layoutX="61.0" layoutY="192.0" style="-fx-text-fill: #FFFFFF;" text="Password:" />
-        <Label layoutX="194.0" layoutY="54.0" prefHeight="23.0" prefWidth="214.0" style="-fx-text-fill: #FFFFFF;" text="Welcome to ShelfShare !">
+        <Label layoutX="194.0" layoutY="54.0" prefHeight="23.0" prefWidth="214.0" style="-fx-text-fill: #FFFFFF;" styleClass="header" text="Welcome to ShelfShare !">
          <font>
             <Font size="18.0" />
          </font></Label>
-        <Button id="cherryIn" fx:id="cherryIn" layoutX="474.0" layoutY="275.0" mnemonicParsing="false" style="-fx-background-color: BC2323;" text="Cherry In" />
-        <Label layoutX="193.0" layoutY="310.0" style="-fx-text-fill: #FFFFFF;" text="---------- New to ShelfShare ----------" />
-        <Button id="JoinNow" fx:id="joinNow" layoutX="264.0" layoutY="350.0" mnemonicParsing="false" style="-fx-background-color: #23BC23;" text="Join now !" />
+        <Button id="cherryIn" fx:id="cherryIn" layoutX="437.0" layoutY="305.0" mnemonicParsing="false" styleClass="redButton" text="Cherry In" />
+        <Label layoutX="132.0" layoutY="389.0" style="-fx-text-fill: #FFFFFF;" text="---------- New to ShelfShare ----------" />
+        <Button id="JoinNow" fx:id="joinNow" layoutX="244.0" layoutY="432.0" mnemonicParsing="false" styleClass="greenButton" stylesheets="@../assets/style.css" text="Join now !" />
         <Label layoutX="60.0" layoutY="258.0" style="-fx-text-fill: #FFFFFF;" text="Forgot your password?" />
       <Label fx:id="warningLabel" layoutX="204.0" layoutY="279.0" text="Email or password is invalid!" textFill="RED" visible="false" />
       <PasswordField fx:id="passwordField" layoutX="60.0" layoutY="219.0" prefHeight="26.0" prefWidth="480.0" />

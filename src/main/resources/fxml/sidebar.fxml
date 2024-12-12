@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sidebarVBox" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
+<VBox fx:id="sidebarVBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
    <children>
       <SplitPane fx:id="splitPane" dividerPositions="0.39277736411020103" orientation="VERTICAL" style="-fx-background-color: #222222;" VBox.vgrow="ALWAYS">
          <items>
@@ -39,12 +40,15 @@
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
-                     <padding>
-                        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
                   </HBox>
-                  <ListView prefHeight="521.0" prefWidth="398.0" style="-fx-background-color: #222222;" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="yourShelvesList" style="-fx-background-color: #222222;">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></ListView>
                </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
             </VBox>
             <VBox>
                <children>
@@ -69,14 +73,18 @@
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
-                     <padding>
-                        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
                   </HBox>
-                  <ListView prefHeight="598.0" prefWidth="318.0" style="-fx-background-color: #222222;" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="recommendedShelvesList" style="-fx-background-color: #222222;" />
                </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
             </VBox>
          </items>
       </SplitPane>
    </children>
+   <stylesheets>
+      <URL value="@../assets/style.css" />
+      <URL value="@../assets/listview.css" />
+   </stylesheets>
 </VBox>

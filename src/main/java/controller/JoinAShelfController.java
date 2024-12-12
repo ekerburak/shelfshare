@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.LoggedInUser;
+import model.Shelf;
 
 public class JoinAShelfController {
 
@@ -29,15 +30,20 @@ public class JoinAShelfController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 isJoined = false;
-                for(int i = 0; i < LoggedInUser.getAddedShelves().length; i++){
-                    if(LoggedInUser.getAddedShelves()[i].getAdminInvitation().equals(invitationCodeText.getText())){
-                        LoggedInUser.joinShelf(invitationCodeText.getText());
-                        isJoined = true;
-                    }
-                }
+
+                LoggedInUser.joinShelf(invitationCodeText.getText());
+                // TODO: check if the invitation code is valid
+                isJoined = true;
+
                 if(!isJoined){
                     warningLabel.setTextFill(Color.RED);
                     warningLabel.setText("Your invitation code is invalid.");
+                } else {
+                    // close the window
+                    warningLabel.getScene().getWindow().hide();
+                    // update the view
+                    CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                            new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")));
                 }
             }
         });

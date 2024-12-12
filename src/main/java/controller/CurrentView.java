@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Pane;
@@ -35,6 +36,12 @@ public class CurrentView {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static void showPopUp(Parent root) {
+        Scene scene = new Scene(root);
+        Stage newStage = new Stage();
+        newStage.setScene(scene);
+        newStage.show();
     }
 
     public static void updateView(FXMLLoader sidebarLoader, FXMLLoader mainLoader) {

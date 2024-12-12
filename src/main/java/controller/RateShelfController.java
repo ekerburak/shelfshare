@@ -1,29 +1,29 @@
 package controller;
 
-import com.sun.tools.javac.Main;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.InputStream;
-
 public class RateShelfController {
 
     @FXML
     ImageView firstStar, secondStar, thirdStar, forthStar, fifthStar;
 
-    ImageView[] stars = {firstStar, secondStar, thirdStar, forthStar, fifthStar};
-    static int rating = 0;
     @FXML
     Label shelfName;
 
     @FXML
     Button doneButton;
+
+    ImageView[] stars = {firstStar, secondStar, thirdStar, forthStar, fifthStar};
+    static int rating = 0;
+
+    public void setShelfName(String name) {
+        shelfName.setText(name);
+    }
 
     public static int getRating() {
         return rating;
@@ -98,6 +98,16 @@ public class RateShelfController {
             rating(fifthStar);
         });
     }
+
+    private void setDoneButton() {
+        doneButton.setCursor(Cursor.HAND);
+        doneButton.setOnMouseClicked(e -> {
+            // TODO: send rating
+
+            // close window after rating
+            doneButton.getScene().getWindow().hide();
+        });
+    }
     public void setImage(ImageView star, int fill) {
         try {
             Image fullStarImage = new Image(getClass().getResourceAsStream("/assets/fullStar.png"));
@@ -117,6 +127,7 @@ public class RateShelfController {
     }
 
     public void initialize(){
+        setDoneButton();
         rateAShelf();
     }
 }

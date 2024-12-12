@@ -31,3 +31,9 @@
     -fx-text-fill: #282828;
     -fx-font-weight: bold;
 }
+
+.redButton {
+    -fx-background-color: #ff7373;
+    -fx-text-fill: #282828;
+    -fx-font-weight: bold;
+}

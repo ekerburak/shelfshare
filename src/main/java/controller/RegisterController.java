@@ -7,6 +7,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.LoggedInUser;
@@ -24,8 +25,23 @@ public class RegisterController {
     private TextField emailField, usernameField, passwordField, passwordAgainField;
 
     @FXML
+    private ImageView backIcon;
+
+    @FXML
     private Label registerStatusLabel;
 
+    private void setBackIcon() {
+        backIcon.setCursor(javafx.scene.Cursor.HAND);
+        backIcon.setOnMouseClicked(e -> {
+            // close the register popup
+            Stage stage = (Stage) backIcon.getScene().getWindow();
+            stage.close();
+            // show the login popup
+            CurrentView.showPopUp(
+                new FXMLLoader(getClass().getResource("/fxml/logIn.fxml"))
+            );
+        });
+    }
 
     private void addRegisterMechanism() {
         cherryUp.setCursor(Cursor.HAND);
@@ -68,6 +84,7 @@ public class RegisterController {
 
     @FXML
     void initialize() {
+        setBackIcon();
         addRegisterMechanism();
     }
 }

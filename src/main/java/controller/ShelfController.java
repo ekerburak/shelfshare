@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -27,7 +28,9 @@ import model.ShelfCollection;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class ShelfController {
     Shelf shelf;
@@ -39,7 +42,7 @@ public class ShelfController {
     private VBox mainBox;
 
     @FXML
-    private ImageView addIcon, addPersonIcon, settingsIcon, rateIcon;
+    private ImageView addIcon, addPersonIcon, settingsIcon, rateIcon, backIcon;
 
     @FXML
     private TextField filterField;
@@ -57,8 +60,8 @@ public class ShelfController {
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
         setShelfName(shelf.getName());
-        books = shelf.getBooks();
 
+        books = shelf.getBooks();
         for (Book book : books) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book.fxml"));
@@ -77,25 +80,33 @@ public class ShelfController {
             }
         }
     }
-    public void ratingShelf() {
+
+    public void setRatingShelf() {
         rateIcon.setCursor(Cursor.HAND);
         rateIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/rateShelf.fxml"));
-
-                    System.out.println("a");
-                    Scene scene = new Scene(root);
-                    Stage newStage = new Stage();
-
-                    newStage.setScene(scene);
-                    newStage.show();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/rateShelf.fxml"));
+                    Pane pane = loader.load();
+                    RateShelfController controller = loader.getController();
+                    controller.setShelfName(shelf.getName());
+                    CurrentView.showPopUp(pane);
                 } catch(IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    private String fileToBase64(File file) {
+        try {
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            return Base64.getEncoder().encodeToString(fileContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void start() {
@@ -104,7 +115,7 @@ public class ShelfController {
 
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
-            String base64String = FileToBase64.encodeFileToBase64(file);
+            String base64String = fileToBase64(file);
          //   shelf.addBook(true,base64String);
             if (base64String != null) {
                 System.out.println("Base64 Encoded String: ");
@@ -113,6 +124,16 @@ public class ShelfController {
                 System.out.println("Failed to encode file.");
             }
         }
+    }
+
+    private void setBackIcon() {
+        backIcon.setCursor(javafx.scene.Cursor.HAND);
+        backIcon.setOnMouseClicked(e -> {
+            CurrentView.updateView(
+                    new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                    new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml"))
+            );
+        });
     }
 
     private void setAddIcon() {
@@ -141,13 +162,14 @@ public class ShelfController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/invitation.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/invitation.fxml"));
+                    Pane root = loader.load();
 
-                    Scene scene = new Scene(root);
-                    Stage newStage = new Stage();
+                    InvitationController controller = loader.getController();
+                    controller.setOnlyView(shelf.getStandardInvitation());
+                    controller.setEdit(shelf.getAdminInvitation());
 
-                    newStage.setScene(scene);
-                    newStage.show();
+                    CurrentView.showPopUp(root);
                 } catch(IOException e) {
                     e.printStackTrace();
                 }
@@ -177,10 +199,11 @@ public class ShelfController {
 
     @FXML
     public void initialize() {
+        setBackIcon();
         setAddIcon();
         setAddPersonIcon();
         setSettingsIcon();
-        ratingShelf();
+        setRatingShelf();
 
         // add chat.fxml to mainBox
         try {
