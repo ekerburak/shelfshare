@@ -60,7 +60,7 @@ public class ShelfController {
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
         setShelfName(shelf.getName());
-
+        setSettingsIcon();
         books = shelf.getBooks();
         for (Book book : books) {
             try {
@@ -178,23 +178,25 @@ public class ShelfController {
     }
 
     private void setSettingsIcon() {
-        settingsIcon.setCursor(javafx.scene.Cursor.HAND);
-        settingsIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/ShelfSettings.fxml"));
-
-                    Scene scene = new Scene(root);
-                    Stage newStage = new Stage();
-
-                    newStage.setScene(scene);
-                    newStage.show();
-                } catch(IOException e) {
-                    e.printStackTrace();
+        if(shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
+            settingsIcon.setCursor(javafx.scene.Cursor.HAND);
+            settingsIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShelfSettings.fxml"));
+                        Pane root = loader.load();
+                        ShelfSettingsController controller = loader.getController();
+                        controller.setShelf(shelf);
+                        CurrentView.showPopUp(root);
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            settingsIcon.setVisible(false);
+        }
     }
 
     @FXML
@@ -202,7 +204,6 @@ public class ShelfController {
         setBackIcon();
         setAddIcon();
         setAddPersonIcon();
-        setSettingsIcon();
         setRatingShelf();
 
         // add chat.fxml to mainBox

@@ -37,3 +37,8 @@
     -fx-text-fill: #282828;
     -fx-font-weight: bold;
 }
+
+.darkRedButton {
+    -fx-background-color: #912c24;
+    -fx-font-weight: bold;
+}
