@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +19,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
+import java.util.Optional;
 
 public class BookEditingController {
     private Book book;
@@ -28,7 +30,7 @@ public class BookEditingController {
     private ImageView imageView;
 
     @FXML
-    private ImageView goBackIcon, leftArrow, rightArrow, underlineIcon, highlightIcon, eraseIcon;
+    private ImageView goBackIcon, leftArrow, rightArrow, underlineIcon, highlightIcon, eraseIcon, stickyNoteIcon;
 
     @FXML
     private Label shelfName, bookName;
@@ -98,6 +100,14 @@ public class BookEditingController {
             eraseIcon.setImage(new Image(getClass().getResourceAsStream("/assets/ink_eraser_red.png")));
         } else {
             eraseIcon.setImage(new Image(getClass().getResourceAsStream("/assets/ink_eraser.png")));
+        }
+    }
+
+    private void setStickyNoteIconColor(boolean selected) {
+        if (selected) {
+            stickyNoteIcon.setImage(new Image(getClass().getResourceAsStream("/assets/sticky_note_blue.png")));
+        } else {
+            stickyNoteIcon.setImage(new Image(getClass().getResourceAsStream("/assets/sticky_note.png")));
         }
     }
 
@@ -173,6 +183,23 @@ public class BookEditingController {
         });
     }
 
+    // Add a method to handle sticky note icon click
+    void stickyNoteIconMechanism(ImageView stickyNoteIcon) {
+        stickyNoteIcon.setCursor(Cursor.HAND);
+        stickyNoteIcon.setOnMouseClicked(event -> {
+            if (currentSelection == 3) {
+                currentSelection = -1;
+                setStickyNoteIconColor(false);
+            } else {
+                currentSelection = 3;
+                setStickyNoteIconColor(true);
+                setHighlightIconColor(false);
+                setUnderlineIconColor(false);
+                setEraseIconColor(false);
+            }
+        });
+    }
+
     /**
      * Draws a highlight rectangle on the given pane
      */
@@ -207,13 +234,50 @@ public class BookEditingController {
         return line;
     }
 
+    // Method to show input dialog and get user input
+    private String getStickyNoteContent() {
+        TextInputDialog dialog = new TextInputDialog("Sticky Note");
+        dialog.setTitle("Sticky Note");
+        dialog.setHeaderText("Enter the content of the sticky note:");
+        dialog.setContentText("Content:");
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse("");
+    }
+
+    // Method to add a sticky note
+    private void addStickyNote(double x, double y) {
+        String content = getStickyNoteContent();
+        if (content.isEmpty()) {
+            return;
+        }
+
+        Label stickyNote = new Label(content);
+        stickyNote.setStyle("-fx-background-color: yellow; -fx-padding: 10px;");
+        stickyNote.setLayoutX(x);
+        stickyNote.setLayoutY(y);
+
+        // Make the sticky note draggable
+        stickyNote.setOnMousePressed(event -> {
+            startX = event.getX();
+            startY = event.getY();
+        });
+
+        drawPane.getChildren().add(stickyNote);
+    }
+
     /**
      * Erases the objects at the given coordinates
      */
     private void erase(double x, double y) {
-        drawPane.getChildren().removeIf(node -> node.contains(x, y));
+        drawPane.getChildren().removeIf(node -> {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                return label.getBoundsInParent().contains(x, y);
+            }
+            return node.contains(x, y);
+        });
     }
-
     private void annotatingMechanism(Pane pane) {
         pane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -248,6 +312,8 @@ public class BookEditingController {
                 lastUnderline = lastHighlight = null;
                 if (currentSelection == 2) {
                     erase(event.getX(), event.getY());
+                } else if (currentSelection == 3) {
+                    addStickyNote(event.getX(), event.getY());
                 }
             }
         });
@@ -271,6 +337,7 @@ public class BookEditingController {
         highlightIconMechanism(highlightIcon);
         underlineIconMechanism(underlineIcon);
         eraseIconMechanism(eraseIcon);
+        stickyNoteIconMechanism(stickyNoteIcon);
         annotatingMechanism(drawPane);
 
         // Add key event handler for left arrow key
