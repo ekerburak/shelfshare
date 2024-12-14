@@ -59,7 +59,6 @@ public class ShelfController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book.fxml"));
                 Pane pane = loader.load();
-
                 // Get the controller of the loaded FXML
                 BookController controller = loader.getController();
                 // Set the shelf name label
@@ -71,6 +70,17 @@ public class ShelfController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        // add chat.fxml to mainBox
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
+            Pane pane = loader.load();
+            ChatController controller = loader.getController();
+            controller.setChat(shelf.getForumChat());
+            mainBox.getChildren().add(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -210,15 +220,6 @@ public class ShelfController {
         setRatingShelf();
         setLeaveIcon();
 
-        // add chat.fxml to mainBox
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
-            Pane pane = loader.load();
-            ChatController controller = loader.getController();
-            mainBox.getChildren().add(pane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         FilteredList<Pane> filteredItems = new FilteredList<>(items, p -> true);
         bookList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
