@@ -30,7 +30,7 @@ public class BookEditingController {
     private ImageView imageView;
 
     @FXML
-    private ImageView goBackIcon, leftArrow, rightArrow, underlineIcon, highlightIcon, eraseIcon, stickyNoteIcon;
+    private ImageView goBackIcon, leftArrow, rightArrow, underlineIcon, highlightIcon, eraseIcon, stickyNoteIcon, chatIcon;
 
     @FXML
     private Label shelfName, bookName;
@@ -45,6 +45,7 @@ public class BookEditingController {
     public void setBook(Book book) {
         this.book = book;
         renderImage();
+        bookName.setText(book.getName());
     }
 
     public void setShelf(Shelf shelf) {
@@ -176,6 +177,24 @@ public class BookEditingController {
                     ShelfController controller = loader.getController();
                     controller.setShelf(shelf);
                     CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")), pane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void setChatIcon() {
+        chatIcon.setCursor(Cursor.HAND);
+        chatIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/discussion.fxml"));
+                    Pane pane = loader.load();
+                    DiscussionController controller = loader.getController();
+                    controller.setBook(book);
+                    CurrentView.showPopUp(pane);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -332,6 +351,7 @@ public class BookEditingController {
     @FXML
     public void initialize() {
         setGoBackIcon();
+        setChatIcon();
         leftArrowMechanism(leftArrow);
         rightArrowMechanism(rightArrow);
         highlightIconMechanism(highlightIcon);

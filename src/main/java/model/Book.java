@@ -51,6 +51,10 @@ public class Book {
         return discussionChatID;
     }
 
+    public Chat getDiscussionChat() {
+        return ChatCollection.getChat(discussionChatID);
+    }
+
     public String getUploaderName() {
         return uploaderName;
     }
