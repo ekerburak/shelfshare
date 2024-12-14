@@ -162,6 +162,7 @@ public class Shelf {
         }
         participantsIDs.remove(userID);
         adminsIDs.remove(userID);
+        UserCollection.removeFromAddedShelves(userID, ID);
         ShelfCollection.updateShelf(this);
     }
 

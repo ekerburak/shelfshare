@@ -14,6 +14,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -60,6 +61,20 @@ public class UserCollection {
                 )
         );
     }
+
+    protected static void removeFromAddedShelves(ObjectId userID, ObjectId shelfID) {
+        Bson filter;
+        if(userID != null) {
+            filter = Filters.eq("_id", userID);
+        } else {
+            filter = Filters.in("addedShelvesIDs", shelfID);
+        }
+        collection.updateMany(
+                filter,
+                Updates.pull("addedShelvesIDs", shelfID)
+        );
+    }
+
     //returns false if signup fails (fails when email or username is taken)
     //does NOT automatically log in.
     public static boolean signUp(String email, String username, String password) {

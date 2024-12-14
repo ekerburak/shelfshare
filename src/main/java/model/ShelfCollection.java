@@ -136,6 +136,8 @@ public class ShelfCollection {
     }
 
     public static void deleteShelf(ObjectId shelfID) {
+        Shelf shelfToDelete = getShelvesWithIDs(new ObjectId[]{shelfID})[0];
+        UserCollection.removeFromAddedShelves(null, shelfToDelete.getID());
         DeleteResult result = collection.deleteOne(
                 new Document().append("_id", shelfID));
         if(result.getDeletedCount() == 0) {
