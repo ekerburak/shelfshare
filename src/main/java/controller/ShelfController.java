@@ -18,10 +18,16 @@ import javafx.stage.FileChooser;
 import model.Book;
 import model.LoggedInUser;
 import model.Shelf;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -61,8 +67,8 @@ public class ShelfController {
                 Pane pane = loader.load();
                 // Get the controller of the loaded FXML
                 BookController controller = loader.getController();
-                // Set the shelf name label
                 controller.setBook(book);
+                controller.setShelf(shelf);
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);
 
@@ -102,33 +108,6 @@ public class ShelfController {
         });
     }
 
-    private String fileToBase64(File file) {
-        try {
-            byte[] fileContent = Files.readAllBytes(file.toPath());
-            return Base64.getEncoder().encodeToString(fileContent);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void start() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select File");
-
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            String base64String = fileToBase64(file);
-         //   shelf.addBook(true,base64String);
-            if (base64String != null) {
-                System.out.println("Base64 Encoded String: ");
-                System.out.println(base64String);
-            } else {
-                System.out.println("Failed to encode file.");
-            }
-        }
-    }
-
     private void setBackIcon() {
         backIcon.setCursor(javafx.scene.Cursor.HAND);
         backIcon.setOnMouseClicked(e -> {
@@ -139,22 +118,55 @@ public class ShelfController {
         });
     }
 
+    private String convertImageToBase64(BufferedImage image) {
+        String encodedfile = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            byte[] bytes = baos.toByteArray();
+            encodedfile = Base64.getEncoder().encodeToString(bytes);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return encodedfile;
+    }
+
     private void setAddIcon() {
         addIcon.setCursor(javafx.scene.Cursor.HAND);
         addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Select an Image File");
-
+                fileChooser.setTitle("Select a PDF File");
                 // Set file extension filters
                 fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+                        new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
                 );
-
                 // Show open file dialog
                 File file = fileChooser.showOpenDialog(null);
 
+                if(file != null) {
+                    try {
+                        PDDocument document = Loader.loadPDF(file);
+                        PDFRenderer renderer = new PDFRenderer(document);
+
+                        String[] base64Images = new String[document.getNumberOfPages()];
+
+                        // convert pdf to images
+                        for (int i = 0; i < document.getNumberOfPages(); i++) {
+                            BufferedImage image = renderer.renderImage(i);
+                            // convert image to base64
+                            base64Images[i] = convertImageToBase64(image);
+                        }
+                        shelf.addBook(false, base64Images);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }});
 
     }

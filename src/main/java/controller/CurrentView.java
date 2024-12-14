@@ -54,6 +54,10 @@ public class CurrentView {
         loadView(loadFXML(mainLoader));
     }
 
+    public static void updateView(Pane pane) {
+        loadView(pane);
+    }
+
 
     private static void loadView(Pane sidebarContent, Pane mainContent) {
         node = new SplitPane();
