@@ -68,7 +68,7 @@ public class ShelfCollection {
             shelves.add(convertMongoShelfToShelf(mongoShelf));
         }
         if(shelves.size() != IDs.length) {
-            System.out.println(shelves + " " + Collections.addAll(new ArrayList<>(IDs.length), IDs));
+            System.out.println(shelves + " " + Arrays.toString(IDs));
             throw new RuntimeException("Some IDs do not correspond to concrete documents");
         }
         return shelves.toArray(new Shelf[0]);
@@ -137,6 +137,7 @@ public class ShelfCollection {
 
     public static void deleteShelf(ObjectId shelfID) {
         Shelf shelfToDelete = getShelvesWithIDs(new ObjectId[]{shelfID})[0];
+        LoggedInUser.getAddedShelvesIDs().remove(shelfToDelete.getID());
         UserCollection.removeFromAddedShelves(null, shelfToDelete.getID());
         DeleteResult result = collection.deleteOne(
                 new Document().append("_id", shelfID));

@@ -187,4 +187,8 @@ public class Shelf {
     public int getPopularity() {
         return popularity;
     }
+
+    public String toString() {
+        return "< Shelf id : " + ID + " name: " + name + " >";
+    }
 }

@@ -80,8 +80,8 @@ public class LoggedInUser extends User {
     public static void leaveShelf(Shelf shelf) {
         ensureLogIn();
         if(shelf.getParticipantsIDs().contains(instance.getID())) {
-            shelf.kickUser(instance.getID());
             addedShelvesIDs.remove(shelf.getID());
+            shelf.kickUser(instance.getID());
             UserCollection.updateLoggedInUser();
         }
     }
