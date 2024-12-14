@@ -36,7 +36,7 @@ public class BookRemoveSettingController {
         deleteIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                shelf.removeBook(book.getID());
+                shelf.deleteBook(book.getID());
                 deleteIcon.getScene().getWindow().hide();
             }
         });

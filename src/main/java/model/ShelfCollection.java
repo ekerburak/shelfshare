@@ -88,6 +88,7 @@ public class ShelfCollection {
     }
 
     protected static void updateShelf(Shelf shelf) {
+        System.out.println("Updating shelf " + shelf);
         collection.updateOne(
                 new Document().append("_id", shelf.getID()),
                 Updates.combine(

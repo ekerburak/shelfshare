@@ -184,9 +184,13 @@ public class Shelf {
         return BookCollection.getAddedBooksByIDs(addedBooksIDs);
     }
 
-    //TODO
-    public void removeBook(ObjectId bookID) {
-        throw new RuntimeException("NOT IMPLEMENTED!!!");
+    public void deleteBook(ObjectId bookID) {
+        if(!addedBooksIDs.contains(bookID)) {
+            throw new IllegalArgumentException("Book not in this shelf");
+        }
+        addedBooksIDs.remove(bookID);
+        ShelfCollection.updateShelf(this);
+        BookCollection.deleteBook(bookID);
     }
 
     public Chat getForumChat() {
