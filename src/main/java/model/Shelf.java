@@ -194,8 +194,10 @@ public class Shelf {
     }
 
     public Chat getForumChat() {
-        throw new RuntimeException("NOT IMPLEMENTED!!");
+        return ChatCollection.getChat(forumChatID);
     }
+
+
     public int getPopularity() {
         return popularity;
     }
