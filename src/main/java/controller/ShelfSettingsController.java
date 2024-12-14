@@ -10,6 +10,7 @@ import model.Book;
 import model.LoggedInUser;
 import model.Shelf;
 import model.ShelfCollection;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ShelfSettingsController {
     private Label shelfName;
 
     @FXML
-    private Button save, leave, deleteShelf;
+    private Button save, deleteShelf;
 
     @FXML
     private TextField nameField;
@@ -34,24 +35,14 @@ public class ShelfSettingsController {
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
 
+    private final ArrayList<String> booksToDelete = new ArrayList<>();
+
     private void setShelfName(String name) {
         shelfName.setText(name);
     }
 
     private void setNameField(String name) {
         nameField.setText(name);
-    }
-
-    private void setLeave() {
-        leave.setCursor(javafx.scene.Cursor.HAND);
-        leave.setOnMouseClicked(mouseEvent -> {
-            LoggedInUser.leaveShelf(shelf);
-            // close the settings
-            leave.getScene().getWindow().hide();
-            // open your shelves back
-            CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                    new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")));
-        });
     }
 
     private void setSave() {
@@ -63,8 +54,24 @@ public class ShelfSettingsController {
             shelf.setAllowBookAnnotate(annotate.isSelected());
             shelf.setAllowDiscussion(comment.isSelected());
             shelf.setAllowInvitation(invite.isSelected());
+
+            for (String book : booksToDelete) {
+                shelf.deleteBook(new ObjectId(book));
+            }
+
             // close the settings
             save.getScene().getWindow().hide();
+            // open the shelf
+
+            try {
+            FXMLLoader shelfLoader = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));
+            Pane shelf = shelfLoader.load();
+            ShelfController controller = shelfLoader.getController();
+            controller.setShelf(this.shelf);
+            CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")), shelf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -80,6 +87,37 @@ public class ShelfSettingsController {
         });
     }
 
+    private void listBooks() {
+        // clear the list view
+        listView.getItems().clear();
+
+        ArrayList<Book> books = shelf.getBooks();
+        for (Book book : books) {
+            if (booksToDelete.contains(book.getID().toString())) {
+                continue;
+            }
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/bookRemoveSetting.fxml"));
+                Pane pane = loader.load();
+                // Get the controller of the loaded FXML
+                BookRemoveSettingController controller = loader.getController();
+                // Set the shelf name label
+                controller.setShelf(shelf);
+                controller.setBook(book);
+                controller.setDeleteIcon(() -> {
+                    booksToDelete.add(book.getID().toString());
+                    listBooks();
+                });
+                // Set the controller as user data for the pane
+                pane.setUserData(controller);
+                items.add(pane);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        listView.setItems(items);
+    }
+
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
         setShelfName(shelf.getName());
@@ -89,31 +127,11 @@ public class ShelfSettingsController {
         annotate.setSelected(shelf.getAllowBookAnnotate());
         comment.setSelected(shelf.getAllowDiscussion());
         invite.setSelected(shelf.getAllowInvitation());
-
-        ArrayList<Book> books = shelf.getBooks();
-
-        for (Book book : books) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/bookRemoveSetting.fxml"));
-                Pane pane = loader.load();
-                // Get the controller of the loaded FXML
-                BookRemoveSettingController controller = loader.getController();
-                // Set the shelf name label
-                controller.setShelf(shelf);
-                controller.setBook(book);
-                // Set the controller as user data for the pane
-                pane.setUserData(controller);
-                items.add(pane);
-                listView.setItems(items);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        listBooks();
     }
 
     @FXML
     public void initialize() {
-        setLeave();
         setSave();
         setDeleteShelf();
         save.setCursor(javafx.scene.Cursor.HAND);

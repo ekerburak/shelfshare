@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -8,23 +7,17 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import model.Book;
 import model.LoggedInUser;
 import model.Shelf;
-import model.ShelfCollection;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +35,7 @@ public class ShelfController {
     private VBox mainBox;
 
     @FXML
-    private ImageView addIcon, addPersonIcon, settingsIcon, rateIcon, backIcon;
+    private ImageView addIcon, addPersonIcon, settingsIcon, rateIcon, backIcon, leaveIcon;
 
     @FXML
     private TextField filterField;
@@ -199,12 +192,23 @@ public class ShelfController {
         }
     }
 
+    private void setLeaveIcon() {
+        leaveIcon.setCursor(javafx.scene.Cursor.HAND);
+        leaveIcon.setOnMouseClicked(mouseEvent -> {
+            LoggedInUser.leaveShelf(shelf);
+            // open your shelves back
+            CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                    new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml")));
+        });
+    }
+
     @FXML
     public void initialize() {
         setBackIcon();
         setAddIcon();
         setAddPersonIcon();
         setRatingShelf();
+        setLeaveIcon();
 
         // add chat.fxml to mainBox
         try {

@@ -18,7 +18,6 @@ public class RateShelfController {
     @FXML
     Button doneButton;
 
-    ImageView[] stars = {firstStar, secondStar, thirdStar, forthStar, fifthStar};
     static int rating = 0;
 
     public void setShelfName(String name) {

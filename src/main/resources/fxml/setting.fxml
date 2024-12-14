@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="652.0" prefWidth="627.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingsController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="627.0" style="-fx-background-color: #222222;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingsController">
    <children>
       <VBox layoutX="10.0" layoutY="10.0" AnchorPane.rightAnchor="60.0">
          <children>
@@ -54,7 +54,7 @@
                   </VBox>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="passwordSaveButton" layoutX="29.0" layoutY="177.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" style="-fx-background-color: #23bc23; -fx-text-fill: #ffffff;" text="Save" />
+                        <Button fx:id="passwordSaveButton" layoutX="29.0" layoutY="177.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="74.0" styleClass="greenButton" text="Save" />
                      </children>
                   </Pane>
                </children>
@@ -85,7 +85,7 @@
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="biographySaveButton" layoutX="28.0" layoutY="177.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" style="-fx-background-color: #23bc23; -fx-text-fill: #ffffff;" text="Save" />
+                        <Button fx:id="biographySaveButton" layoutX="13.0" layoutY="177.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="70.0" styleClass="greenButton" text="Save" />
                      </children>
                   </Pane>
                </children>
@@ -95,6 +95,6 @@
             <Insets left="18.0" top="12.0" />
          </padding>
       </VBox>
-      <Button fx:id="logOutButton" layoutX="515.0" layoutY="582.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="67.0" style="-fx-background-color: #bc2323;" text="Log out" />
+      <Button fx:id="logOutButton" layoutX="490.0" layoutY="661.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="101.0" styleClass="redButton" text="Log out" />
    </children>
 </AnchorPane>

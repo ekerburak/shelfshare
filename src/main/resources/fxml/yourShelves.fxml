@@ -35,7 +35,7 @@
             <Button alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="greenButton" text="Sort by Rating" />
          </children>
       </HBox>
-      <ListView fx:id="shelvesList" prefHeight="400.0" prefWidth="1295.0" style="-fx-background-color: #333333;" />
+      <ListView fx:id="shelvesList" prefHeight="400.0" prefWidth="1295.0" stylesheets="@../assets/listview.css" />
       <HBox>
          <children>
             <Label fx:id="joinLabel" styleClass="green_text" text="Join a shelf" />

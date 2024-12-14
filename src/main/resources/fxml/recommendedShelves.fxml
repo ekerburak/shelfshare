@@ -34,7 +34,7 @@
             <Button fx:id="recommendedSortButton" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="greenButton" text="Sort by Rating" />
          </children>
       </HBox>
-      <ListView fx:id="shelvesList" prefWidth="1221.0" style="-fx-background-color: #333333;" />
+      <ListView fx:id="shelvesList" prefWidth="1221.0" stylesheets="@../assets/listview.css" />
    </children>
    <padding>
       <Insets bottom="60.0" left="60.0" right="60.0" top="60.0" />

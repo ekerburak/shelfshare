@@ -31,19 +31,17 @@ public class BookRemoveSettingController {
         this.shelf = shelf;
     }
 
-    private void setDeleteIcon() {
+    public void setDeleteIcon(Runnable runnable) {
         deleteIcon.setCursor(javafx.scene.Cursor.HAND);
         deleteIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                shelf.deleteBook(book.getID());
-                deleteIcon.getScene().getWindow().hide();
+                runnable.run();
             }
         });
     }
 
     @FXML
     public void initialize() {
-        setDeleteIcon();
     }
 }

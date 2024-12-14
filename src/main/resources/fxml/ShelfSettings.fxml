@@ -36,7 +36,6 @@
          </children>
       </HBox>
       <Button id="saveButton" fx:id="save" layoutX="447.0" layoutY="645.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="Save" />
-      <Button id="leaveButton" fx:id="leave" layoutX="43.0" layoutY="645.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" styleClass="redButton" text="Leave" textFill="#bc2626" />
       <VBox id="settingsPane" layoutX="43.0" layoutY="115.0" prefHeight="466.0" prefWidth="515.0" spacing="20.0">
          <children>
             <Label id="nameLabel" style="-fx-text-fill: #c6c6c6;" text="Name">
@@ -53,6 +52,6 @@
             <ListView fx:id="listView" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
-      <Button id="leaveButton" fx:id="deleteShelf" layoutX="177.0" layoutY="645.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" styleClass="darkRedButton" stylesheets="@../assets/listview.css" text="Delete shelf" textFill="#ffdddd" />
+      <Button id="leaveButton" fx:id="deleteShelf" layoutX="43.0" layoutY="645.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" styleClass="darkRedButton" stylesheets="@../assets/listview.css" text="Delete shelf" textFill="#ffdddd" />
    </children>
 </Pane>
