@@ -214,7 +214,7 @@ public class ShelfController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chat.fxml"));
             Pane pane = loader.load();
-            ChatContoller controller = loader.getController();
+            ChatController controller = loader.getController();
             mainBox.getChildren().add(pane);
         } catch (IOException e) {
             e.printStackTrace();
