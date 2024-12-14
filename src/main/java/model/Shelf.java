@@ -146,6 +146,9 @@ public class Shelf {
     }
 
     public void addUser(ObjectId userID, boolean asAdmin) {
+        if(participantsIDs.contains(userID)) {
+            throw new IllegalStateException("User already in shelf");
+        }
         participantsIDs.add(userID);
         if(asAdmin) {
             adminsIDs.add(userID);

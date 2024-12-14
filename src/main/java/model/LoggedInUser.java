@@ -70,21 +70,28 @@ public class LoggedInUser extends User {
     public static void joinShelf(String invitation) {
         ensureLogIn();
         Shelf shelf = ShelfCollection.getShelfWithInvitation(invitation);
-        shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
+        if(addedShelvesIDs.contains(shelf.getID())) {
+            return;
+        }
         LoggedInUser.addedShelvesIDs.add(shelf.getID());
+        shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
         UserCollection.updateLoggedInUser();
     }
     public static void leaveShelf(Shelf shelf) {
         ensureLogIn();
-
+        if(shelf.getParticipantsIDs().contains(instance.getID())) {
+            shelf.kickUser(instance.getID());
+            addedShelvesIDs.remove(shelf.getID());
+            UserCollection.updateLoggedInUser();
+        }
     }
 
-    //TODO: implement changePassword
     public static boolean changePassword(String oldPassword, String newPassword) {
         ensureLogIn();
         if(oldPassword.equals(newPassword)) {
             return false;
         }
+
         if(UserCollection.checkPassword(oldPassword)) {
             UserCollection.updatePassword(newPassword);
 
