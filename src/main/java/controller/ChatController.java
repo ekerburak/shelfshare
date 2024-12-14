@@ -64,6 +64,12 @@ public class ChatController implements ChatListener {
     @FXML
     public void initialize() {
         setSendButton();
+
+        textField.setOnKeyPressed(event -> {
+            if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                sendMessage();
+            }
+        });
     }
 
     @Override
