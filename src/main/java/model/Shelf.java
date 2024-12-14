@@ -128,21 +128,29 @@ public class Shelf {
 
     public void setName(String name) {
         this.name = name;
+        ShelfCollection.updateShelf(this);
     }
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
+        ShelfCollection.updateShelf(this);
     }
     public void setAllowBookAdd(boolean allowBookAdd) {
         this.allowBookAdd = allowBookAdd;
+        ShelfCollection.updateShelf(this);
     }
     public void setAllowBookAnnotate(boolean allowBookAnnotate) {
         this.allowBookAnnotate = allowBookAnnotate;
+        ShelfCollection.updateShelf(this);
     }
+
     public void setAllowDiscussion(boolean allowDiscussion) {
         this.allowDiscussion = allowDiscussion;
+        ShelfCollection.updateShelf(this);
     }
+
     public void setAllowInvitation(boolean allowInvitation) {
         this.allowInvitation = allowInvitation;
+        ShelfCollection.updateShelf(this);
     }
 
     public void addUser(ObjectId userID, boolean asAdmin) {
