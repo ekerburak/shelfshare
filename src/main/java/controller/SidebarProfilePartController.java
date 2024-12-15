@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class SidebarProfilePartController {
     @FXML
-    public ImageView settingsIcon;
+    public ImageView settingsIcon, homeButton;
 
     @FXML
     private Label usernameLabel;
@@ -61,9 +61,20 @@ public class SidebarProfilePartController {
         });
     }
 
+    private void setHomeButton() {
+        homeButton.setCursor(javafx.scene.Cursor.HAND);
+        homeButton.setOnMouseClicked(e -> {
+            CurrentView.updateView(
+                    new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                    new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml"))
+            );
+        });
+    }
+
     @FXML
     public void initialize() {
         openSettings();
         profileBoxFunction();
+        setHomeButton();
     }
 }

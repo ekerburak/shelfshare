@@ -25,6 +25,11 @@
          </children>
       </HBox>
       <Region HBox.hgrow="ALWAYS" />
+      <ImageView fx:id="homeButton" fitHeight="44.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/home.png" />
+         </image>
+      </ImageView>
       <ImageView fx:id="settingsIcon" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/settings.png" />
