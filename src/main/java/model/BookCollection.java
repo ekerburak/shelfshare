@@ -1,15 +1,21 @@
 package model;
 
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoIterable;
+import com.mongodb.client.*;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
+import com.mongodb.client.model.changestream.UpdateDescription;
+import javafx.scene.paint.Color;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -31,19 +37,20 @@ public class BookCollection {
     private static MongoCollection<Document> collection;
 
     public static void setup() {
-        if(collection != null) {
+        if (collection != null) {
             throw new RuntimeException("Collection already set");
         }
         collection = DatabaseConnector.getCollection("book");
     }
 
     /**
-     *  private final String ID;
-     *     private String name;
-     *     private final String uploaderName;
-     *     private boolean isDownloadable;
-     *     private final int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
-     *     private final String discussionChatID;
+     * private final String ID;
+     * private String name;
+     * private final String uploaderName;
+     * private boolean isDownloadable;
+     * private final int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
+     * private final String discussionChatID;
+     *
      * @param mongoBook
      * @return
      */
@@ -60,15 +67,11 @@ public class BookCollection {
     }
 
     protected static ArrayList<Book> getAddedBooksByIDs(ArrayList<ObjectId> IDs) {
-        ArrayList<ObjectId> objectIDs = new ArrayList<>();
-        for(ObjectId ID : IDs) {
-            objectIDs.add(ID);
-        }
-        MongoIterable<Document> mongoBooks = collection.find(
-                Filters.in("_id", objectIDs)
-        );
+        ArrayList<ObjectId> objectIDs = new ArrayList<>(IDs);
+        MongoIterable<Document> mongoBooks = collection.find(Filters.in("_id", objectIDs))
+                .projection(Projections.exclude("pages"));
         ArrayList<Book> books = new ArrayList<Book>();
-        for(Document mongoBook : mongoBooks) {
+        for (Document mongoBook : mongoBooks) {
             books.add(convertMongoBookToBook(mongoBook));
         }
         return books;
@@ -101,28 +104,24 @@ public class BookCollection {
 
     //gets all the pages from pageLow to pageHigh (inclusive)
     protected static ArrayList<Page> getPages(ObjectId bookID, int pageLow, int pageHigh) {
-//        Document mongoBook = collection.aggregate(List.of(
-//                Filters.eq("_id", bookID)
-//                //Projections.slice("pages", pageLow, pageHigh - pageLow + 1)
-//        )).first();
 
         Document mongoBook = collection.find(Filters.eq("_id", bookID))
                 .projection(Projections.fields(Projections.slice("pages", pageLow, pageHigh - pageLow + 1)))
                 .first();
 
-        if(mongoBook == null) {
+        if (mongoBook == null) {
             throw new RuntimeException("Book not found");
         }
 
         ArrayList<Document> mongoPages = new ArrayList<>(mongoBook.getList("pages", Document.class));
 
-        if(mongoPages.size() != pageHigh - pageLow + 1) {
+        if (mongoPages.size() != pageHigh - pageLow + 1) {
             throw new IllegalArgumentException("Invalid page range");
         }
 
         ArrayList<Page> pages = new ArrayList<Page>();
 
-        for(int i = 0; i < mongoPages.size(); i++) {
+        for (int i = 0; i < mongoPages.size(); i++) {
             pages.add(new Page(mongoPages.get(i), i));
         }
 
@@ -134,11 +133,11 @@ public class BookCollection {
             boolean isDownloadable,
             String[] pageImages
     ) {
-        if(pageImages.length == 0) {
+        if (pageImages.length == 0) {
             throw new IllegalArgumentException("Pages cannot be empty");
         }
         ArrayList<Document> mongoPages = new ArrayList<Document>();
-        for(int i = 0; i < pageImages.length; i++) {
+        for (int i = 0; i < pageImages.length; i++) {
             Page page = new Page(pageImages[i], i);
             Document mongoPage = new Document()
                     .append("image", page.getImage())
@@ -162,7 +161,214 @@ public class BookCollection {
         collection.deleteOne(new Document("_id", bookID));
     }
 
+    protected static void addHighlightToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        collection.updateOne(
+                new Document().append("_id", BookID),
+                Updates.combine(
+                        Updates.push("pages." + pageNumber + ".highlightCoordinates", coordinate),
+                        Updates.push("pages." + pageNumber + ".highlightColorStrings", Page.colorToString(color))
+                )
+        );
+    }
+
+    protected static void addUnderlineToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        collection.updateOne(
+                new Document().append("_id", BookID),
+                Updates.combine(
+                        Updates.push("pages." + pageNumber + ".lineCoordinates", coordinate),
+                        Updates.push("pages." + pageNumber + ".lineColorStrings", Page.colorToString(color))
+                )
+        );
+    }
+
+    protected static void removeHighlightFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        collection.updateOne(
+                new Document().append("_id", BookID),
+                Updates.combine(
+                        Updates.pull("pages." + pageNumber + ".highlightCoordinates", coordinate),
+                        Updates.pull("pages." + pageNumber + ".highlightColorStrings", Page.colorToString(color))
+                )
+        );
+    }
+
+    protected static void removeUnderlineFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        collection.updateOne(
+                new Document().append("_id", BookID),
+                Updates.combine(
+                        Updates.pull("pages." + pageNumber + ".lineCoordinates", coordinate),
+                        Updates.pull("pages." + pageNumber + ".lineColorStrings", Page.colorToString(color))
+                )
+        );
+    }
+
+    private static int parseUpdatedPage(String updatedField) {
+        //the page number is between the first and second dot
+        int firstDotIndex = updatedField.indexOf(".");
+        int secondDotIndex = updatedField.indexOf(".", firstDotIndex + 1);
+        return Integer.parseInt(updatedField.substring(firstDotIndex + 1, secondDotIndex));
+
+    }
+
+
+    public static void setChangeStream(Book book) {
+
+        System.out.println("are you even called?");
+        new Thread(() -> {
+            List<Bson> pipeline = Arrays.asList(
+                    Aggregates.match(
+                            Filters.and(
+                                    Filters.eq("documentKey._id", book.getID()),
+                                    Filters.eq("operationType", "update")
+                            )
+                    )
+            );
+
+            ChangeStreamIterable<Document> changeStream = collection.watch(pipeline);
+
+            String regexHighlightCoordinateAdd = "pages\\.\\d+\\.highlightCoordinates\\.\\d+$";
+            String regexHighlightColorStringAdd = "pages\\.\\d+\\.highlightColorStrings\\.\\d+$";
+            String regexHighlightCoordinateRemove = "pages\\.\\d+\\.highlightCoordinates$";
+            String regexHighlightColorStringRemove = "pages\\.\\d+\\.highlightColorStrings$";
+
+            String regexUnderlineCoordinateAdd = "pages\\.\\d+\\.lineCoordinates\\.\\d+$";
+            String regexUnderlineColorStringAdd = "pages\\.\\d+\\.lineColorStrings\\.\\d+$";
+            String regexUnderlineCoordinateRemove = "pages\\.\\d+\\.lineCoordinates$";
+            String regexUnderlineColorStringRemove = "pages\\.\\d+\\.lineColorStrings$";
+
+            try (MongoChangeStreamCursor<ChangeStreamDocument<Document>> cursor = changeStream.cursor()) {
+                while (cursor.hasNext()) {
+
+                    ChangeStreamDocument<Document> change = cursor.next();
+
+                    UpdateDescription updateDescription = change.getUpdateDescription();
+
+                    if (updateDescription == null || updateDescription.getUpdatedFields() == null) {
+                        throw new RuntimeException("Unexpected mongo error");
+                    }
+
+                    BsonDocument updatedFields = updateDescription.getUpdatedFields();
+
+
+                    final int NONE = 0, HIGHLIGHT = 1, UNDERLINE = 2;
+                    int mode = NONE;
+                    boolean isAdd = false;
+                    int modifiedPageNumber = -1;
+                    ArrayList<Integer> addedCoordinate = null;
+                    ArrayList<ArrayList<Integer>> remainingCoordinates = null;
+                    String addedColorString = null;
+                    ArrayList<Color> remainingColors = null;
+
+                    for (String updatedKey : updatedFields.keySet()) {
+
+                        System.out.println(updatedKey);
+
+                        //HIGHLIGHT
+                        if (updatedKey.matches(regexHighlightCoordinateAdd)) {
+                            mode = HIGHLIGHT;
+                            isAdd = true;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            addedCoordinate = new ArrayList<Integer>();
+                            for (BsonValue coordinate : updatedFields.get(updatedKey).asArray()) {
+                                addedCoordinate.add(coordinate.asInt32().getValue());
+                            }
+                        } else if (updatedKey.matches(regexHighlightColorStringAdd)) {
+                            mode = HIGHLIGHT;
+                            isAdd = true;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            addedColorString = updatedFields.get(updatedKey).asString().getValue();
+                        } else if (updatedKey.matches(regexHighlightCoordinateRemove)) {
+                            mode = HIGHLIGHT;
+                            isAdd = false;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            remainingCoordinates = new ArrayList<ArrayList<Integer>>();
+                            for (BsonValue coordinate : updatedFields.get(updatedKey).asArray()) {
+                                ArrayList<Integer> coordinateToAdd = new ArrayList<Integer>();
+                                for (BsonValue coordinateData : coordinate.asArray()) {
+                                    coordinateToAdd.add(coordinateData.asInt32().getValue());
+                                }
+                                remainingCoordinates.add(coordinateToAdd);
+                            }
+
+                        } else if (updatedKey.matches(regexHighlightColorStringRemove)) {
+                            mode = HIGHLIGHT;
+                            isAdd = false;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            remainingColors = new ArrayList<Color>();
+                            for (BsonValue colorString : updatedFields.get(updatedKey).asArray()) {
+                                remainingColors.add(Color.valueOf(colorString.asString().getValue()));
+                            }
+                        }
+
+                        //UNDERLINE
+                        if (updatedKey.matches(regexUnderlineCoordinateAdd)) {
+                            mode = UNDERLINE;
+                            isAdd = true;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            addedCoordinate = new ArrayList<Integer>();
+                            for (BsonValue coordinate : updatedFields.get(updatedKey).asArray()) {
+                                addedCoordinate.add(coordinate.asInt32().getValue());
+                            }
+                        } else if (updatedKey.matches(regexUnderlineColorStringAdd)) {
+                            mode = UNDERLINE;
+                            isAdd = true;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            addedColorString = updatedFields.get(updatedKey).asString().getValue();
+                        } else if (updatedKey.matches(regexUnderlineCoordinateRemove)) {
+                            mode = UNDERLINE;
+                            isAdd = false;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            remainingCoordinates = new ArrayList<ArrayList<Integer>>();
+                            for (BsonValue coordinate : updatedFields.get(updatedKey).asArray()) {
+                                ArrayList<Integer> coordinateToAdd = new ArrayList<Integer>();
+                                for (BsonValue coordinateData : coordinate.asArray()) {
+                                    coordinateToAdd.add(coordinateData.asInt32().getValue());
+                                }
+                                remainingCoordinates.add(coordinateToAdd);
+                            }
+
+                        } else if (updatedKey.matches(regexUnderlineColorStringRemove)) {
+                            mode = UNDERLINE;
+                            isAdd = false;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            remainingColors = new ArrayList<Color>();
+                            for (BsonValue colorString : updatedFields.get(updatedKey).asArray()) {
+                                remainingColors.add(Color.valueOf(colorString.asString().getValue()));
+                            }
+                        }
+
+                    }
+
+                    if (mode == NONE) {
+                        continue;
+                    }
+
+                    if (isAdd) {
+                        assert addedCoordinate != null && addedColorString != null && modifiedPageNumber != -1;
+                        if (mode == HIGHLIGHT) {
+                            book.notifyPageHighlightAdded(modifiedPageNumber, addedCoordinate, Page.stringToColor(addedColorString));
+                        } else {
+                            book.notifyPageUnderlineAdded(modifiedPageNumber, addedCoordinate, Page.stringToColor(addedColorString));
+                        }
+                    } else {
+                        assert remainingCoordinates != null && remainingColors != null && modifiedPageNumber != -1;
+                        if (mode == HIGHLIGHT) {
+                            book.notifyPageHighlightRemoved(modifiedPageNumber, remainingCoordinates, remainingColors);
+                        } else {
+                            book.notifyPageUnderlineRemoved(modifiedPageNumber, remainingCoordinates, remainingColors);
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
     public static void main(String[] args) {
         setup();
+        Book book = BookCollection.getAddedBooksByIDs(new ArrayList<ObjectId>(List.of(new ObjectId("675dc91bc16e4836de0f531d")))).get(0);
+        book.startListening();
     }
+
 }

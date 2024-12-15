@@ -1,83 +1,51 @@
 package model;
 
+import javafx.scene.paint.Color;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 
 public class Book {
-    private final ObjectId ID;
+    private ObjectId ID;
     private String name;
     private final String uploaderName;
     private boolean isDownloadable;
-    private final int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
-    private final ObjectId discussionChatID;
+    private int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
+    private ObjectId discussionChatID;
 
-
-    private static final int MAX_BUFFER_SIZE = 11; //must be odd-numbered for simplicity
-    private static ArrayList<PageListener> pageListeners;
-
-    //different from pageNumber in Page. this denotes the position of the current page relative to the buffer.
-    private int currentPageIndex;
-
+    private static final int MAX_BUFFER_SIZE = 11;
     private ArrayList<Page> pageBuffer;
 
-    protected void notifyListeners() {
-        for (PageListener listener : pageListeners) {
-            listener.onPageModified();
-        }
-    }
+    private ArrayList<PageListener> currentPageListeners;
+    private int currentPageIndex;
 
     public ObjectId getID() {
         return ID;
-    }
-
-    public boolean getIsDownloadable() {
-        return isDownloadable;
     }
 
     public String getName() {
         return name;
     }
 
-    public Page getCurrentPage() {
-        return pageBuffer.get(currentPageIndex);
+    public String getUploaderName() {
+        return uploaderName;
+    }
+
+    public boolean getIsDownloadable() {
+        return isDownloadable;
     }
 
     public int getPageCount() {
         return pageCount;
     }
 
-    public ObjectId getDiscussionChatID() {
-        return discussionChatID;
-    }
-
     public Chat getDiscussionChat() {
         return ChatCollection.getChat(discussionChatID);
-    }
-
-    public String getUploaderName() {
-        return uploaderName;
-    }
-
-    public void setIsDownloadable(boolean isDownloadable) {
-        this.isDownloadable = isDownloadable;
-        BookCollection.updateProperties(this);
     }
 
     public void setName(String name) {
         this.name = name;
         BookCollection.updateProperties(this);
-    }
-
-    protected Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID) {
-        this.ID = ID;
-        this.name = name;
-        this.uploaderName = uploaderName;
-        this.isDownloadable = isDownloadable;
-        this.pageCount = pageCount;
-        this.discussionChatID = discussionChatID;
-        pageListeners = new ArrayList<PageListener>();
-        goToFirstPage();
     }
 
     /**
@@ -101,14 +69,20 @@ public class Book {
         if(currentPageNumber == pageCount - 1) {
             return false;
         }
-        int pageLow = Math.min(currentPageNumber + 1, pageCount - 1);
-        int pageHigh = Math.min(currentPageNumber + MAX_BUFFER_SIZE / 2, pageCount - 1);
+
+        int pageLow = Math.max(currentPageNumber - MAX_BUFFER_SIZE / 2, 0);
+        int pageHigh = Math.max(currentPageNumber - 1, 0);
+        currentPageIndex += pageHigh - pageLow + 1;
+
         ArrayList<Page> newPages = BookCollection.getPages(ID, pageLow, pageHigh);
-        pageBuffer.addAll(newPages);
+        ArrayList<Page> pageBufferTemp = pageBuffer;
+        pageBuffer = newPages;
+        pageBuffer.addAll(pageBufferTemp);
+
         while(pageBuffer.size() > MAX_BUFFER_SIZE) {
-            pageBuffer.remove(0);
-            currentPageIndex--;
+            pageBuffer.remove(pageBuffer.size() - 1);
         }
+
         return true;
     }
 
@@ -148,12 +122,120 @@ public class Book {
         return true;
     }
 
+
     public void goToFirstPage() {
         pageBuffer = BookCollection.getPages(ID, 0, Math.min(MAX_BUFFER_SIZE - 1, pageCount - 1));
         currentPageIndex = 0;
     }
 
-    public void addPageListener(PageListener listener) {
-        pageListeners.add(listener);
+    public Page getCurrentPage() {
+        return pageBuffer.get(currentPageIndex);
     }
+
+    public Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID) {
+        this.ID = ID;
+        this.name = name;
+        this.uploaderName = uploaderName;
+        this.isDownloadable = isDownloadable;
+        this.pageCount = pageCount;
+        this.discussionChatID = discussionChatID;
+        pageBuffer = new ArrayList<>();
+        goToFirstPage();
+    }
+
+    private int getPageIndexAtBuffer(int pageNumber) {
+        int pageLow = pageBuffer.get(0).getPageNumber();
+        int pageHigh = pageBuffer.get(pageBuffer.size() - 1).getPageNumber();
+        if(pageNumber < pageLow || pageNumber > pageHigh) {
+            return -1;
+        }
+        return pageNumber - pageLow;
+    }
+
+    //notifies the listeners only from the incoming db changes
+
+    protected void notifyPageHighlightAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        int pageIndex = getPageIndexAtBuffer(pageNumber);
+        if(pageIndex == -1) {
+            return;
+        }
+        if(pageIndex == currentPageIndex) {
+            for(PageListener listener : currentPageListeners) {
+                listener.onPageHighlightAdded(coordinate, color);
+            }
+        }
+        notifyPageHighlightAdded(pageNumber, coordinate, color);
+    }
+
+    protected void notifyPageUnderlineAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        int pageIndex = getPageIndexAtBuffer(pageNumber);
+        if(pageIndex == -1) {
+            return;
+        }
+        if(pageIndex == currentPageIndex) {
+            for(PageListener listener : currentPageListeners) {
+                listener.onPageUnderlineAdded(coordinate, color);
+            }
+        }
+        notifyPageUnderlineAdded(pageNumber, coordinate, color);
+    }
+
+    protected void notifyPageHighlightRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+        int pageIndex = getPageIndexAtBuffer(pageNumber);
+        if(pageIndex == -1) {
+            return;
+        }
+        if(pageIndex == currentPageIndex) {
+            for(PageListener listener : currentPageListeners) {
+                listener.onPageHighlightRemoved(remainingCoordinates, remainingColors);
+            }
+        }
+        notifyPageHighlightRemoved(pageNumber, remainingCoordinates, remainingColors);
+    }
+
+    protected void notifyPageUnderlineRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+        int pageIndex = getPageIndexAtBuffer(pageNumber);
+        if(pageIndex == -1) {
+            return;
+        }
+        if(pageIndex == currentPageIndex) {
+            for(PageListener listener : currentPageListeners) {
+                listener.onPageUnderlineRemoved(remainingCoordinates, remainingColors);
+            }
+        }
+        notifyPageUnderlineRemoved(pageNumber, remainingCoordinates, remainingColors);
+    }
+
+    public void addCurrentPageListener(PageListener listener) {
+        if(currentPageListeners == null) {
+            currentPageListeners = new ArrayList<>();
+        }
+        currentPageListeners.add(listener);
+    }
+
+    public void addHighlightToCurrentPage(ArrayList<Integer> coordinate, Color color) {
+        int currentPageNumber = getCurrentPage().getPageNumber();
+        BookCollection.addHighlightToPage(ID, currentPageNumber, coordinate, color);
+    }
+
+    public void addUnderlineToCurrentPage(ArrayList<Integer> coordinate, Color color) {
+        int currentPageNumber = getCurrentPage().getPageNumber();
+        BookCollection.addUnderlineToPage(ID, currentPageNumber, coordinate, color);
+    }
+
+    public void removeHighlightFromCurrentPage(ArrayList<Integer> coordinate, Color color) {
+        int currentPageNumber = getCurrentPage().getPageNumber();
+        BookCollection.removeHighlightFromPage(ID, currentPageNumber, coordinate, color);
+    }
+
+    public void removeUnderlineFromCurrentPage(ArrayList<Integer> coordinate, Color color) {
+        int currentPageNumber = getCurrentPage().getPageNumber();
+        BookCollection.removeUnderlineFromPage(ID, currentPageNumber, coordinate, color);
+    }
+
+    public void startListening() {
+        BookCollection.setChangeStream(this);
+    }
+
+
 }

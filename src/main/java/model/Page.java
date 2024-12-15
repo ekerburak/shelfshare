@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Page {
-    public static final int MODE_HIGHLIGHT = 0;
-    public static final int MODE_LINE = 1;
 
     private final int pageNumber;
     private final String image;
@@ -32,9 +30,9 @@ public class Page {
         this.pageNumber = pageNumber;
 
         List<?> highlightCoordinates = mongoPage.getList("highlightCoordinates", List.class);
-        List<?> highlightColorStrings = mongoPage.getList("highlightColorStrings", List.class);
+        List<?> highlightColorStrings = mongoPage.getList("highlightColorStrings", String.class);
         List<?> lineCoordinates = mongoPage.getList("lineCoordinates", List.class);
-        List<?> lineColorStrings = mongoPage.getList("lineColorStrings", List.class);
+        List<?> lineColorStrings = mongoPage.getList("lineColorStrings", String.class);
 
         this.highlightCoordinates = convertMongoCoordinatesToCoordinates(highlightCoordinates);
         this.highlightColorStrings = convertMongoColorStringsToColorStrings(highlightColorStrings);
@@ -79,7 +77,7 @@ public class Page {
     }
 
 
-    private static String colorToString(Color color) {
+    protected static String colorToString(Color color) {
         return String.format("#%02x%02x%02x%02x",
                 (int)(color.getRed() * 255),
                 (int)(color.getGreen() * 255),
@@ -87,13 +85,21 @@ public class Page {
                 (int)(color.getOpacity() * 255));
     }
 
-    private static Color stringToColor(String colorStr) {
+    protected static Color stringToColor(String colorStr) {
         // Assuming the format is #RRGGBBAA
         int red = Integer.valueOf(colorStr.substring(1, 3), 16);
         int green = Integer.valueOf(colorStr.substring(3, 5), 16);
         int blue = Integer.valueOf(colorStr.substring(5, 7), 16);
         int alpha = Integer.valueOf(colorStr.substring(7, 9), 16);
         return Color.rgb(red, green, blue, alpha / 255.0);
+    }
+
+    protected ArrayList<String> getHighlightColorStrings() {
+        return highlightColorStrings;
+    }
+
+    protected ArrayList<String> getLineColorStrings() {
+        return lineColorStrings;
     }
 
     public String getImage() {
@@ -109,14 +115,6 @@ public class Page {
     }
     public ArrayList<ArrayList<Integer>> getLineCoordinates() {
         return lineCoordinates;
-    }
-
-    protected ArrayList<String> getHighlightColorStrings() {
-        return highlightColorStrings;
-    }
-
-    protected ArrayList<String> getLineColorStrings() {
-        return lineColorStrings;
     }
 
     public ArrayList<Color> getHighlightColors() {
@@ -135,17 +133,26 @@ public class Page {
         return lineColors;
     }
 
-    public void addAnnotation(int x1, int y1, int x2, int y2, Color color, int mode) {
-        if(mode != MODE_HIGHLIGHT && mode != MODE_LINE) {
-            throw new IllegalStateException("Invalid annotation mode: " + mode);
-        }
-        //x1 y1 is the upper left corner and x2 y2 is the lower right corner
-        if(mode == MODE_HIGHLIGHT) {
-            highlightCoordinates.add(new ArrayList<Integer>(List.of(x1, y1, x2, y2)));
+    protected void onPageHighlightAdded(ArrayList<Integer> coordinate, Color color) {
+        highlightCoordinates.add(coordinate);
+        highlightColorStrings.add(colorToString(color));
+    }
+
+    protected void onPageUnderlineAdded(ArrayList<Integer> coordinate, Color color) {
+        lineCoordinates.add(coordinate);
+        lineColorStrings.add(colorToString(color));
+    }
+
+    protected void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+        highlightCoordinates = remainingCoordinates;
+        highlightColorStrings = new ArrayList<String>();
+        for(Color color : remainingColors) {
             highlightColorStrings.add(colorToString(color));
         }
-        lineCoordinates.add(new ArrayList<Integer>(List.of(x1, y1, x2, y2)));
-        lineColorStrings.add(colorToString(color));
+    }
 
+    protected void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+        lineCoordinates = remainingCoordinates;
+        lineColorStrings = new ArrayList<String>();
     }
 }
