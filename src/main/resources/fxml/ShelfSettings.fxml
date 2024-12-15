@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -43,15 +45,20 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField id="textfieldOfShelfName" fx:id="nameField" />
+            <TextField id="textfieldOfShelfName" fx:id="nameField" style="-fx-background-color: #333333;" />
             <CheckBox fx:id="makePublic" mnemonicParsing="false" styleClass="text" text="Make Public" />
             <CheckBox fx:id="addBooks" mnemonicParsing="false" styleClass="text" text="Users can add books to shelf" />
             <CheckBox fx:id="annotate" mnemonicParsing="false" styleClass="text" text="Users can annotate the books" />
             <CheckBox fx:id="comment" mnemonicParsing="false" styleClass="text" text="Users can leave comments on the book" />
             <CheckBox fx:id="invite" mnemonicParsing="false" styleClass="text" text="Users can invite others to join the shelf" />
-            <ListView fx:id="listView" VBox.vgrow="ALWAYS" />
+            <ListView fx:id="listView" style="-fx-background-color: #333333;" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
-      <Button id="leaveButton" fx:id="deleteShelf" layoutX="43.0" layoutY="645.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" styleClass="darkRedButton" stylesheets="@../assets/listview.css" text="Delete shelf" textFill="#ffdddd" />
+      <Button id="leaveButton" fx:id="deleteShelf" layoutX="43.0" layoutY="643.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="132.0" styleClass="darkRedButton" stylesheets="@../assets/listview.css" text="Delete shelf" textFill="#ffdddd" />
+      <ImageView fx:id="addPersonIcon" fitHeight="43.0" fitWidth="54.0" layoutX="505.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/person_add.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

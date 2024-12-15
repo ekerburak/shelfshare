@@ -70,7 +70,7 @@
                         <TextField fx:id="filterField" promptText="Search for shelves..." />
                      </children>
                   </HBox>
-                  <ListView fx:id="bookList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="400.0" stylesheets="@../assets/listview.css" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="bookList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="400.0" style="-fx-background-color: #474747;" stylesheets="@../assets/listview.css" VBox.vgrow="ALWAYS" />
                   <Region prefHeight="40.0" prefWidth="200.0" />
                   <Label fx:id="shelfName1" style="-fx-font-size: 48;" styleClass="header" stylesheets="@../assets/style.css" text="Forum" textFill="#ddd6d6">
                      <font>

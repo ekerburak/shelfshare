@@ -125,6 +125,7 @@ public class BookEditingController {
                     setHighlightIconColor(true);
                     setUnderlineIconColor(false);
                     setEraseIconColor(false);
+                    setStickyNoteIconColor(false);
                 }
             }
         });
@@ -143,6 +144,7 @@ public class BookEditingController {
                     setUnderlineIconColor(true);
                     setHighlightIconColor(false);
                     setEraseIconColor(false);
+                    setStickyNoteIconColor(false);
                 }
             }
         });
@@ -161,6 +163,7 @@ public class BookEditingController {
                     setEraseIconColor(true);
                     setHighlightIconColor(false);
                     setUnderlineIconColor(false);
+                    setStickyNoteIconColor(false);
                 }
             }
         });

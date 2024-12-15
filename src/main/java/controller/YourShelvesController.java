@@ -36,6 +36,9 @@ public class YourShelvesController {
     private Label createAShelfLabel;
 
     @FXML
+    private Label joinAShelfLabel;
+
+    @FXML
     private ImageView backIcon;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();

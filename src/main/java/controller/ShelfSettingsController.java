@@ -2,9 +2,12 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import model.Book;
 import model.LoggedInUser;
@@ -32,6 +35,10 @@ public class ShelfSettingsController {
 
     @FXML
     private ListView listView;
+
+    @FXML
+    private ImageView addPersonIcon;
+
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
 
@@ -128,6 +135,24 @@ public class ShelfSettingsController {
         comment.setSelected(shelf.getAllowDiscussion());
         invite.setSelected(shelf.getAllowInvitation());
         listBooks();
+    }
+
+    private void setAddPersonIcon() {
+        addPersonIcon.setCursor(javafx.scene.Cursor.HAND);
+        addPersonIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/memberRemoveSettings.fxml"));
+                    Pane root = loader.load();
+
+                    memberRemoveController controller = loader.getController();
+                    CurrentView.showPopUp(root);
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @FXML
