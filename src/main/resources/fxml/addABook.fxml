@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddABookController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Label prefHeight="80.0" prefWidth="353.0" style="-fx-text-fill: #FFFFc2;" text="Add a new book to your shelf">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="15.0" />
+               </VBox.margin>
+            </Label>
+            <Label style="-fx-text-fill: #c2c2c2;" text="Give a name for your book">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="15.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="name" prefHeight="26.0" prefWidth="558.0" text="book">
+               <VBox.margin>
+                  <Insets left="20.0" right="100.0" top="20.0" />
+               </VBox.margin>
+            </TextField>
+            <HBox prefHeight="63.0" prefWidth="567.0">
+               <children>
+                  <Pane prefHeight="69.0" prefWidth="77.0" />
+                  <RadioButton fx:id="redCover" mnemonicParsing="false">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="coverSelection" />
+                     </toggleGroup></RadioButton>
+                  <ImageView fitHeight="75.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/redCover.png" />
+                     </image>
+                  </ImageView>
+                  <Pane prefHeight="69.0" prefWidth="77.0" />
+                  <RadioButton fx:id="blueCover" mnemonicParsing="false" toggleGroup="$coverSelection" />
+                  <ImageView fitHeight="75.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/blueCover.png" />
+                     </image>
+                  </ImageView>
+                  <Pane prefHeight="69.0" prefWidth="77.0" />
+                  <RadioButton fx:id="pinkCover" mnemonicParsing="false" toggleGroup="$coverSelection" />
+                  <ImageView fitHeight="75.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/pinkCover.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets top="30.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="63.0" prefWidth="567.0" />
+            <Pane prefHeight="69.0" prefWidth="77.0">
+               <children>
+                  <Button fx:id="fileButton" layoutX="51.0" layoutY="2.0" mnemonicParsing="false" style="-fx-background-color: #EEFF44;" text="Choose a file" />
+                  <Button fx:id="doneButton" layoutX="503.0" layoutY="3.0" mnemonicParsing="false" style="-fx-background-color: #65EE43;" text="DONE" />
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <HBox layoutX="10.0" layoutY="10.0" prefHeight="63.0" prefWidth="567.0" />
+   </children>
+</Pane>

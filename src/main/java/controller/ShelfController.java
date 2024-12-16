@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 public class ShelfController {
+
     Shelf shelf;
 
     @FXML
@@ -171,6 +172,27 @@ public class ShelfController {
 
     }
 
+    private void openAddABookPopup() {
+        addIcon.setCursor(javafx.scene.Cursor.HAND);
+        addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addABook.fxml"));
+                    Pane root = loader.load();
+
+                    AddABookController controller = loader.getController();
+                    controller.setShelf(shelf);
+                    CurrentView.showPopUp(root);
+
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+//                CurrentView.showPopUp(new FXMLLoader(getClass().getResource("/fxml/addABook.fxml")));
+
+            }});
+    }
+
     private void setAddPersonIcon() {
         addPersonIcon.setCursor(javafx.scene.Cursor.HAND);
         addPersonIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -227,7 +249,8 @@ public class ShelfController {
     @FXML
     public void initialize() {
         setBackIcon();
-        setAddIcon();
+//        setAddIcon();
+        openAddABookPopup();
         setAddPersonIcon();
         setRatingShelf();
         setLeaveIcon();
