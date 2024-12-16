@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,15 +14,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.Book;
+import model.PageListener;
 import model.Shelf;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
-public class BookEditingController {
+public class BookEditingController implements PageListener {
     private Book book;
     private Shelf shelf;
     private Rectangle lastHighlight, lastUnderline;
@@ -38,14 +42,16 @@ public class BookEditingController {
     @FXML
     private Pane drawPane;
 
-    private double startX, startY;
+    private int startX, startY;
 
     private int currentSelection = -1;
 
     public void setBook(Book book) {
         this.book = book;
-        renderImage();
+        book.addCurrentPageListener(this);
+        book.startListening();
         bookName.setText(book.getName());
+        renderImage();
     }
 
     public void setShelf(Shelf shelf) {
@@ -56,6 +62,21 @@ public class BookEditingController {
     private void renderImage() {
         imageView.setImage(decodeImageFromBase64(book.getCurrentPage().getImage()));
         imageView.setFitHeight(950);
+
+        ArrayList<ArrayList<Integer>> coordinates = book.getCurrentPage().getHighlightCoordinates();
+//        ArrayList<Color> colors = book.getCurrentPage().getHighlightColors();
+        for(int i = 0; i < coordinates.size(); i++) {
+            ArrayList<Integer> coordinate = coordinates.get(i);
+//            Color color = colors.get(i);
+            drawHighlight(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+        }
+
+        coordinates = book.getCurrentPage().getLineCoordinates();
+
+        for(int i = 0; i < coordinates.size(); i++) {
+            ArrayList<Integer> coordinate = coordinates.get(i);
+            drawLine(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+        }
     }
 
     private void leftArrowMechanism(ImageView leftArrow) {
@@ -225,12 +246,7 @@ public class BookEditingController {
     /**
      * Draws a highlight rectangle on the given pane
      */
-    private Rectangle drawHighlight(double startX, double startY, double endX) {
-        if(endX < startX) {
-            double temp = startX;
-            startX = endX;
-            endX = temp;
-        }
+    private Rectangle drawHighlight(int startX, int startY, int endX) {
         Rectangle highlight = new Rectangle(
                 startX, startY - 6, (endX - startX), 12
         );
@@ -242,12 +258,7 @@ public class BookEditingController {
     /**
      * Draws a line on the given pane
      */
-    private Rectangle drawLine(double startX, double startY, double endX) {
-        if(endX < startX) {
-            double temp = startX;
-            startX = endX;
-            endX = temp;
-        }
+    private Rectangle drawLine(int startX, int startY, int endX) {
         Rectangle line = new Rectangle(
                 startX, startY - 1, (endX - startX), 2
         );
@@ -268,7 +279,7 @@ public class BookEditingController {
     }
 
     // Method to add a sticky note
-    private void addStickyNote(double x, double y) {
+    private void addStickyNote(int x, int y) {
         String content = getStickyNoteContent();
         if (content.isEmpty()) {
             return;
@@ -281,8 +292,8 @@ public class BookEditingController {
 
         // Make the sticky note draggable
         stickyNote.setOnMousePressed(event -> {
-            startX = event.getX();
-            startY = event.getY();
+            startX = (int)event.getX();
+            startY = (int)event.getY();
         });
 
         drawPane.getChildren().add(stickyNote);
@@ -291,7 +302,7 @@ public class BookEditingController {
     /**
      * Erases the objects at the given coordinates
      */
-    private void erase(double x, double y) {
+    private void erase(int x, int y) {
         drawPane.getChildren().removeIf(node -> {
             if (node instanceof Label) {
                 Label label = (Label) node;
@@ -299,20 +310,21 @@ public class BookEditingController {
             }
             return node.contains(x, y);
         });
+
     }
     private void annotatingMechanism(Pane pane) {
         pane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                startX = event.getX();
-                startY = event.getY();
+                startX = (int)event.getX();
+                startY = (int)event.getY();
             }
         });
 
         pane.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double endX = event.getX();
+                int endX = (int)(event.getX());
 
                 if (currentSelection == 0) {
                     if (lastHighlight != null) {
@@ -331,11 +343,35 @@ public class BookEditingController {
         pane.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                if(currentSelection == 0) {
+                    if (lastHighlight != null) {
+                        drawPane.getChildren().remove(lastHighlight);
+                    }
+                    int endX = (int) (event.getX());
+                    if (endX < startX) {
+                        int temp = startX;
+                        startX = endX;
+                        endX = temp;
+                    }
+                    book.addHighlightToCurrentPage(new ArrayList<Integer>(List.of(startX, startY, endX)), Color.rgb(255, 255, 0, 0.3));
+                }
+                if(currentSelection == 1) {
+                    if(lastUnderline != null) {
+                        drawPane.getChildren().remove(lastUnderline);
+                    }
+                    int endX = (int) (event.getX());
+                    if (endX < startX) {
+                        int temp = startX;
+                        startX = endX;
+                        endX = temp;
+                    }
+                    book.addUnderlineToCurrentPage(new ArrayList<Integer>(List.of(startX, startY, endX)), Color.BLACK);
+                }
                 lastUnderline = lastHighlight = null;
                 if (currentSelection == 2) {
-                    erase(event.getX(), event.getY());
+                    erase((int)event.getX(), (int)event.getY());
                 } else if (currentSelection == 3) {
-                    addStickyNote(event.getX(), event.getY());
+                    addStickyNote((int)event.getX(), (int)event.getY());
                 }
             }
         });
@@ -380,5 +416,31 @@ public class BookEditingController {
                 });
             }
         });
+
+
+    }
+
+    @Override
+    public void onPageHighlightAdded(ArrayList<Integer> coordinate, Color color) {
+        Platform.runLater(() -> {
+            drawHighlight(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+        });
+    }
+
+    @Override
+    public void onPageUnderlineAdded(ArrayList<Integer> coordinate, Color color) {
+        Platform.runLater(() -> {
+            drawLine(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+        });
+    }
+
+    @Override
+    public void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+
+    }
+
+    @Override
+    public void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+
     }
 }
