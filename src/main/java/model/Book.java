@@ -164,7 +164,6 @@ public class Book {
                 listener.onPageHighlightAdded(coordinate, color);
             }
         }
-        notifyPageHighlightAdded(pageNumber, coordinate, color);
     }
 
     protected void notifyPageUnderlineAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
@@ -177,7 +176,6 @@ public class Book {
                 listener.onPageUnderlineAdded(coordinate, color);
             }
         }
-        notifyPageUnderlineAdded(pageNumber, coordinate, color);
     }
 
     protected void notifyPageHighlightRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
@@ -190,7 +188,6 @@ public class Book {
                 listener.onPageHighlightRemoved(remainingCoordinates, remainingColors);
             }
         }
-        notifyPageHighlightRemoved(pageNumber, remainingCoordinates, remainingColors);
     }
 
     protected void notifyPageUnderlineRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
@@ -203,7 +200,6 @@ public class Book {
                 listener.onPageUnderlineRemoved(remainingCoordinates, remainingColors);
             }
         }
-        notifyPageUnderlineRemoved(pageNumber, remainingCoordinates, remainingColors);
     }
 
     public void addCurrentPageListener(PageListener listener) {
