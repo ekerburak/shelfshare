@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookEditingController implements PageListener {
+    private final int SX = 0, SY = 1, EX = 2;
+
     private Book book;
     private Shelf shelf;
     private Rectangle lastHighlight, lastUnderline;
@@ -46,6 +48,13 @@ public class BookEditingController implements PageListener {
 
     private int currentSelection = -1;
 
+    private int getX() {
+        return (int)imageView.localToScene(0, 0).getX();
+    }
+    private int getY() {
+        return (int)imageView.localToScene(0, 0).getY();
+    }
+
     public void setBook(Book book) {
         this.book = book;
         book.addCurrentPageListener(this);
@@ -59,24 +68,45 @@ public class BookEditingController implements PageListener {
         shelfName.setText(shelf.getName());
     }
 
+    ArrayList<Integer> convertToPercentCoordinate(int startX, int startY, int endX) {
+        if (endX < startX) {
+            int temp = startX;
+            startX = endX;
+            endX = temp;
+        }
+        System.out.println(startX + " " + imageView.getLayoutX() + " " + imageView.getBoundsInParent().getWidth());
+
+        int newStartX = (int)((startX - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * 100);
+        int newEndX = (int)((endX - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * 100);
+        int newStartY = (int)(startY / imageView.getBoundsInParent().getHeight() * 100);
+        return new ArrayList<Integer>(List.of(newStartX, newStartY, newEndX));
+    }
+
+    ArrayList<Integer> convertFromPercentCoordinate(int startX, int startY, int endX) {
+        int newStartX = (int)(startX * imageView.getBoundsInParent().getWidth() / 100 + imageView.getLayoutX());
+        int newEndX = (int)(endX * imageView.getBoundsInParent().getWidth() / 100 + imageView.getLayoutX());
+        int newStartY = (int)(startY * imageView.getBoundsInParent().getHeight() / 100);
+        return new ArrayList<Integer>(List.of(newStartX, newStartY, newEndX));
+    }
+
     private void renderImage() {
         imageView.setImage(decodeImageFromBase64(book.getCurrentPage().getImage()));
         imageView.setFitHeight(950);
-        drawPane.getChildren().clear();
-        ArrayList<ArrayList<Integer>> coordinates = book.getCurrentPage().getHighlightCoordinates();
-//        ArrayList<Color> colors = book.getCurrentPage().getHighlightColors();
-        for(int i = 0; i < coordinates.size(); i++) {
-            ArrayList<Integer> coordinate = coordinates.get(i);
-//            Color color = colors.get(i);
-            drawHighlight(coordinate.get(0), coordinate.get(1), coordinate.get(2));
-        }
 
-        coordinates = book.getCurrentPage().getLineCoordinates();
+        Platform.runLater(() -> {
+            drawPane.getChildren().clear();
+            ArrayList<ArrayList<Integer>> percentCoordinates = book.getCurrentPage().getHighlightCoordinates();
+            for (int i = 0; i < percentCoordinates.size(); i++) {
+                ArrayList<Integer> coordinate = percentCoordinates.get(i);
+                drawHighlight(convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2)));
+            }
 
-        for(int i = 0; i < coordinates.size(); i++) {
-            ArrayList<Integer> coordinate = coordinates.get(i);
-            drawLine(coordinate.get(0), coordinate.get(1), coordinate.get(2));
-        }
+            percentCoordinates = book.getCurrentPage().getLineCoordinates();
+            for (int i = 0; i < percentCoordinates.size(); i++) {
+                ArrayList<Integer> coordinate = percentCoordinates.get(i);
+                drawLine(convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2)));
+            }
+        });
     }
 
     private void leftArrowMechanism(ImageView leftArrow) {
@@ -246,9 +276,14 @@ public class BookEditingController implements PageListener {
     /**
      * Draws a highlight rectangle on the given pane
      */
-    private Rectangle drawHighlight(int startX, int startY, int endX) {
+    private Rectangle drawHighlight(ArrayList<Integer> coordinate) {
+        if (coordinate.get(EX) < coordinate.get(SX)) {
+            int temp = coordinate.get(SX);
+            coordinate.set(SX, coordinate.get(EX));
+            coordinate.set(EX, temp);
+        }
         Rectangle highlight = new Rectangle(
-                startX, startY - 6, (endX - startX), 12
+                coordinate.get(SX), coordinate.get(SY) - 6, (coordinate.get(EX) - coordinate.get(SX)), 12
         );
         highlight.setFill(Color.rgb(255, 255, 0, 0.3));
         drawPane.getChildren().add(highlight);
@@ -258,9 +293,14 @@ public class BookEditingController implements PageListener {
     /**
      * Draws a line on the given pane
      */
-    private Rectangle drawLine(int startX, int startY, int endX) {
+    private Rectangle drawLine(ArrayList<Integer> coordinate) {
+        if (coordinate.get(EX) < coordinate.get(SX)) {
+            int temp = coordinate.get(SX);
+            coordinate.set(SX, coordinate.get(EX));
+            coordinate.set(EX, temp);
+        }
         Rectangle line = new Rectangle(
-                startX, startY - 1, (endX - startX), 2
+                coordinate.get(SX), coordinate.get(SY) - 1, (coordinate.get(EX) - coordinate.get(SX)), 2
         );
         line.setFill(Color.BLACK);
         drawPane.getChildren().add(line);
@@ -325,17 +365,16 @@ public class BookEditingController implements PageListener {
             @Override
             public void handle(MouseEvent event) {
                 int endX = (int)(event.getX());
-
                 if (currentSelection == 0) {
                     if (lastHighlight != null) {
                         drawPane.getChildren().remove(lastHighlight);
                     }
-                    lastHighlight = drawHighlight(startX, startY, endX);
+                    lastHighlight = drawHighlight(new ArrayList<>(List.of(startX, startY, endX)));
                 } else if (currentSelection == 1) {
                     if(lastUnderline != null) {
                         drawPane.getChildren().remove(lastUnderline);
                     }
-                    lastUnderline = drawLine(startX, startY, endX);
+                    lastUnderline = drawLine(new ArrayList<>(List.of(startX, startY, endX)));
                 }
             }
         });
@@ -348,24 +387,14 @@ public class BookEditingController implements PageListener {
                         drawPane.getChildren().remove(lastHighlight);
                     }
                     int endX = (int) (event.getX());
-                    if (endX < startX) {
-                        int temp = startX;
-                        startX = endX;
-                        endX = temp;
-                    }
-                    book.addHighlightToCurrentPage(new ArrayList<Integer>(List.of(startX, startY, endX)), Color.rgb(255, 255, 0, 0.3));
+                    book.addHighlightToCurrentPage(convertToPercentCoordinate(startX, startY, endX), Color.rgb(255, 255, 0, 0.3));
                 }
                 if(currentSelection == 1) {
                     if(lastUnderline != null) {
                         drawPane.getChildren().remove(lastUnderline);
                     }
                     int endX = (int) (event.getX());
-                    if (endX < startX) {
-                        int temp = startX;
-                        startX = endX;
-                        endX = temp;
-                    }
-                    book.addUnderlineToCurrentPage(new ArrayList<Integer>(List.of(startX, startY, endX)), Color.BLACK);
+                    book.addUnderlineToCurrentPage(convertToPercentCoordinate(startX, startY, endX), Color.BLACK);
                 }
                 lastUnderline = lastHighlight = null;
                 if (currentSelection == 2) {
@@ -423,14 +452,16 @@ public class BookEditingController implements PageListener {
     @Override
     public void onPageHighlightAdded(ArrayList<Integer> coordinate, Color color) {
         Platform.runLater(() -> {
-            drawHighlight(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+            ArrayList<Integer> newCoordinate = convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+            drawHighlight(newCoordinate);
         });
     }
 
     @Override
     public void onPageUnderlineAdded(ArrayList<Integer> coordinate, Color color) {
         Platform.runLater(() -> {
-            drawLine(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+            ArrayList<Integer> newCoordinate = convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+            drawLine(newCoordinate);
         });
     }
 
