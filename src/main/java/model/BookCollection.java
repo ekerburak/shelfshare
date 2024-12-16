@@ -7,7 +7,6 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
-import javafx.scene.paint.Color;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.Document;
@@ -26,9 +25,7 @@ discussion (chat)
 pages [{
     image: string (base64)
     highlightCoordinates: []
-    highlightColors: []
     lineCoordinates: []
-    lineColorStrings: []
 }]
 * */
 
@@ -82,9 +79,7 @@ public class BookCollection {
         Document mongoPage = new Document()
                 .append("image", page.getImage())
                 .append("highlightCoordinates", page.getHighlightCoordinates())
-                .append("highlightColorStrings", page.getHighlightColorStrings())
-                .append("lineCoordinates", page.getLineCoordinates())
-                .append("lineColorStrings", page.getLineColorStrings());
+                .append("lineCoordinates", page.getLineCoordinates());
         collection.updateOne(
                 new Document().append("_id", book.getID()),
                 Updates.set("pages." + page.getPageNumber() + ".content", mongoPage)
@@ -142,9 +137,7 @@ public class BookCollection {
             Document mongoPage = new Document()
                     .append("image", page.getImage())
                     .append("highlightCoordinates", page.getHighlightCoordinates())
-                    .append("highlightColorStrings", page.getHighlightColorStrings())
-                    .append("lineCoordinates", page.getLineCoordinates())
-                    .append("lineColorStrings", page.getLineColorStrings());
+                    .append("lineCoordinates", page.getLineCoordinates());
             mongoPages.add(mongoPage);
         }
         ObjectId discussionChatID = ChatCollection.createChat();
@@ -161,42 +154,38 @@ public class BookCollection {
         collection.deleteOne(new Document("_id", bookID));
     }
 
-    protected static void addHighlightToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+    protected static void addHighlightToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
                 new Document().append("_id", BookID),
                 Updates.combine(
-                        Updates.push("pages." + pageNumber + ".highlightCoordinates", coordinate),
-                        Updates.push("pages." + pageNumber + ".highlightColorStrings", Page.colorToString(color))
+                        Updates.push("pages." + pageNumber + ".highlightCoordinates", coordinate)
                 )
         );
     }
 
-    protected static void addUnderlineToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+    protected static void addUnderlineToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
                 new Document().append("_id", BookID),
                 Updates.combine(
-                        Updates.push("pages." + pageNumber + ".lineCoordinates", coordinate),
-                        Updates.push("pages." + pageNumber + ".lineColorStrings", Page.colorToString(color))
+                        Updates.push("pages." + pageNumber + ".lineCoordinates", coordinate)
                 )
         );
     }
 
-    protected static void removeHighlightFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+    protected static void removeHighlightFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
                 new Document().append("_id", BookID),
                 Updates.combine(
-                        Updates.pull("pages." + pageNumber + ".highlightCoordinates", coordinate),
-                        Updates.pull("pages." + pageNumber + ".highlightColorStrings", Page.colorToString(color))
+                        Updates.pull("pages." + pageNumber + ".highlightCoordinates", coordinate)
                 )
         );
     }
 
-    protected static void removeUnderlineFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate, Color color) {
+    protected static void removeUnderlineFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
                 new Document().append("_id", BookID),
                 Updates.combine(
-                        Updates.pull("pages." + pageNumber + ".lineCoordinates", coordinate),
-                        Updates.pull("pages." + pageNumber + ".lineColorStrings", Page.colorToString(color))
+                        Updates.pull("pages." + pageNumber + ".lineCoordinates", coordinate)
                 )
         );
     }
@@ -226,14 +215,10 @@ public class BookCollection {
             ChangeStreamIterable<Document> changeStream = collection.watch(pipeline);
 
             String regexHighlightCoordinateAdd = "pages\\.\\d+\\.highlightCoordinates\\.\\d+$";
-            String regexHighlightColorStringAdd = "pages\\.\\d+\\.highlightColorStrings\\.\\d+$";
             String regexHighlightCoordinateRemove = "pages\\.\\d+\\.highlightCoordinates$";
-            String regexHighlightColorStringRemove = "pages\\.\\d+\\.highlightColorStrings$";
 
             String regexUnderlineCoordinateAdd = "pages\\.\\d+\\.lineCoordinates\\.\\d+$";
-            String regexUnderlineColorStringAdd = "pages\\.\\d+\\.lineColorStrings\\.\\d+$";
             String regexUnderlineCoordinateRemove = "pages\\.\\d+\\.lineCoordinates$";
-            String regexUnderlineColorStringRemove = "pages\\.\\d+\\.lineColorStrings$";
 
             try (MongoChangeStreamCursor<ChangeStreamDocument<Document>> cursor = changeStream.cursor()) {
                 while (cursor.hasNext()) {
@@ -255,8 +240,6 @@ public class BookCollection {
                     int modifiedPageNumber = -1;
                     ArrayList<Integer> addedCoordinate = null;
                     ArrayList<ArrayList<Integer>> remainingCoordinates = null;
-                    String addedColorString = null;
-                    ArrayList<Color> remainingColors = null;
 
                     for (String updatedKey : updatedFields.keySet()) {
 
@@ -271,11 +254,6 @@ public class BookCollection {
                             for (BsonValue coordinate : updatedFields.get(updatedKey).asArray()) {
                                 addedCoordinate.add(coordinate.asInt32().getValue());
                             }
-                        } else if (updatedKey.matches(regexHighlightColorStringAdd)) {
-                            mode = HIGHLIGHT;
-                            isAdd = true;
-                            modifiedPageNumber = parseUpdatedPage(updatedKey);
-                            addedColorString = updatedFields.get(updatedKey).asString().getValue();
                         } else if (updatedKey.matches(regexHighlightCoordinateRemove)) {
                             mode = HIGHLIGHT;
                             isAdd = false;
@@ -289,14 +267,6 @@ public class BookCollection {
                                 remainingCoordinates.add(coordinateToAdd);
                             }
 
-                        } else if (updatedKey.matches(regexHighlightColorStringRemove)) {
-                            mode = HIGHLIGHT;
-                            isAdd = false;
-                            modifiedPageNumber = parseUpdatedPage(updatedKey);
-                            remainingColors = new ArrayList<Color>();
-                            for (BsonValue colorString : updatedFields.get(updatedKey).asArray()) {
-                                remainingColors.add(Color.valueOf(colorString.asString().getValue()));
-                            }
                         }
 
                         //UNDERLINE
@@ -308,11 +278,6 @@ public class BookCollection {
                             for (BsonValue coordinate : updatedFields.get(updatedKey).asArray()) {
                                 addedCoordinate.add(coordinate.asInt32().getValue());
                             }
-                        } else if (updatedKey.matches(regexUnderlineColorStringAdd)) {
-                            mode = UNDERLINE;
-                            isAdd = true;
-                            modifiedPageNumber = parseUpdatedPage(updatedKey);
-                            addedColorString = updatedFields.get(updatedKey).asString().getValue();
                         } else if (updatedKey.matches(regexUnderlineCoordinateRemove)) {
                             mode = UNDERLINE;
                             isAdd = false;
@@ -326,14 +291,6 @@ public class BookCollection {
                                 remainingCoordinates.add(coordinateToAdd);
                             }
 
-                        } else if (updatedKey.matches(regexUnderlineColorStringRemove)) {
-                            mode = UNDERLINE;
-                            isAdd = false;
-                            modifiedPageNumber = parseUpdatedPage(updatedKey);
-                            remainingColors = new ArrayList<Color>();
-                            for (BsonValue colorString : updatedFields.get(updatedKey).asArray()) {
-                                remainingColors.add(Color.valueOf(colorString.asString().getValue()));
-                            }
                         }
 
                     }
@@ -343,18 +300,18 @@ public class BookCollection {
                     }
 
                     if (isAdd) {
-                        assert addedCoordinate != null && addedColorString != null && modifiedPageNumber != -1;
+                        assert addedCoordinate != null && modifiedPageNumber != -1;
                         if (mode == HIGHLIGHT) {
-                            book.notifyPageHighlightAdded(modifiedPageNumber, addedCoordinate, Page.stringToColor(addedColorString));
+                            book.notifyPageHighlightAdded(modifiedPageNumber, addedCoordinate);
                         } else {
-                            book.notifyPageUnderlineAdded(modifiedPageNumber, addedCoordinate, Page.stringToColor(addedColorString));
+                            book.notifyPageUnderlineAdded(modifiedPageNumber, addedCoordinate);
                         }
                     } else {
-                        assert remainingCoordinates != null && remainingColors != null && modifiedPageNumber != -1;
+                        assert remainingCoordinates != null && modifiedPageNumber != -1;
                         if (mode == HIGHLIGHT) {
-                            book.notifyPageHighlightRemoved(modifiedPageNumber, remainingCoordinates, remainingColors);
+                            book.notifyPageHighlightRemoved(modifiedPageNumber, remainingCoordinates);
                         } else {
-                            book.notifyPageUnderlineRemoved(modifiedPageNumber, remainingCoordinates, remainingColors);
+                            book.notifyPageUnderlineRemoved(modifiedPageNumber, remainingCoordinates);
                         }
                     }
 

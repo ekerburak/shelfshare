@@ -154,8 +154,7 @@ public class Book {
 
     //notifies the listeners only from the incoming db changes
 
-    protected void notifyPageHighlightAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
-        System.out.println("HIGHLIGHT ADDED " + coordinate + " " + color);
+    protected void notifyPageHighlightAdded(int pageNumber, ArrayList<Integer> coordinate) {
         int pageIndex = getPageIndexAtBuffer(pageNumber);
         if(pageIndex == -1) {
             return;
@@ -163,49 +162,49 @@ public class Book {
         if(pageIndex == currentPageIndex) {
             for(PageListener listener : currentPageListeners) {
                 System.out.println("NOTIFY PAGE HIGHLIGHT ADDED");
-                listener.onPageHighlightAdded(coordinate, color);
+                listener.onPageHighlightAdded(coordinate);
             }
         }
-        pageBuffer.get(pageIndex).onPageHighlightAdded(coordinate, color);
+        pageBuffer.get(pageIndex).onPageHighlightAdded(coordinate);
     }
 
-    protected void notifyPageUnderlineAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
+    protected void notifyPageUnderlineAdded(int pageNumber, ArrayList<Integer> coordinate) {
         int pageIndex = getPageIndexAtBuffer(pageNumber);
         if(pageIndex == -1) {
             return;
         }
+        pageBuffer.get(pageIndex).onPageUnderlineAdded(coordinate);
         if(pageIndex == currentPageIndex) {
             for(PageListener listener : currentPageListeners) {
-                listener.onPageUnderlineAdded(coordinate, color);
+                listener.onPageUnderlineAdded(coordinate);
             }
         }
-        pageBuffer.get(pageIndex).onPageUnderlineAdded(coordinate, color);
     }
 
-    protected void notifyPageHighlightRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+    protected void notifyPageHighlightRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates) {
         int pageIndex = getPageIndexAtBuffer(pageNumber);
         if(pageIndex == -1) {
             return;
         }
+        pageBuffer.get(pageIndex).onPageHighlightRemoved(remainingCoordinates);
         if(pageIndex == currentPageIndex) {
             for(PageListener listener : currentPageListeners) {
-                listener.onPageHighlightRemoved(remainingCoordinates, remainingColors);
+                listener.onPageHighlightRemoved(remainingCoordinates);
             }
         }
-        pageBuffer.get(pageIndex).onPageHighlightRemoved(remainingCoordinates, remainingColors);
     }
 
-    protected void notifyPageUnderlineRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
+    protected void notifyPageUnderlineRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates) {
         int pageIndex = getPageIndexAtBuffer(pageNumber);
         if(pageIndex == -1) {
             return;
         }
+        pageBuffer.get(pageIndex).onPageUnderlineRemoved(remainingCoordinates);
         if(pageIndex == currentPageIndex) {
             for(PageListener listener : currentPageListeners) {
-                listener.onPageUnderlineRemoved(remainingCoordinates, remainingColors);
+                listener.onPageUnderlineRemoved(remainingCoordinates);
             }
         }
-        pageBuffer.get(pageIndex).onPageUnderlineRemoved(remainingCoordinates, remainingColors);
     }
 
     public void addCurrentPageListener(PageListener listener) {
@@ -215,25 +214,24 @@ public class Book {
         currentPageListeners.add(listener);
     }
 
-    public void addHighlightToCurrentPage(ArrayList<Integer> coordinate, Color color) {
+    public void addHighlightToCurrentPage(ArrayList<Integer> coordinate) {
         int currentPageNumber = getCurrentPage().getPageNumber();
-        BookCollection.addHighlightToPage(ID, currentPageNumber, coordinate, color);
+        BookCollection.addHighlightToPage(ID, currentPageNumber, coordinate);
     }
 
-    public void addUnderlineToCurrentPage(ArrayList<Integer> coordinate, Color color) {
+    public void addUnderlineToCurrentPage(ArrayList<Integer> coordinate) {
         int currentPageNumber = getCurrentPage().getPageNumber();
-        BookCollection.addUnderlineToPage(ID, currentPageNumber, coordinate, color);
+        BookCollection.addUnderlineToPage(ID, currentPageNumber, coordinate);
     }
 
-    public void removeHighlightFromCurrentPage(ArrayList<Integer> coordinate, Color color) {
+    public void removeHighlightFromCurrentPage(ArrayList<Integer> coordinate) {
         int currentPageNumber = getCurrentPage().getPageNumber();
-        System.out.println("REMOVE HIGHLIGHT " + coordinate + " " + color + " " + currentPageNumber);
-        BookCollection.removeHighlightFromPage(ID, currentPageNumber, coordinate, color);
+        BookCollection.removeHighlightFromPage(ID, currentPageNumber, coordinate);
     }
 
-    public void removeUnderlineFromCurrentPage(ArrayList<Integer> coordinate, Color color) {
+    public void removeUnderlineFromCurrentPage(ArrayList<Integer> coordinate) {
         int currentPageNumber = getCurrentPage().getPageNumber();
-        BookCollection.removeUnderlineFromPage(ID, currentPageNumber, coordinate, color);
+        BookCollection.removeUnderlineFromPage(ID, currentPageNumber, coordinate);
     }
 
     public void startListening() {
