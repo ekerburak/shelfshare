@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookEditingController implements PageListener {
-    private final int SX = 0, SY = 1, EX = 2;
+    private final int SX = 0, SY = 1, EX = 2, ORAN = 100;
 
     private Book book;
     private Shelf shelf;
@@ -50,13 +50,6 @@ public class BookEditingController implements PageListener {
 
     private int currentSelection = -1;
 
-    private int getX() {
-        return (int)imageView.localToScene(0, 0).getX();
-    }
-    private int getY() {
-        return (int)imageView.localToScene(0, 0).getY();
-    }
-
     public void setBook(Book book) {
         this.book = book;
         book.addCurrentPageListener(this);
@@ -76,19 +69,23 @@ public class BookEditingController implements PageListener {
             startX = endX;
             endX = temp;
         }
-        System.out.println(startX + " " + imageView.getLayoutX() + " " + imageView.getBoundsInParent().getWidth());
-
-        int newStartX = (int)((startX - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * 100);
-        int newEndX = (int)((endX - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * 100);
-        int newStartY = (int)(startY / imageView.getBoundsInParent().getHeight() * 100);
+        int newStartX = (int)((startX - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * ORAN);
+        int newEndX = (int)((endX - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * ORAN);
+        int newStartY = (int)(startY / imageView.getBoundsInParent().getHeight() * ORAN);
         return new ArrayList<Integer>(List.of(newStartX, newStartY, newEndX));
+    }
+    ArrayList<Integer> convertToPercentCoordinate(ArrayList<Integer> coordinate) {
+        return convertToPercentCoordinate(coordinate.get(SX), coordinate.get(SY), coordinate.get(EX));
     }
 
     ArrayList<Integer> convertFromPercentCoordinate(int startX, int startY, int endX) {
-        int newStartX = (int)(startX * imageView.getBoundsInParent().getWidth() / 100 + imageView.getLayoutX());
-        int newEndX = (int)(endX * imageView.getBoundsInParent().getWidth() / 100 + imageView.getLayoutX());
-        int newStartY = (int)(startY * imageView.getBoundsInParent().getHeight() / 100);
+        int newStartX = (int)(startX * imageView.getBoundsInParent().getWidth() / ORAN + imageView.getLayoutX());
+        int newEndX = (int)(endX * imageView.getBoundsInParent().getWidth() / ORAN + imageView.getLayoutX());
+        int newStartY = (int)(startY * imageView.getBoundsInParent().getHeight() / ORAN);
         return new ArrayList<Integer>(List.of(newStartX, newStartY, newEndX));
+    }
+    ArrayList<Integer> convertFromPercentCoordinate(ArrayList<Integer> coordinate) {
+        return convertFromPercentCoordinate(coordinate.get(SX), coordinate.get(SY), coordinate.get(EX));
     }
 
     private void renderImage() {
@@ -100,14 +97,14 @@ public class BookEditingController implements PageListener {
             ArrayList<ArrayList<Integer>> percentCoordinates = book.getCurrentPage().getHighlightCoordinates();
             for (int i = 0; i < percentCoordinates.size(); i++) {
                 ArrayList<Integer> coordinate = percentCoordinates.get(i);
-                drawHighlight(convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2)));
+                drawHighlight(convertFromPercentCoordinate(coordinate));
             }
 
             percentCoordinates = book.getCurrentPage().getLineCoordinates();
-            for (int i = 0; i < percentCoordinates.size(); i++) {
-                ArrayList<Integer> coordinate = percentCoordinates.get(i);
-                drawLine(convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2)));
-            }
+//            for (int i = 0; i < percentCoordinates.size(); i++) {
+//                ArrayList<Integer> coordinate = percentCoordinates.get(i);
+//                drawLine(convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2)));
+//            }
         });
     }
 
@@ -345,16 +342,24 @@ public class BookEditingController implements PageListener {
      * Erases the objects at the given coordinates
      */
     private void erase(int x, int y) {
-        ObservableList<Node> nodes = drawPane.getChildren();
-        for(Node node: nodes) {
-            if(node instanceof Rectangle) {
-                Rectangle rectangle = (Rectangle)node;
-                if(rectangle.contains(x, y)) {
-                    int startX = (int)rectangle.localToParent(0,0).getX();
-                    int startY = (int)rectangle.localToParent(0,0).getY();
-                    int endX = (int)rectangle.localToParent(rectangle.getWidth(),0).getX();
-                    book.removeHighlightFromCurrentPage(convertToPercentCoordinate(startX, startY, endX), (Color)rectangle.getFill());
-                }
+//        ObservableList<Node> nodes = drawPane.getChildren();
+//        for(Node node: nodes) {
+//            if(node instanceof Rectangle) {
+//                Rectangle rectangle = (Rectangle)node;
+//                if(rectangle.contains(x, y)) {
+//                    int rstartX = (int)rectangle.getBoundsInParent().getMinX();
+//                    int rstartY = (int)rectangle.getBoundsInParent().getMinY();
+//                    int rendX = (int)(rstartX + rectangle.getWidth());
+//                    System.out.println("Erasing rectangle" + rstartX + " " + rstartY + " " + rectangle.getWidth());
+//                    book.removeHighlightFromCurrentPage(convertToPercentCoordinate(rstartX, rstartY, rendX), (Color)rectangle.getFill());
+//                }
+//            }
+//        }
+        int percentageX = (int)((x - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * ORAN);
+        int percentageY = (int)(y / imageView.getBoundsInParent().getHeight() * ORAN);
+        for(ArrayList<Integer> coordinate: book.getCurrentPage().getHighlightCoordinates()) {
+            if (percentageX >= coordinate.get(SX) && percentageX <= coordinate.get(EX) && percentageY == coordinate.get(SY)) {
+                book.removeHighlightFromCurrentPage(coordinate, Color.rgb(255, 255, 0, 0.3));
             }
         }
     }
@@ -377,10 +382,10 @@ public class BookEditingController implements PageListener {
                     }
                     lastHighlight = drawHighlight(new ArrayList<>(List.of(startX, startY, endX)));
                 } else if (currentSelection == 1) {
-                    if(lastUnderline != null) {
-                        drawPane.getChildren().remove(lastUnderline);
-                    }
-                    lastUnderline = drawLine(new ArrayList<>(List.of(startX, startY, endX)));
+//                    if(lastUnderline != null) {
+//                        drawPane.getChildren().remove(lastUnderline);
+//                    }
+//                    lastUnderline = drawLine(new ArrayList<>(List.of(startX, startY, endX)));
                 }
             }
         });
@@ -396,11 +401,7 @@ public class BookEditingController implements PageListener {
                     book.addHighlightToCurrentPage(convertToPercentCoordinate(startX, startY, endX), Color.rgb(255, 255, 0, 0.3));
                 }
                 if(currentSelection == 1) {
-                    if(lastUnderline != null) {
-                        drawPane.getChildren().remove(lastUnderline);
-                    }
-                    int endX = (int) (event.getX());
-                    book.addUnderlineToCurrentPage(convertToPercentCoordinate(startX, startY, endX), Color.BLACK);
+                    //
                 }
                 lastUnderline = lastHighlight = null;
                 if (currentSelection == 2) {
@@ -457,45 +458,52 @@ public class BookEditingController implements PageListener {
 
     @Override
     public void onPageHighlightAdded(ArrayList<Integer> coordinate, Color color) {
-        Platform.runLater(() -> {
-            ArrayList<Integer> newCoordinate = convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2));
-            drawHighlight(newCoordinate);
-        });
+        Runnable runnable = new Runnable() {
+            ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
+            @Override
+            public void run() {
+                drawHighlight(convertFromPercentCoordinate(localCoordinate));
+            }
+        };
+        Platform.runLater(runnable);
     }
 
     @Override
     public void onPageUnderlineAdded(ArrayList<Integer> coordinate, Color color) {
-        Platform.runLater(() -> {
-            ArrayList<Integer> newCoordinate = convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2));
-            drawLine(newCoordinate);
-        });
+//        Platform.runLater(() -> {
+//            ArrayList<Integer> newCoordinate = convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2));
+//            drawLine(newCoordinate);
+//        });
     }
 
     @Override
     public void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
-        Platform.runLater(() -> {
-            drawPane.getChildren().clear();
-            for (int i = 0; i < remainingCoordinates.size(); i++) {
-                drawHighlight(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+        Runnable runnable = new Runnable() {
+            ArrayList<ArrayList<Integer>> localCoordinates = new ArrayList<>(remainingCoordinates);
+            @Override
+            public void run() {
+                drawPane.getChildren().clear();
+                for (ArrayList<Integer> coordinates: localCoordinates) {
+                    drawHighlight(convertFromPercentCoordinate(coordinates));
+                }
             }
-            ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
-            for (int i = 0; i < lineCoordinates.size(); i++) {
-                drawLine(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
-            }
-        });
+        };
+        Platform.runLater(runnable);
     }
 
     @Override
     public void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
-        Platform.runLater(() -> {
-            drawPane.getChildren().clear();
-            for (int i = 0; i < remainingCoordinates.size(); i++) {
-                drawLine(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
-            }
-            ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
-            for (int i = 0; i < highlightCoordinates.size(); i++) {
-                drawHighlight(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
-            }
-        });
+//        synchronized (this) {
+//            Platform.runLater(() -> {
+//                drawPane.getChildren().clear();
+//                for (int i = 0; i < remainingCoordinates.size(); i++) {
+//                    drawLine(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+//                }
+//                ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
+//                for (int i = 0; i < highlightCoordinates.size(); i++) {
+//                    drawHighlight(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+//                }
+//            });
+//        }
     }
 }

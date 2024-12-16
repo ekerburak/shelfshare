@@ -227,6 +227,7 @@ public class Book {
 
     public void removeHighlightFromCurrentPage(ArrayList<Integer> coordinate, Color color) {
         int currentPageNumber = getCurrentPage().getPageNumber();
+        System.out.println("REMOVE HIGHLIGHT " + coordinate + " " + color + " " + currentPageNumber);
         BookCollection.removeHighlightFromPage(ID, currentPageNumber, coordinate, color);
     }
 

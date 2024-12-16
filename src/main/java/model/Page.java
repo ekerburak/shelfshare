@@ -1,5 +1,6 @@
 package model;
 
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import org.bson.Document;
 
@@ -134,25 +135,49 @@ public class Page {
     }
 
     protected void onPageHighlightAdded(ArrayList<Integer> coordinate, Color color) {
-        highlightCoordinates.add(coordinate);
-        highlightColorStrings.add(colorToString(color));
+        Runnable runnable = new Runnable() {
+            ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
+            Color localColor = stringToColor(colorToString(color));
+            @Override
+            public void run() {
+                highlightCoordinates.add(localCoordinate);
+                highlightColorStrings.add(colorToString(localColor));
+            }
+        };
+        Platform.runLater(runnable);
     }
 
     protected void onPageUnderlineAdded(ArrayList<Integer> coordinate, Color color) {
-        lineCoordinates.add(coordinate);
-        lineColorStrings.add(colorToString(color));
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                lineCoordinates.add(coordinate);
+//                lineColorStrings.add(colorToString(color));
+//            }
+//        };
+//        Platform.runLater(runnable);
     }
 
     protected void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
-        highlightCoordinates = remainingCoordinates;
-        highlightColorStrings = new ArrayList<String>();
-        for(Color color : remainingColors) {
-            highlightColorStrings.add(colorToString(color));
-        }
+        Runnable runnable = new Runnable() {
+            ArrayList<ArrayList<Integer>> localCoordinates = new ArrayList<>(remainingCoordinates);
+            ArrayList<Color> localColors = new ArrayList<>(remainingColors);
+            @Override
+            public void run() {
+                highlightCoordinates = localCoordinates;
+                highlightColorStrings = new ArrayList<String>();
+                for(Color color : localColors) {
+                    highlightColorStrings.add(colorToString(color));
+                }
+            }
+        };
+        Platform.runLater(runnable);
     }
 
     protected void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
-        lineCoordinates = remainingCoordinates;
-        lineColorStrings = new ArrayList<String>();
+//        Platform.runLater(() -> {
+//            lineCoordinates = remainingCoordinates;
+//            lineColorStrings = new ArrayList<String>();
+//        });
     }
 }

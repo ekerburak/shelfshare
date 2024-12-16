@@ -21,5 +21,5 @@ public class App extends Application {
         BookCollection.setup();
 
         launch(args);
-    }
+    }   
 }
