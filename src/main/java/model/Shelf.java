@@ -109,9 +109,12 @@ public class Shelf {
     public ArrayList<ObjectId> getAddedBooksIDs() {
         return addedBooksIDs;
     }
-
+    
     public ArrayList<ObjectId> getParticipantsIDs() {
         return participantsIDs;
+    }
+    public ArrayList<User> getParticipants() {
+        return UserCollection.getUsersByIDs(participantsIDs);
     }
 
     public ArrayList<ObjectId> getAdminsIDs() {

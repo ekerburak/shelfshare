@@ -10,6 +10,7 @@ package model;
 * */
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
@@ -17,6 +18,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -39,15 +41,17 @@ public class UserCollection {
                 mongoUser.getString("about")
         );
     }
-    protected static User getUser(ObjectId userID) {
-        Document mongoUser = collection.find(
-                Filters.eq("_id", userID)
-        ).first();
-        if(mongoUser == null) {
-            throw new RuntimeException("Getting user by id failed");
+    protected static ArrayList<User> getUsersByIDs(ArrayList<ObjectId> userIDs) {
+        MongoIterable mongoUsers = collection.find(
+                Filters.in("_id", userIDs)
+        );
+        ArrayList<User> users = new ArrayList<>();
+        for(Object mongoUser : mongoUsers) {
+            users.add(convertMongoUserToUser((Document) mongoUser));
         }
-        return convertMongoUserToUser(mongoUser);
+        return users;
     }
+
     protected static void updateLoggedInUser() {
         LoggedInUser user = LoggedInUser.getInstance();
         collection.updateOne(
