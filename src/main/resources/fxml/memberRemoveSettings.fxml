@@ -6,15 +6,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="549.0" prefWidth="600.0" style="-fx-background-color: #474747;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="522.0" prefWidth="600.0" style="-fx-background-color: #474747;" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MemberRemoveController">
    <children>
-      <Label layoutX="52.0" layoutY="36.0" prefHeight="51.0" prefWidth="123.0" text="Members" textFill="#c9c9c9">
+      <Label layoutX="52.0" layoutY="36.0" prefHeight="51.0" prefWidth="123.0" styleClass="header" text="Members" textFill="#c9c9c9">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <ListView layoutX="50.0" layoutY="151.0" prefHeight="310.0" prefWidth="501.0" style="-fx-background-color: #333333;" />
-      <Button id="saveButton" fx:id="save" layoutX="436.0" layoutY="487.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: #b7e8b9; -fx-text-fill: #111111;" text="Save" />
+      <ListView fx:id="memberList" layoutX="50.0" layoutY="106.0" prefHeight="310.0" prefWidth="501.0" style="-fx-background-color: #333333;" stylesheets="@../assets/listview.css" />
+      <Button fx:id="save" layoutX="436.0" layoutY="457.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" styleClass="greenButton" text="Save" />
    </children>
 </Pane>

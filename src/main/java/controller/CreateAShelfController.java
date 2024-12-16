@@ -32,6 +32,7 @@ public class CreateAShelfController {
                     comment.isSelected(),
                     invite.isSelected()
             );
+            LoggedInUser.joinShelf(shelf.getAdminInvitation());
             // close the window
             create.getScene().getWindow().hide();
             try {

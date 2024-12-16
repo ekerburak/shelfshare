@@ -45,7 +45,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField id="textfieldOfShelfName" fx:id="nameField" style="-fx-background-color: #333333;" />
+            <TextField id="textfieldOfShelfName" fx:id="nameField" prefHeight="45.0" prefWidth="515.0" stylesheets="@../assets/style.css" />
             <CheckBox fx:id="makePublic" mnemonicParsing="false" styleClass="text" text="Make Public" />
             <CheckBox fx:id="addBooks" mnemonicParsing="false" styleClass="text" text="Users can add books to shelf" />
             <CheckBox fx:id="annotate" mnemonicParsing="false" styleClass="text" text="Users can annotate the books" />

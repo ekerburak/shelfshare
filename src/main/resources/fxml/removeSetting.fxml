@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="342.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookRemoveSettingController">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="342.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RemoveSettingController">
    <children>
-      <Label fx:id="bookName" styleClass="text" stylesheets="@../assets/style.css" text="Label" />
+      <Label fx:id="name" styleClass="text" stylesheets="@../assets/style.css" text="Label" />
       <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
       <ImageView fx:id="deleteIcon" fitHeight="25.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
          <image>

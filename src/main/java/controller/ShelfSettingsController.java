@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import model.Book;
-import model.LoggedInUser;
 import model.Shelf;
 import model.ShelfCollection;
 import org.bson.types.ObjectId;
@@ -104,13 +103,12 @@ public class ShelfSettingsController {
                 continue;
             }
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/bookRemoveSetting.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/removeSetting.fxml"));
                 Pane pane = loader.load();
                 // Get the controller of the loaded FXML
-                BookRemoveSettingController controller = loader.getController();
+                RemoveSettingController controller = loader.getController();
                 // Set the shelf name label
-                controller.setShelf(shelf);
-                controller.setBook(book);
+                controller.setName(book.getName());
                 controller.setDeleteIcon(() -> {
                     booksToDelete.add(book.getID().toString());
                     listBooks();
@@ -127,6 +125,7 @@ public class ShelfSettingsController {
 
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
+        setAddPersonIcon();
         setShelfName(shelf.getName());
         setNameField(shelf.getName());
         makePublic.setSelected(shelf.getIsPublic());
@@ -145,8 +144,8 @@ public class ShelfSettingsController {
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/memberRemoveSettings.fxml"));
                     Pane root = loader.load();
-
-                    memberRemoveController controller = loader.getController();
+                    MemberRemoveController controller = loader.getController();
+                    controller.setShelf(shelf);
                     CurrentView.showPopUp(root);
                 } catch(IOException e) {
                     e.printStackTrace();
