@@ -109,7 +109,7 @@ public class Shelf {
     public ArrayList<ObjectId> getAddedBooksIDs() {
         return addedBooksIDs;
     }
-    
+
     public ArrayList<ObjectId> getParticipantsIDs() {
         return participantsIDs;
     }
@@ -167,6 +167,7 @@ public class Shelf {
         ShelfCollection.updateShelf(this);
     }
 
+    //TODO: Check if logged in user is admin
     public void kickUser(ObjectId userID) {
         if(!participantsIDs.contains(userID)) {
             throw new IllegalArgumentException("User is not a participant of this shelf");
