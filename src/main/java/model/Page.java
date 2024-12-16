@@ -80,6 +80,14 @@ public class Page {
     }
 
     protected void onPageUnderlineAdded(ArrayList<Integer> coordinate) {
+        Runnable runnable = new Runnable() {
+            ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
+            @Override
+            public void run() {
+                lineCoordinates.add(localCoordinate);
+            }
+        };
+        Platform.runLater(runnable);
     }
 
     protected void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates) {
@@ -94,6 +102,13 @@ public class Page {
     }
 
     protected void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates) {
-
+        Runnable runnable = new Runnable() {
+            ArrayList<ArrayList<Integer>> localCoordinates = new ArrayList<>(remainingCoordinates);
+            @Override
+            public void run() {
+                lineCoordinates = localCoordinates;
+            }
+        };
+        Platform.runLater(runnable);
     }
 }

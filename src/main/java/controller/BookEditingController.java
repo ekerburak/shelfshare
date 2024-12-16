@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookEditingController implements PageListener {
-    private final int SX = 0, SY = 1, EX = 2, ORAN = 100;
+    private final int SX = 0, SY = 1, EX = 2, ORAN = 300;
 
     private Book book;
     private Shelf shelf;
@@ -101,10 +102,10 @@ public class BookEditingController implements PageListener {
             }
 
             percentCoordinates = book.getCurrentPage().getLineCoordinates();
-//            for (int i = 0; i < percentCoordinates.size(); i++) {
-//                ArrayList<Integer> coordinate = percentCoordinates.get(i);
-//                drawLine(convertFromPercentCoordinate(coordinate.get(0), coordinate.get(1), coordinate.get(2)));
-//            }
+            for (int i = 0; i < percentCoordinates.size(); i++) {
+                ArrayList<Integer> coordinate = percentCoordinates.get(i);
+                drawLine(convertFromPercentCoordinate(coordinate));
+            }
         });
     }
 
@@ -176,6 +177,7 @@ public class BookEditingController implements PageListener {
                     setUnderlineIconColor(false);
                     setEraseIconColor(false);
                     setStickyNoteIconColor(false);
+                    drawPane.setCursor(Cursor.DEFAULT);
                 }
             }
         });
@@ -195,6 +197,7 @@ public class BookEditingController implements PageListener {
                     setHighlightIconColor(false);
                     setEraseIconColor(false);
                     setStickyNoteIconColor(false);
+                    drawPane.setCursor(Cursor.DEFAULT);
                 }
             }
         });
@@ -208,12 +211,15 @@ public class BookEditingController implements PageListener {
                 if(currentSelection == 2) {
                     currentSelection = -1;
                     setEraseIconColor(false);
+                    drawPane.setCursor(Cursor.DEFAULT);
                 } else {
                     currentSelection = 2;
                     setEraseIconColor(true);
                     setHighlightIconColor(false);
                     setUnderlineIconColor(false);
                     setStickyNoteIconColor(false);
+                    Image eraserImage = new Image(getClass().getResourceAsStream("/assets/erase_cursor.png"), 25, 25, true, true);
+                    drawPane.setCursor(new ImageCursor(eraserImage));
                 }
             }
         });
@@ -268,6 +274,7 @@ public class BookEditingController implements PageListener {
                 setHighlightIconColor(false);
                 setUnderlineIconColor(false);
                 setEraseIconColor(false);
+                drawPane.setCursor(Cursor.DEFAULT);
             }
         });
     }
@@ -349,6 +356,11 @@ public class BookEditingController implements PageListener {
                 book.removeHighlightFromCurrentPage(coordinate);
             }
         }
+        for(ArrayList<Integer> coordinate: book.getCurrentPage().getLineCoordinates()) {
+            if (percentageX >= coordinate.get(SX) && percentageX <= coordinate.get(EX) && percentageY == coordinate.get(SY)) {
+                book.removeUnderlineFromCurrentPage(coordinate);
+            }
+        }
     }
     private void annotatingMechanism(Pane pane) {
         pane.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -373,6 +385,8 @@ public class BookEditingController implements PageListener {
                         drawPane.getChildren().remove(lastUnderline);
                     }
                     lastUnderline = drawLine(new ArrayList<>(List.of(startX, startY, endX)));
+                } else if (currentSelection == 2) {
+                    erase((int)event.getX(), (int)event.getY());
                 }
             }
         });
@@ -481,6 +495,10 @@ public class BookEditingController implements PageListener {
                 for (ArrayList<Integer> coordinates: localCoordinates) {
                     drawHighlight(convertFromPercentCoordinate(coordinates));
                 }
+                ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
+                for (ArrayList<Integer> coordinates: lineCoordinates) {
+                    drawLine(convertFromPercentCoordinate(coordinates));
+                }
             }
         };
         Platform.runLater(runnable);
@@ -495,6 +513,10 @@ public class BookEditingController implements PageListener {
                 drawPane.getChildren().clear();
                 for (ArrayList<Integer> coordinates: localCoordinates) {
                     drawLine(convertFromPercentCoordinate(coordinates));
+                }
+                ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
+                for (ArrayList<Integer> coordinates: highlightCoordinates) {
+                    drawHighlight(convertFromPercentCoordinate(coordinates));
                 }
             }
         };
