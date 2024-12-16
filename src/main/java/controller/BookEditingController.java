@@ -1,10 +1,12 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
@@ -343,14 +345,18 @@ public class BookEditingController implements PageListener {
      * Erases the objects at the given coordinates
      */
     private void erase(int x, int y) {
-        drawPane.getChildren().removeIf(node -> {
-            if (node instanceof Label) {
-                Label label = (Label) node;
-                return label.getBoundsInParent().contains(x, y);
+        ObservableList<Node> nodes = drawPane.getChildren();
+        for(Node node: nodes) {
+            if(node instanceof Rectangle) {
+                Rectangle rectangle = (Rectangle)node;
+                if(rectangle.contains(x, y)) {
+                    int startX = (int)rectangle.localToParent(0,0).getX();
+                    int startY = (int)rectangle.localToParent(0,0).getY();
+                    int endX = (int)rectangle.localToParent(rectangle.getWidth(),0).getX();
+                    book.removeHighlightFromCurrentPage(convertToPercentCoordinate(startX, startY, endX), (Color)rectangle.getFill());
+                }
             }
-            return node.contains(x, y);
-        });
-
+        }
     }
     private void annotatingMechanism(Pane pane) {
         pane.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -467,11 +473,29 @@ public class BookEditingController implements PageListener {
 
     @Override
     public void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
-
+        Platform.runLater(() -> {
+            drawPane.getChildren().clear();
+            for (int i = 0; i < remainingCoordinates.size(); i++) {
+                drawHighlight(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+            }
+            ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
+            for (int i = 0; i < lineCoordinates.size(); i++) {
+                drawLine(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+            }
+        });
     }
 
     @Override
     public void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
-
+        Platform.runLater(() -> {
+            drawPane.getChildren().clear();
+            for (int i = 0; i < remainingCoordinates.size(); i++) {
+                drawLine(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+            }
+            ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
+            for (int i = 0; i < highlightCoordinates.size(); i++) {
+                drawHighlight(convertFromPercentCoordinate(remainingCoordinates.get(i).get(0), remainingCoordinates.get(i).get(1), remainingCoordinates.get(i).get(2)));
+            }
+        });
     }
 }
