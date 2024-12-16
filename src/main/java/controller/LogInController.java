@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.LoggedInUser;
@@ -55,25 +56,35 @@ public class LogInController {
         });
     }
 
+    private void logInAction() {
+        boolean successfulLogin = UserCollection.logIn(emailField.getText(), passwordField.getText());
+
+        if (!successfulLogin) {
+            warningLabel.setVisible(true);
+            return;
+        }
+        // Close the sign-in popup
+        Stage stage = (Stage) cherryIn.getScene().getWindow();
+        stage.close();
+
+        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
+    }
+
     private void addLogInMechanism() {
         cherryIn.setCursor(Cursor.HAND);
         cherryIn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
-                boolean successfulLogin = UserCollection.logIn(emailField.getText(), passwordField.getText());
-
-                if(!successfulLogin) {
-                    warningLabel.setVisible(true);
-                    return;
+               logInAction();
+            }
+        });
+        passwordField.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if(keyEvent.getCode().toString().equals("ENTER")) {
+                    logInAction();
                 }
-                // Close the sign-in popup
-                Stage stage = (Stage) cherryIn.getScene().getWindow();
-                stage.close();
-
-                //TODO: change yourShelves.fxml to mainPage.fxml
-                CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                        new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
             }
         });
     }
