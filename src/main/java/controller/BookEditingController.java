@@ -62,7 +62,7 @@ public class BookEditingController implements PageListener {
     private void renderImage() {
         imageView.setImage(decodeImageFromBase64(book.getCurrentPage().getImage()));
         imageView.setFitHeight(950);
-
+        drawPane.getChildren().clear();
         ArrayList<ArrayList<Integer>> coordinates = book.getCurrentPage().getHighlightCoordinates();
 //        ArrayList<Color> colors = book.getCurrentPage().getHighlightColors();
         for(int i = 0; i < coordinates.size(); i++) {
