@@ -161,8 +161,10 @@ public class Book {
         }
         if(pageIndex == currentPageIndex) {
             for(PageListener listener : currentPageListeners) {
+                System.out.println("NOTIFY PAGE HIGHLIGHT ADDED");
                 listener.onPageHighlightAdded(coordinate, color);
             }
+            getCurrentPage().onPageHighlightAdded(coordinate, color);
         }
     }
 
@@ -175,6 +177,7 @@ public class Book {
             for(PageListener listener : currentPageListeners) {
                 listener.onPageUnderlineAdded(coordinate, color);
             }
+            getCurrentPage().onPageUnderlineAdded(coordinate, color);
         }
     }
 
@@ -187,6 +190,7 @@ public class Book {
             for(PageListener listener : currentPageListeners) {
                 listener.onPageHighlightRemoved(remainingCoordinates, remainingColors);
             }
+            getCurrentPage().onPageHighlightRemoved(remainingCoordinates, remainingColors);
         }
     }
 
@@ -199,6 +203,7 @@ public class Book {
             for(PageListener listener : currentPageListeners) {
                 listener.onPageUnderlineRemoved(remainingCoordinates, remainingColors);
             }
+            getCurrentPage().onPageUnderlineRemoved(remainingCoordinates, remainingColors);
         }
     }
 
