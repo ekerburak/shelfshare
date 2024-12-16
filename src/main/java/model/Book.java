@@ -155,6 +155,7 @@ public class Book {
     //notifies the listeners only from the incoming db changes
 
     protected void notifyPageHighlightAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
+        System.out.println("HIGHLIGHT ADDED " + coordinate + " " + color);
         int pageIndex = getPageIndexAtBuffer(pageNumber);
         if(pageIndex == -1) {
             return;
@@ -164,8 +165,8 @@ public class Book {
                 System.out.println("NOTIFY PAGE HIGHLIGHT ADDED");
                 listener.onPageHighlightAdded(coordinate, color);
             }
-            getCurrentPage().onPageHighlightAdded(coordinate, color);
         }
+        pageBuffer.get(pageIndex).onPageHighlightAdded(coordinate, color);
     }
 
     protected void notifyPageUnderlineAdded(int pageNumber, ArrayList<Integer> coordinate, Color color) {
@@ -177,8 +178,8 @@ public class Book {
             for(PageListener listener : currentPageListeners) {
                 listener.onPageUnderlineAdded(coordinate, color);
             }
-            getCurrentPage().onPageUnderlineAdded(coordinate, color);
         }
+        pageBuffer.get(pageIndex).onPageUnderlineAdded(coordinate, color);
     }
 
     protected void notifyPageHighlightRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
@@ -190,8 +191,8 @@ public class Book {
             for(PageListener listener : currentPageListeners) {
                 listener.onPageHighlightRemoved(remainingCoordinates, remainingColors);
             }
-            getCurrentPage().onPageHighlightRemoved(remainingCoordinates, remainingColors);
         }
+        pageBuffer.get(pageIndex).onPageHighlightRemoved(remainingCoordinates, remainingColors);
     }
 
     protected void notifyPageUnderlineRemoved(int pageNumber, ArrayList<ArrayList<Integer>> remainingCoordinates, ArrayList<Color> remainingColors) {
@@ -203,8 +204,8 @@ public class Book {
             for(PageListener listener : currentPageListeners) {
                 listener.onPageUnderlineRemoved(remainingCoordinates, remainingColors);
             }
-            getCurrentPage().onPageUnderlineRemoved(remainingCoordinates, remainingColors);
         }
+        pageBuffer.get(pageIndex).onPageUnderlineRemoved(remainingCoordinates, remainingColors);
     }
 
     public void addCurrentPageListener(PageListener listener) {
