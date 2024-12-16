@@ -12,12 +12,14 @@ public class Page {
     private final String image;
     private ArrayList<ArrayList<Integer>> highlightCoordinates;
     private ArrayList<ArrayList<Integer>> lineCoordinates;
+    private ArrayList<StickyNote> stickyNotes;
 
     public Page(String image, int pageNumber) {
         this.image = image;
         this.pageNumber = pageNumber;
         highlightCoordinates = new ArrayList<ArrayList<Integer>>();
         lineCoordinates = new ArrayList<ArrayList<Integer>>();
+        stickyNotes = new ArrayList<StickyNote>();
     }
 
     protected Page(Document mongoPage, int pageNumber) {
@@ -29,6 +31,32 @@ public class Page {
 
         this.highlightCoordinates = convertMongoCoordinatesToCoordinates(highlightCoordinates);
         this.lineCoordinates = convertMongoCoordinatesToCoordinates(lineCoordinates);
+
+        List<?> mongoStickyNotes = mongoPage.getList("stickyNotes", List.class);
+
+        this.stickyNotes = convertMongoStickyNotesToStickyNotes(mongoStickyNotes);
+    }
+
+    private ArrayList<StickyNote> convertMongoStickyNotesToStickyNotes(List<?> mongoStickyNotes) {
+        if(mongoStickyNotes == null) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<StickyNote> result = new ArrayList<StickyNote>();
+
+        for(Object mongoStickyNote : mongoStickyNotes) {
+            assert mongoStickyNote instanceof Document;
+
+            ArrayList<Integer> coordinate = new ArrayList<Integer>();
+
+            for(Integer coordinateData : ((Document) mongoStickyNote).getList("coordinate", Integer.class)) {
+                coordinate.add((Integer) coordinateData);
+            }
+
+            result.add(new StickyNote(coordinate, ((Document) mongoStickyNote).getString("content")));
+        }
+
+        return result;
     }
 
 
@@ -66,6 +94,9 @@ public class Page {
     }
     public ArrayList<ArrayList<Integer>> getLineCoordinates() {
         return lineCoordinates;
+    }
+    public ArrayList<StickyNote> getStickyNotes() {
+        return stickyNotes;
     }
 
     protected void onPageHighlightAdded(ArrayList<Integer> coordinate) {
@@ -107,6 +138,17 @@ public class Page {
             @Override
             public void run() {
                 lineCoordinates = localCoordinates;
+            }
+        };
+        Platform.runLater(runnable);
+    }
+
+    public void onPageStickyAdded(StickyNote stickyNote) {
+        Runnable runnable = new Runnable() {
+            StickyNote localStickyNote = stickyNote;
+            @Override
+            public void run() {
+                stickyNotes.add(localStickyNote);
             }
         };
         Platform.runLater(runnable);

@@ -220,6 +220,10 @@ public class BookCollection {
             String regexUnderlineCoordinateAdd = "pages\\.\\d+\\.lineCoordinates\\.\\d+$";
             String regexUnderlineCoordinateRemove = "pages\\.\\d+\\.lineCoordinates$";
 
+
+            String regexStickyNoteAdd = "pages\\.\\d+\\.stickyNotes\\.\\d+$";
+            String regexStickyNoteRemove = "pages\\.\\d+\\.stickyNotes$";
+
             try (MongoChangeStreamCursor<ChangeStreamDocument<Document>> cursor = changeStream.cursor()) {
                 while (cursor.hasNext()) {
 
@@ -234,12 +238,14 @@ public class BookCollection {
                     BsonDocument updatedFields = updateDescription.getUpdatedFields();
 
 
-                    final int NONE = 0, HIGHLIGHT = 1, UNDERLINE = 2;
+                    final int NONE = 0, HIGHLIGHT = 1, UNDERLINE = 2, STICKY = 3;
                     int mode = NONE;
                     boolean isAdd = false;
                     int modifiedPageNumber = -1;
                     ArrayList<Integer> addedCoordinate = null;
                     ArrayList<ArrayList<Integer>> remainingCoordinates = null;
+                    ArrayList<StickyNote> remainingStickyNotes = null;
+                    String stickyContent = null;
 
                     for (String updatedKey : updatedFields.keySet()) {
 
@@ -293,6 +299,32 @@ public class BookCollection {
 
                         }
 
+                        //STICKY
+                        if (updatedKey.matches(regexStickyNoteAdd)) {
+                            mode = STICKY;
+                            isAdd = true;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            addedCoordinate = new ArrayList<Integer>();
+                            for (BsonValue coordinate : updatedFields.get(updatedKey).asDocument().getArray("coordinate").asArray()) {
+                                addedCoordinate.add(coordinate.asInt32().getValue());
+                            }
+
+                            stickyContent = updatedFields.get(updatedKey).asDocument().getString("content").getValue();
+                        } else if (updatedKey.matches(regexStickyNoteRemove)) {
+                            mode = STICKY;
+                            isAdd = false;
+                            modifiedPageNumber = parseUpdatedPage(updatedKey);
+                            remainingStickyNotes = new ArrayList<StickyNote>();
+                            for (BsonValue mongoSticky : updatedFields.get(updatedKey).asArray()) {
+                                ArrayList<Integer> coordinateToAdd = new ArrayList<Integer>();
+                                for (BsonValue coordinateData : mongoSticky.asDocument().getArray("coordinate").asArray()) {
+                                    coordinateToAdd.add(coordinateData.asInt32().getValue());
+                                }
+                                String content = mongoSticky.asDocument().getString("content").getValue();
+                                remainingStickyNotes.add(new StickyNote(coordinateToAdd, content));
+                            }
+
+                        }
                     }
 
                     if (mode == NONE) {
@@ -303,15 +335,21 @@ public class BookCollection {
                         assert addedCoordinate != null && modifiedPageNumber != -1;
                         if (mode == HIGHLIGHT) {
                             book.notifyPageHighlightAdded(modifiedPageNumber, addedCoordinate);
-                        } else {
+                        } else if (mode == UNDERLINE) {
                             book.notifyPageUnderlineAdded(modifiedPageNumber, addedCoordinate);
+                        } else {
+                            assert stickyContent != null;
+                            book.notifyPageStickyAdded(modifiedPageNumber, new StickyNote(addedCoordinate, stickyContent));
                         }
                     } else {
                         assert remainingCoordinates != null && modifiedPageNumber != -1;
                         if (mode == HIGHLIGHT) {
                             book.notifyPageHighlightRemoved(modifiedPageNumber, remainingCoordinates);
-                        } else {
+                        } else if(mode == UNDERLINE) {
                             book.notifyPageUnderlineRemoved(modifiedPageNumber, remainingCoordinates);
+                        } else {
+                            assert remainingStickyNotes != null;
+                            book.notifyPageStickyRemoved(modifiedPageNumber, remainingCoordinates);
                         }
                     }
 
@@ -319,13 +357,20 @@ public class BookCollection {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
         }).start();
+
+
     }
 
     public static void main(String[] args) {
         setup();
         Book book = BookCollection.getAddedBooksByIDs(new ArrayList<ObjectId>(List.of(new ObjectId("675dc91bc16e4836de0f531d")))).get(0);
+        //System.out.println(book.getName());
         book.startListening();
+        //book.addHighlightToCurrentPage(new ArrayList<Integer>(List.of(1, 2, 3)));
+        //book.addUnderlineToCurrentPage(new ArrayList<Integer>(List.of(1, 2, 3)));
     }
 
 }

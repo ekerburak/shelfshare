@@ -239,4 +239,16 @@ public class Book {
     }
 
 
+    public void notifyPageStickyAdded(int modifiedPageNumber, StickyNote stickyNote) {
+        int pageIndex = getPageIndexAtBuffer(modifiedPageNumber);
+        if(pageIndex == -1) {
+            return;
+        }
+        pageBuffer.get(pageIndex).onPageStickyAdded(stickyNote);
+        if(pageIndex == currentPageIndex) {
+            for(PageListener listener : currentPageListeners) {
+                listener.onPageStickyAdded(stickyNote);
+            }
+        }
+    }
 }

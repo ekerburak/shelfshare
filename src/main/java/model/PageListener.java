@@ -1,7 +1,5 @@
 package model;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
 public interface PageListener {
@@ -9,4 +7,6 @@ public interface PageListener {
     void onPageUnderlineAdded(ArrayList<Integer> coordinate);
     void onPageHighlightRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates);
     void onPageUnderlineRemoved(ArrayList<ArrayList<Integer>> remainingCoordinates);
+    void onPageStickyAdded(StickyNote content);
+    void onPageStickyRemoved(ArrayList<StickyNote> remainingStickyNoteNotes);
 }
