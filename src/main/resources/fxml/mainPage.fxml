@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -10,103 +9,63 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<HBox minHeight="0.0" minWidth="0.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
+<HBox alignment="CENTER" minHeight="0.0" minWidth="0.0" spacing="100.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
    <children>
-      <HBox spacing="20.0">
+      <ImageView fitHeight="235.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/cherry.png" />
+         </image>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </ImageView>
+      <VBox alignment="CENTER_LEFT" prefHeight="157.0" prefWidth="282.0">
          <children>
-            <ImageView fitHeight="235.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/cherry.png" />
-               </image>
-               <HBox.margin>
-                  <Insets top="200.0" />
-               </HBox.margin>
-            </ImageView>
-            <VBox spacing="200.0">
-               <children>
-                  <VBox>
-                     <children>
-                        <Label ellipsisString="-" style="-fx-text-fill: #C2C2C2;" text="ShelfShare" textFill="TRANSPARENT">
-                           <font>
-                              <Font size="45.0" />
-                           </font>
-                        </Label>
-                        <Label prefHeight="55.0" prefWidth="282.0" style="-fx-text-fill: #C2C2C2;" text="Share what you love." textFill="TRANSPARENT">
-                           <effect>
-                              <DropShadow />
-                           </effect>
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox spacing="30.0">
-                     <children>
-                        <HBox fx:id="exploreYourShelves" alignment="CENTER_LEFT" spacing="10.0">
-                           <children>
-                              <ImageView fitHeight="43.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/explore.png" />
-                                 </image>
-                              </ImageView>
-                              <Label style="-fx-text-fill: #B7E8B9;" stylesheets="@../assets/style.css" text="Explore your shelves" textFill="TRANSPARENT" />
-                           </children>
-                        </HBox>
-                        <HBox fx:id="explorePublicShelves" alignment="CENTER_LEFT" spacing="10.0">
-                           <children>
-                              <ImageView fitHeight="40.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/explore.png" />
-                                 </image>
-                              </ImageView>
-                              <Label style="-fx-text-fill: #B7E8B9;" stylesheets="@../assets/style.css" text="Explore public shelves" textFill="TRANSPARENT">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-               <padding>
-                  <Insets top="200.0" />
-               </padding>
-            </VBox>
+            <Label ellipsisString="-" style="-fx-text-fill: #C2C2C2;" text="ShelfShare" textFill="TRANSPARENT">
+               <font>
+                  <Font size="45.0" />
+               </font>
+            </Label>
+            <Label prefHeight="55.0" prefWidth="282.0" style="-fx-text-fill: #C2C2C2;" text="Share what you love." textFill="TRANSPARENT">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
          </children>
-         <padding>
-            <Insets left="50.0" />
-         </padding>
-      </HBox>
-      <VBox>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="159.0" prefWidth="234.0" spacing="30.0">
          <children>
-            <HBox spacing="15.0">
+            <HBox fx:id="exploreYourShelves" alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <ImageView fitHeight="37.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="43.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/recently_read_books.png" />
+                        <Image url="@../assets/explore.png" />
                      </image>
                   </ImageView>
-                  <Label prefHeight="43.0" prefWidth="301.0" style="-fx-text-fill: #C2C2C2;" stylesheets="@../assets/style.css" text="Recently read books:" textFill="TRANSPARENT">
+                  <Label style="-fx-text-fill: #B7E8B9;" stylesheets="@../assets/style.css" text="Explore your shelves" textFill="TRANSPARENT" />
+               </children>
+            </HBox>
+            <HBox fx:id="explorePublicShelves" alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <ImageView fitHeight="40.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/explore.png" />
+                     </image>
+                  </ImageView>
+                  <Label style="-fx-text-fill: #B7E8B9;" stylesheets="@../assets/style.css" text="Explore public shelves" textFill="TRANSPARENT">
                      <font>
-                        <Font size="26.0" />
+                        <Font size="30.0" />
                      </font>
                   </Label>
                </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
             </HBox>
-            <ListView fx:id="listView" />
          </children>
-         <padding>
-            <Insets left="200.0" right="200.0" top="200.0" />
-         </padding>
       </VBox>
    </children>
    <padding>
-      <Insets bottom="200.0" />
+      <Insets bottom="250.0" left="250.0" right="250.0" top="250.0" />
    </padding>
 </HBox>

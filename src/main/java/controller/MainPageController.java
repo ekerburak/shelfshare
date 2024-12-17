@@ -10,16 +10,6 @@ public class MainPageController {
     @FXML
     private HBox exploreYourShelves, explorePublicShelves;
 
-    @FXML
-    private ListView<String> listView;
-
-    private final String[] recentlyReadBooks = {"Book 1", "Book 2", "Book 3", "Book 4", "Book 5"};
-
-    private void addRecentlyReadBooks() {
-        for (String book : recentlyReadBooks) {
-            listView.getItems().add(book);
-        }
-    }
 
     private void setExploreYourShelves() {
         exploreYourShelves.setCursor(javafx.scene.Cursor.HAND);
@@ -45,6 +35,5 @@ public class MainPageController {
     public void initialize() {
         setExploreYourShelves();
         setExplorePublicShelves();
-        addRecentlyReadBooks();
     }
 }
