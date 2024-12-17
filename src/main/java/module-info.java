@@ -9,6 +9,7 @@ module cherryontop {
     requires org.mongodb.driver.sync.client;
     requires org.apache.pdfbox;
     requires org.apache.commons.logging;
+    requires postmark;
 
 
     exports controller;

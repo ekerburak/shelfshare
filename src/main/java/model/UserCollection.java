@@ -139,6 +139,13 @@ public class UserCollection {
         );
     }
 
+    public static void updatePassword(String email, String newPassword) {
+        collection.updateOne(
+                Filters.eq("email", email),
+                Updates.set("password", newPassword)
+        );
+    }
+
     public static void main(String[] args) {
         setup();
     }

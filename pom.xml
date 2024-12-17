@@ -11,6 +11,11 @@
         <javafx.version>23.0.1</javafx.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.postmarkapp</groupId>
+            <artifactId>postmark</artifactId>
+            <version>1.10.21</version>
+        </dependency>
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-sync</artifactId>
