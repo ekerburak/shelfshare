@@ -91,8 +91,8 @@ public class BookCollection {
         collection.updateOne(
                 new Document().append("_id", book.getID()),
                 Updates.combine(
-                        Updates.set("isDownloadable", book.getIsDownloadable())
-                        //ADD CHAT ID HERE!!
+                        Updates.set("isDownloadable", book.getIsDownloadable()),
+                        Updates.set("name", book.getName())
                 )
         );
     }
@@ -125,6 +125,7 @@ public class BookCollection {
 
     //returns the mongo id of the added book
     protected static ObjectId addBook(
+            String name,
             boolean isDownloadable,
             String[] pageImages
     ) {
@@ -142,6 +143,7 @@ public class BookCollection {
         }
         ObjectId discussionChatID = ChatCollection.createChat();
         Document mongoBook = new Document()
+                .append("name", name)
                 .append("isDownloadable", isDownloadable)
                 .append("pages", mongoPages)
                 .append("pageCount", pageImages.length)

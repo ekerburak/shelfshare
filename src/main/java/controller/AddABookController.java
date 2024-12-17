@@ -99,7 +99,7 @@ public class AddABookController {
                             base64Images[i] = convertImageToBase64(image);
                         }
                         System.out.println("entered");
-                        shelf.addBook(false, base64Images);
+                        shelf.addBook(name.getText(), false, base64Images);
                         shelf.getBooks().get(shelf.getBooks().size()-1).setName(name.getText());
                     } catch (IOException e) {
                         e.printStackTrace();

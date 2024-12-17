@@ -138,42 +138,6 @@ public class ShelfController {
         return encodedfile;
     }
 
-    private void setAddIcon() {
-        addIcon.setCursor(javafx.scene.Cursor.HAND);
-        addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Select a PDF File");
-                // Set file extension filters
-                fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
-                );
-                // Show open file dialog
-                File file = fileChooser.showOpenDialog(null);
-
-                if(file != null) {
-                    try {
-                        PDDocument document = Loader.loadPDF(file);
-                        PDFRenderer renderer = new PDFRenderer(document);
-
-                        String[] base64Images = new String[document.getNumberOfPages()];
-
-                        // convert pdf to images
-                        for (int i = 0; i < document.getNumberOfPages(); i++) {
-                            BufferedImage image = renderer.renderImage(i);
-                            // convert image to base64
-                            base64Images[i] = convertImageToBase64(image);
-                        }
-                        shelf.addBook(false, base64Images);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }});
-
-    }
-
     private void openAddABookPopup() {
         if(shelf.getAllowBookAdd() || shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
             addIcon.setCursor(javafx.scene.Cursor.HAND);
