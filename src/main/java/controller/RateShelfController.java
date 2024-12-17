@@ -2,12 +2,15 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import model.Shelf;
 
 public class RateShelfController {
+    Shelf shelf;
 
     @FXML
     ImageView firstStar, secondStar, thirdStar, forthStar, fifthStar;
@@ -20,8 +23,9 @@ public class RateShelfController {
 
     static int rating = 0;
 
-    public void setShelfName(String name) {
-        shelfName.setText(name);
+    public void setShelf(Shelf shelf) {
+        this.shelf = shelf;
+        shelfName.setText(shelf.getName());
     }
 
     public static int getRating() {
@@ -101,8 +105,12 @@ public class RateShelfController {
     private void setDoneButton() {
         doneButton.setCursor(Cursor.HAND);
         doneButton.setOnMouseClicked(e -> {
-            // TODO: send rating
-
+            // send rating
+            if(!shelf.rateShelf(rating)) {
+                // send message to the user
+                Alert alert = new Alert(Alert.AlertType.ERROR, "You have already rated this shelf");
+                alert.showAndWait();
+            }
             // close window after rating
             doneButton.getScene().getWindow().hide();
         });

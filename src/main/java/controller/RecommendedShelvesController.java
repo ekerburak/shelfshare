@@ -54,6 +54,7 @@ public class RecommendedShelvesController {
                 RecommendedShelfListElementController controller = loader.getController();
                 // Set the shelf name label
                 controller.setShelfName(shelf.getName());
+                controller.setRating("" + shelf.getPopularity());
                 controller.setNumberOfMember("" + shelf.getParticipantsIDs().size());
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);

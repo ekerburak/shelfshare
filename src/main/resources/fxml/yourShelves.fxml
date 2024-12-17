@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
@@ -32,7 +31,6 @@
          <children>
             <Label styleClass="text" text="Search:" />
             <TextField fx:id="filterField" prefHeight="26.0" prefWidth="263.0" promptText="Search for shelves..." />
-            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="greenButton" text="Sort by Rating" />
          </children>
       </HBox>
       <ListView fx:id="shelvesList" prefHeight="400.0" prefWidth="1295.0" stylesheets="@../assets/listview.css" />

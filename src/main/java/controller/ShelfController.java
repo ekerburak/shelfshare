@@ -100,7 +100,7 @@ public class ShelfController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/rateShelf.fxml"));
                     Pane pane = loader.load();
                     RateShelfController controller = loader.getController();
-                    controller.setShelfName(shelf.getName());
+                    controller.setShelf(shelf);
                     CurrentView.showPopUp(pane);
                 } catch(IOException e) {
                     e.printStackTrace();
