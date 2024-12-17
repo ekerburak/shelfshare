@@ -67,11 +67,21 @@ public class BookEditingController implements PageListener {
         shelfName.setText(shelf.getName());
     }
 
+    private int boundX(int x) {
+        return Math.max((int)imageView.getLayoutX(), Math.min((int)(imageView.getLayoutX() + imageView.getBoundsInParent().getWidth()), x));
+    }
+
+    private int boundY(int y) {
+        return Math.max(0, Math.min((int)imageView.getBoundsInParent().getHeight(), y));
+    }
+
     private int convertToPercentX(int x) {
+        x = boundX(x);
         return (int)((x - imageView.getLayoutX()) / imageView.getBoundsInParent().getWidth() * ORAN);
     }
 
     private int convertToPercentY(int y) {
+        y = boundY(y);
         return (int)(y / imageView.getBoundsInParent().getHeight() * ORAN);
     }
 
@@ -304,6 +314,10 @@ public class BookEditingController implements PageListener {
      * Draws a highlight rectangle on the given pane
      */
     private Rectangle drawHighlight(ArrayList<Integer> coordinate) {
+        coordinate.set(EX, boundX(coordinate.get(EX)));
+        coordinate.set(SY, boundY(coordinate.get(SY)));
+        coordinate.set(SX, boundX(coordinate.get(SX)));
+
         if (coordinate.get(EX) < coordinate.get(SX)) {
             int temp = coordinate.get(SX);
             coordinate.set(SX, coordinate.get(EX));
@@ -321,6 +335,10 @@ public class BookEditingController implements PageListener {
      * Draws a line on the given pane
      */
     private Rectangle drawLine(ArrayList<Integer> coordinate) {
+        coordinate.set(EX, boundX(coordinate.get(EX)));
+        coordinate.set(SY, boundY(coordinate.get(SY)));
+        coordinate.set(SX, boundX(coordinate.get(SX)));
+
         if (coordinate.get(EX) < coordinate.get(SX)) {
             int temp = coordinate.get(SX);
             coordinate.set(SX, coordinate.get(EX));
@@ -379,7 +397,7 @@ public class BookEditingController implements PageListener {
             }
         }
         for(StickyNote note: book.getCurrentPage().getStickyNotes()) {
-            if (Math.abs(percentageX - note.getCoordinate().get(0)) <= 1 && Math.abs(percentageY - note.getCoordinate().get(1)) <= 1) {
+            if (percentageX - note.getCoordinate().get(0) <= 15 && percentageY - note.getCoordinate().get(1) <= 15) {
                 book.removeStickyFromCurrentPage(note);
             }
         }
