@@ -111,15 +111,16 @@ public class BookCollection {
 
         ArrayList<Document> mongoPages = new ArrayList<>(mongoBook.getList("pages", Document.class));
 
-        if (mongoPages.size() != pageHigh - pageLow + 1) {
-            throw new IllegalArgumentException("Invalid page range");
-        }
 
         ArrayList<Page> pages = new ArrayList<Page>();
 
         for (int i = 0; i < mongoPages.size(); i++) {
-            pages.add(new Page(mongoPages.get(i), i));
+            pages.add(new Page(mongoPages.get(i), pageLow + i));
         }
+
+        System.out.println(pageLow + " " + pageHigh + " " + pages);
+
+        assert pages.size() == pageHigh - pageLow + 1;
 
         return pages;
     }

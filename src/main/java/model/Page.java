@@ -22,6 +22,11 @@ public class Page {
         stickyNotes = new ArrayList<StickyNote>();
     }
 
+    public String toString() {
+        return "Page{" +
+                "pageNumber=" + pageNumber + '}';
+    }
+
     protected Page(Document mongoPage, int pageNumber) {
         this.image = mongoPage.getString("image");
         this.pageNumber = pageNumber;

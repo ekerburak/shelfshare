@@ -12,6 +12,7 @@ public class Book {
     private boolean isDownloadable;
     private int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
     private ObjectId discussionChatID;
+    private final Object lock = new Object();
 
     private static final int MAX_BUFFER_SIZE = 11;
     private ArrayList<Page> pageBuffer;
@@ -61,29 +62,30 @@ public class Book {
      *         last page of the book.
      */
     public boolean goToNextPage() {
-        if (currentPageIndex < pageBuffer.size() - 1) {
+        synchronized (lock) {
+            if (currentPageIndex < pageBuffer.size() - 1) {
+                currentPageIndex++;
+                return true;
+            }
+            int currentPageNumber = pageBuffer.get(currentPageIndex).getPageNumber();
+            if(currentPageNumber == pageCount - 1) {
+                return false;
+            }
+
+            int pageLow = Math.min(currentPageNumber + 1, pageCount - 1);
+            int pageHigh = Math.min(currentPageNumber + MAX_BUFFER_SIZE / 2, pageCount - 1);
             currentPageIndex++;
+
+            ArrayList<Page> newPages = BookCollection.getPages(ID, pageLow, pageHigh);
+            pageBuffer.addAll(newPages);
+
+            while(pageBuffer.size() > MAX_BUFFER_SIZE) {
+                pageBuffer.remove(0);
+                currentPageIndex--;
+            }
+
             return true;
         }
-        int currentPageNumber = pageBuffer.get(currentPageIndex).getPageNumber();
-        if(currentPageNumber == pageCount - 1) {
-            return false;
-        }
-
-        int pageLow = Math.max(currentPageNumber - MAX_BUFFER_SIZE / 2, 0);
-        int pageHigh = Math.max(currentPageNumber - 1, 0);
-        currentPageIndex += pageHigh - pageLow + 1;
-
-        ArrayList<Page> newPages = BookCollection.getPages(ID, pageLow, pageHigh);
-        ArrayList<Page> pageBufferTemp = pageBuffer;
-        pageBuffer = newPages;
-        pageBuffer.addAll(pageBufferTemp);
-
-        while(pageBuffer.size() > MAX_BUFFER_SIZE) {
-            pageBuffer.remove(pageBuffer.size() - 1);
-        }
-
-        return true;
     }
 
     /**
@@ -96,40 +98,47 @@ public class Book {
      *         at the beginning of the book and no further previous pages are available.
      */
     public boolean goToPrevPage() {
-        if (currentPageIndex > 0) {
-            currentPageIndex--;
-            return true;
-        }
-        int currentPageNumber = pageBuffer.get(currentPageIndex).getPageNumber();
-        //already at the first page
-        if(currentPageNumber == 0) {
-            return false;
-        }
+       synchronized (lock) {
+           if (currentPageIndex > 0) {
+               currentPageIndex--;
+               return true;
+           }
+           int currentPageNumber = pageBuffer.get(currentPageIndex).getPageNumber();
+           //already at the first page
+           if(currentPageNumber == 0) {
+               return false;
+           }
 
-        int pageLow = Math.max(currentPageNumber - MAX_BUFFER_SIZE / 2, 0);
-        int pageHigh = Math.max(currentPageNumber - 1, 0);
-        currentPageIndex += pageHigh - pageLow + 1;
+           int pageLow = Math.max(currentPageNumber - MAX_BUFFER_SIZE / 2, 0);
+           int pageHigh = Math.max(currentPageNumber - 1, 0);
+           currentPageIndex += (pageHigh - pageLow + 1);
+           currentPageIndex--;
 
-        ArrayList<Page> newPages = BookCollection.getPages(ID, pageLow, pageHigh);
-        ArrayList<Page> pageBufferTemp = pageBuffer;
-        pageBuffer = newPages;
-        pageBuffer.addAll(pageBufferTemp);
+           ArrayList<Page> newPages = BookCollection.getPages(ID, pageLow, pageHigh);
+           ArrayList<Page> pageBufferTemp = pageBuffer;
+           pageBuffer = newPages;
+           pageBuffer.addAll(pageBufferTemp);
 
-        while(pageBuffer.size() > MAX_BUFFER_SIZE) {
-            pageBuffer.remove(pageBuffer.size() - 1);
-        }
+           while(pageBuffer.size() > MAX_BUFFER_SIZE) {
+               pageBuffer.remove(pageBuffer.size() - 1);
+           }
 
-        return true;
+           return true;
+       }
     }
 
 
     public void goToFirstPage() {
-        pageBuffer = BookCollection.getPages(ID, 0, Math.min(MAX_BUFFER_SIZE - 1, pageCount - 1));
-        currentPageIndex = 0;
+        synchronized (lock) {
+            pageBuffer = BookCollection.getPages(ID, 0, Math.min(MAX_BUFFER_SIZE - 1, pageCount - 1));
+            currentPageIndex = 0;
+        }
     }
 
     public Page getCurrentPage() {
-        return pageBuffer.get(currentPageIndex);
+        synchronized (lock) {
+            return pageBuffer.get(currentPageIndex);
+        }
     }
 
     public Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID) {
