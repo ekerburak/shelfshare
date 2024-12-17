@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookEditingController implements PageListener {
+    public static final String HIGHLIGHT_R_LINE_TEMPL = "XYX";
+    public static final String NOTE_TEMPL = "XY";
     private final int SX = 0, SY = 1, EX = 2, ORAN = 300;
 
     private Book book;
@@ -113,16 +115,16 @@ public class BookEditingController implements PageListener {
             ArrayList<ArrayList<Integer>> percentCoordinates = book.getCurrentPage().getHighlightCoordinates();
             for (int i = 0; i < percentCoordinates.size(); i++) {
                 ArrayList<Integer> coordinate = percentCoordinates.get(i);
-                drawHighlight(convertFromPercentCoordinate(coordinate, "XYX"));
+                drawHighlight(convertFromPercentCoordinate(coordinate, HIGHLIGHT_R_LINE_TEMPL));
             }
             percentCoordinates = book.getCurrentPage().getLineCoordinates();
             for (int i = 0; i < percentCoordinates.size(); i++) {
                 ArrayList<Integer> coordinate = percentCoordinates.get(i);
-                drawLine(convertFromPercentCoordinate(coordinate, "XYX"));
+                drawLine(convertFromPercentCoordinate(coordinate, HIGHLIGHT_R_LINE_TEMPL));
             }
             ArrayList<StickyNote> stickyNotes = book.getCurrentPage().getStickyNotes();
             for (int i = 0; i < stickyNotes.size(); i++) {
-                StickyNote note = new StickyNote(convertFromPercentCoordinate(stickyNotes.get(i).getCoordinate(), "XY"), stickyNotes.get(i).getContent());
+                StickyNote note = new StickyNote(convertFromPercentCoordinate(stickyNotes.get(i).getCoordinate(), NOTE_TEMPL), stickyNotes.get(i).getContent());
                 drawStickyNote(note);
             }
         });
@@ -376,11 +378,11 @@ public class BookEditingController implements PageListener {
                 book.removeUnderlineFromCurrentPage(coordinate);
             }
         }
-//        for(StickyNote note: book.getCurrentPage().getStickyNotes()) {
-//            if (Math.abs(percentageX - note.getCoordinate().get(0)) <= 1 && Math.abs(percentageY - note.getCoordinate().get(1)) <= 1) {
-//                book.removeStickyNoteFromCurrentPage(note);
-//            }
-//        }
+        for(StickyNote note: book.getCurrentPage().getStickyNotes()) {
+            if (Math.abs(percentageX - note.getCoordinate().get(0)) <= 1 && Math.abs(percentageY - note.getCoordinate().get(1)) <= 1) {
+                book.removeStickyFromCurrentPage(note);
+            }
+        }
     }
     private void annotatingMechanism(Pane pane) {
         pane.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -487,7 +489,7 @@ public class BookEditingController implements PageListener {
             ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
             @Override
             public void run() {
-                drawHighlight(convertFromPercentCoordinate(localCoordinate, "XYX"));
+                drawHighlight(convertFromPercentCoordinate(localCoordinate, HIGHLIGHT_R_LINE_TEMPL));
             }
         };
         Platform.runLater(runnable);
@@ -499,7 +501,7 @@ public class BookEditingController implements PageListener {
             ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
             @Override
             public void run() {
-                drawLine(convertFromPercentCoordinate(localCoordinate, "XYX"));
+                drawLine(convertFromPercentCoordinate(localCoordinate, HIGHLIGHT_R_LINE_TEMPL));
             }
         };
         Platform.runLater(runnable);
@@ -513,11 +515,16 @@ public class BookEditingController implements PageListener {
             public void run() {
                 drawPane.getChildren().clear();
                 for (ArrayList<Integer> coordinates: localCoordinates) {
-                    drawHighlight(convertFromPercentCoordinate(coordinates, "XYX"));
+                    drawHighlight(convertFromPercentCoordinate(coordinates, HIGHLIGHT_R_LINE_TEMPL));
                 }
                 ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
                 for (ArrayList<Integer> coordinates: lineCoordinates) {
-                    drawLine(convertFromPercentCoordinate(coordinates, "XYX"));
+                    drawLine(convertFromPercentCoordinate(coordinates, HIGHLIGHT_R_LINE_TEMPL));
+                }
+                ArrayList<StickyNote> stickyNotes = book.getCurrentPage().getStickyNotes();
+                for (StickyNote stickyNote: stickyNotes) {
+                    StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(stickyNote.getCoordinate(), NOTE_TEMPL), stickyNote.getContent());
+                    drawStickyNote(convertedNote);
                 }
             }
         };
@@ -532,13 +539,17 @@ public class BookEditingController implements PageListener {
             public void run() {
                 drawPane.getChildren().clear();
                 for (ArrayList<Integer> coordinates: localCoordinates) {
-                    drawLine(convertFromPercentCoordinate(coordinates, "XYX"));
+                    drawLine(convertFromPercentCoordinate(coordinates, HIGHLIGHT_R_LINE_TEMPL));
                 }
                 ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
                 for (ArrayList<Integer> coordinates: highlightCoordinates) {
-                    drawHighlight(convertFromPercentCoordinate(coordinates, "XYX"));
+                    drawHighlight(convertFromPercentCoordinate(coordinates, HIGHLIGHT_R_LINE_TEMPL));
                 }
-//                ArrayList<StickyNote> stickyNotes = book.getCurrentPage().getStickyNotes();
+                ArrayList<StickyNote> stickyNotes = book.getCurrentPage().getStickyNotes();
+                for (StickyNote stickyNote: stickyNotes) {
+                    StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(stickyNote.getCoordinate(), NOTE_TEMPL), stickyNote.getContent());
+                    drawStickyNote(convertedNote);
+                }
             }
         };
         Platform.runLater(runnable);
@@ -550,7 +561,7 @@ public class BookEditingController implements PageListener {
             StickyNote localContent = content;
             @Override
             public void run() {
-                StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(localContent.getCoordinate(), "XY"), localContent.getContent());
+                StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(localContent.getCoordinate(), NOTE_TEMPL), localContent.getContent());
                 drawStickyNote(convertedNote);
             }
         };
@@ -559,24 +570,25 @@ public class BookEditingController implements PageListener {
 
     @Override
     public void onPageStickyRemoved(ArrayList<StickyNote> remainingStickyNoteNotes) {
-//        Runnable runnable = new Runnable() {
-//            ArrayList<StickyNote> localStickyNotes = new ArrayList<>(remainingStickyNoteNotes);
-//            @Override
-//            public void run() {
-//                drawPane.getChildren().clear();
-//                for (StickyNote stickyNote: localStickyNotes) {
-//                    drawStickyNote(stickyNote);
-//                }
-//                ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
-//                for (ArrayList<Integer> coordinates: highlightCoordinates) {
-//                    drawHighlight(convertFromPercentCoordinate(coordinates));
-//                }
-//                ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
-//                for (ArrayList<Integer> coordinates: lineCoordinates) {
-//                    drawLine(convertFromPercentCoordinate(coordinates));
-//                }
-//            }
-//        };
-//        Platform.runLater(runnable);
+        Runnable runnable = new Runnable() {
+            ArrayList<StickyNote> localStickyNotes = new ArrayList<>(remainingStickyNoteNotes);
+            @Override
+            public void run() {
+                drawPane.getChildren().clear();
+                for (StickyNote stickyNote: localStickyNotes) {
+                    StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(stickyNote.getCoordinate(), NOTE_TEMPL), stickyNote.getContent());
+                    drawStickyNote(convertedNote);
+                }
+                ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
+                for (ArrayList<Integer> coordinates: highlightCoordinates) {
+                    drawHighlight(convertFromPercentCoordinate(coordinates, HIGHLIGHT_R_LINE_TEMPL));
+                }
+                ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
+                for (ArrayList<Integer> coordinates: lineCoordinates) {
+                    drawLine(convertFromPercentCoordinate(coordinates, HIGHLIGHT_R_LINE_TEMPL));
+                }
+            }
+        };
+        Platform.runLater(runnable);
     }
 }
