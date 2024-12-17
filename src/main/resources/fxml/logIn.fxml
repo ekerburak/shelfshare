@@ -20,7 +20,7 @@
         <Button id="cherryIn" fx:id="cherryIn" layoutX="437.0" layoutY="305.0" mnemonicParsing="false" styleClass="redButton" text="Cherry In" />
         <Label focusTraversable="false" layoutX="132.0" layoutY="389.0" style="-fx-text-fill: #FFFFFF;" text="---------- New to ShelfShare? ----------" />
         <Button id="JoinNow" fx:id="joinNow" layoutX="244.0" layoutY="432.0" mnemonicParsing="false" styleClass="greenButton" stylesheets="@../assets/style.css" text="Join now !" />
-        <Label layoutX="60.0" layoutY="258.0" style="-fx-text-fill: #FFFFFF;" text="Forgot your password?" />
+        <Label fx:id="forgotPassword" layoutX="60.0" layoutY="258.0" style="-fx-text-fill: #FFFFFF;" text="Forgot your password?" />
       <Label fx:id="warningLabel" focusTraversable="false" layoutX="204.0" layoutY="279.0" text="Email or password is invalid!" textFill="RED" visible="false" />
     </children>
 </Pane>

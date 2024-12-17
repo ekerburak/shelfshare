@@ -18,6 +18,7 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
 import com.mongodb.client.result.DeleteResult;
 import org.bson.BsonDocument;
+import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -115,15 +116,28 @@ public class ChatCollection {
                    }
 
                    BsonDocument updatedField = updateDescription.getUpdatedFields();
+                   Message message;
 
-                   BsonDocument mongoMessage = updatedField.getDocument(updatedField.getFirstKey());
+                   try {
+                       BsonDocument mongoMessage = updatedField.getDocument(updatedField.getFirstKey());
 
-                   Message message = new Message(
-                           mongoMessage.getString("timestamp").getValue(),
-                           mongoMessage.getString("sender").getValue(),
-                           mongoMessage.getObjectId("senderID").getValue(),
-                           mongoMessage.getString("content").getValue()
-                   );
+
+                        message = new Message(
+                               mongoMessage.getString("timestamp").getValue(),
+                               mongoMessage.getString("sender").getValue(),
+                               mongoMessage.getObjectId("senderID").getValue(),
+                               mongoMessage.getString("content").getValue()
+                       );
+                   } catch (BsonInvalidOperationException e) {
+
+                       BsonDocument mongoMessage = updatedField.getArray(updatedField.getFirstKey()).get(0).asDocument();
+                       message = new Message(
+                               mongoMessage.getString("timestamp").getValue(),
+                               mongoMessage.getString("sender").getValue(),
+                               mongoMessage.getObjectId("senderID").getValue(),
+                               mongoMessage.getString("content").getValue()
+                       );
+                   }
 
                    chat.notifyListeners(message);
 

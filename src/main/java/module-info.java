@@ -8,6 +8,7 @@ module cherryontop {
     requires org.mongodb.driver.core;
     requires org.mongodb.driver.sync.client;
     requires org.apache.pdfbox;
+    requires org.apache.commons.logging;
 
 
     exports controller;
