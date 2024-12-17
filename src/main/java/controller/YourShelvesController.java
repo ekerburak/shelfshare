@@ -71,6 +71,7 @@ public class YourShelvesController {
     }
 
     private void openInvitation(){
+
         joinLabel.setCursor(javafx.scene.Cursor.HAND);
         joinLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override

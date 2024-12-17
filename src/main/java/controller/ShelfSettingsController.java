@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import model.Book;
+import model.LoggedInUser;
 import model.Shelf;
 import model.ShelfCollection;
 import org.bson.types.ObjectId;
@@ -115,6 +116,7 @@ public class ShelfSettingsController {
                 });
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);
+
                 items.add(pane);
             } catch (IOException e) {
                 e.printStackTrace();

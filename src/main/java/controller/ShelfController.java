@@ -61,6 +61,8 @@ public class ShelfController {
         this.shelf = shelf;
         setShelfName(shelf.getName());
         setSettingsIcon();
+        openAddABookPopup();
+        setAddPersonIcon();
         books = shelf.getBooks();
         for (Book book : books) {
             try {
@@ -173,45 +175,56 @@ public class ShelfController {
     }
 
     private void openAddABookPopup() {
-        addIcon.setCursor(javafx.scene.Cursor.HAND);
-        addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addABook.fxml"));
-                    Pane root = loader.load();
+        if(shelf.getAllowBookAdd() || shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
+            addIcon.setCursor(javafx.scene.Cursor.HAND);
+            addIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addABook.fxml"));
+                        Pane root = loader.load();
 
-                    AddABookController controller = loader.getController();
-                    controller.setShelf(shelf);
-                    CurrentView.showPopUp(root);
+                        AddABookController controller = loader.getController();
+                        controller.setShelf(shelf);
 
-                } catch(IOException e) {
-                    e.printStackTrace();
+                        CurrentView.showPopUp(root);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-//                CurrentView.showPopUp(new FXMLLoader(getClass().getResource("/fxml/addABook.fxml")));
-
-            }});
+            });
+        }
+        else {
+            addIcon.setVisible(false);
+        }
     }
 
     private void setAddPersonIcon() {
-        addPersonIcon.setCursor(javafx.scene.Cursor.HAND);
-        addPersonIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/invitation.fxml"));
-                    Pane root = loader.load();
+        if(shelf.getAllowInvitation() || shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
+            addPersonIcon.setCursor(javafx.scene.Cursor.HAND);
+            addPersonIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/invitation.fxml"));
+                        Pane root = loader.load();
 
-                    InvitationController controller = loader.getController();
-                    controller.setOnlyView(shelf.getStandardInvitation());
-                    controller.setEdit(shelf.getAdminInvitation());
+                        InvitationController controller = loader.getController();
+                        controller.setOnlyView(shelf.getStandardInvitation());
+                        controller.setEdit(shelf.getAdminInvitation());
 
-                    CurrentView.showPopUp(root);
-                } catch(IOException e) {
-                    e.printStackTrace();
+                        CurrentView.showPopUp(root);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            addPersonIcon.setVisible(false);
+        }
     }
 
     private void setSettingsIcon() {
@@ -246,15 +259,13 @@ public class ShelfController {
         });
     }
 
+
     @FXML
     public void initialize() {
         setBackIcon();
 //        setAddIcon();
-        openAddABookPopup();
-        setAddPersonIcon();
         setRatingShelf();
         setLeaveIcon();
-
 
         FilteredList<Pane> filteredItems = new FilteredList<>(items, p -> true);
         bookList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);

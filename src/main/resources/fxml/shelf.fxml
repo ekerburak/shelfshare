@@ -41,11 +41,6 @@
                                     <Image url="@../assets/settings.png" />
                                  </image>
                               </ImageView>
-                               <ImageView fx:id="rateIcon" fitHeight="69.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
-                                   <image>
-                                       <Image url="@../assets/rate_star.png" />
-                                   </image>
-                               </ImageView>
                               <ImageView fx:id="addIcon" fitHeight="93.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../assets/add_book.png" />
@@ -56,6 +51,11 @@
                                     <Image url="@../assets/person_add.png" />
                                  </image>
                               </ImageView>
+                               <ImageView fx:id="rateIcon" fitHeight="69.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
+                                   <image>
+                                       <Image url="@../assets/rate_star.png" />
+                                   </image>
+                               </ImageView>
                               <ImageView fx:id="leaveIcon" fitHeight="72.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../assets/leave.png" />
