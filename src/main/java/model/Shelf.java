@@ -75,6 +75,7 @@ public class Shelf {
         this.participantsIDs = participantsIDs;
         this.adminsIDs = adminsIDs;
         this.ratedParticipantsIDs = ratedParticipantsIDs;
+        assert ratedParticipantsIDs != null;
     }
 
     public ObjectId getID() {

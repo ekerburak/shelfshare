@@ -186,4 +186,5 @@ public class ShelfCollection {
         sortList.sort(new PopularityComparator());
         return new ArrayList<Shelf>(sortList.subList(0, Math.min(limit, sortList.size())));
     }
+
 }
