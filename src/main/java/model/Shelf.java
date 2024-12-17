@@ -41,6 +41,7 @@ public class Shelf {
     private ArrayList<ObjectId> addedBooksIDs;
     private ArrayList<ObjectId> participantsIDs;
     private ArrayList<ObjectId> adminsIDs;
+    private ArrayList<ObjectId> ratedParticipantsIDs;
 
     public Shelf(
             ObjectId ID,
@@ -56,7 +57,8 @@ public class Shelf {
             ObjectId forumChatID,
             ArrayList<ObjectId> addedBooksIDs,
             ArrayList<ObjectId> participantsIDs,
-            ArrayList<ObjectId> adminsIDs
+            ArrayList<ObjectId> adminsIDs,
+            ArrayList<ObjectId> ratedParticipantsIDs
     ) {
         this.ID = ID;
         this.name = name;
@@ -72,6 +74,7 @@ public class Shelf {
         this.addedBooksIDs = addedBooksIDs;
         this.participantsIDs = participantsIDs;
         this.adminsIDs = adminsIDs;
+        this.ratedParticipantsIDs = ratedParticipantsIDs;
     }
 
     public ObjectId getID() {
@@ -128,6 +131,7 @@ public class Shelf {
     public String getStandardInvitation() {
         return standardInvitation;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -208,5 +212,26 @@ public class Shelf {
 
     public String toString() {
         return "< Shelf id : " + ID + " name: " + name + " >";
+    }
+
+    public ArrayList<ObjectId> getRatedParticipantsIDs() {
+        return ratedParticipantsIDs;
+    }
+
+    //1 <= rating <= 5
+    public boolean rateShelf(int rating) {
+        if(ratedParticipantsIDs.contains(LoggedInUser.getInstance().getID())) {
+            //already rated
+            return false;
+        }
+        if(!(1 <= rating && rating <= 5)) {
+            return false;
+        }
+        popularity *= ratedParticipantsIDs.size();
+        popularity += rating;
+        ratedParticipantsIDs.add(LoggedInUser.getInstance().getID());
+        popularity /= ratedParticipantsIDs.size();
+        ShelfCollection.updateShelf(this);
+        return true;
     }
 }

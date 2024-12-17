@@ -16,6 +16,7 @@ forum (chat)
 addedBooks (book) 
 participants (user)
 admin (user) (multiple people)
+ratedParticipants
 * */
 
 import com.mongodb.client.FindIterable;
@@ -53,7 +54,8 @@ public class ShelfCollection {
                 mongoShelf.getObjectId("forumChatID"),
                 new ArrayList<ObjectId>(mongoShelf.getList("addedBooksIDs", ObjectId.class)),
                 new ArrayList<ObjectId>(mongoShelf.getList("participantsIDs", ObjectId.class)),
-                new ArrayList<ObjectId>(mongoShelf.getList("adminsIDs", ObjectId.class))
+                new ArrayList<ObjectId>(mongoShelf.getList("adminsIDs", ObjectId.class)),
+                new ArrayList<ObjectId>(mongoShelf.getList("ratedParticipantsIDs", ObjectId.class))
         );
     }
 
@@ -104,7 +106,8 @@ public class ShelfCollection {
                         Updates.set("forumChatID", shelf.getForumChatID()),
                         Updates.set("addedBooksIDs", shelf.getAddedBooksIDs()),
                         Updates.set("participantsIDs", shelf.getParticipantsIDs()),
-                        Updates.set("adminsIDs", shelf.getAdminsIDs())
+                        Updates.set("adminsIDs", shelf.getAdminsIDs()),
+                        Updates.set("ratedParticipantsIDs", shelf.getRatedParticipantsIDs())
                 )
         );
     }
@@ -130,7 +133,8 @@ public class ShelfCollection {
                 .append("addedBooksIDs", new ArrayList<ObjectId>())
                 .append("participantsIDs", new ArrayList<ObjectId>())
                 .append("adminsIDs", new ArrayList<ObjectId>())
-                .append("forumChatID", forumChatID);
+                .append("forumChatID", forumChatID)
+                .append("ratedParticipantsIDs", new ArrayList<ObjectId>());
         collection.insertOne(mongoShelf);
         LoggedInUser.joinShelf(mongoShelf.get("adminInvitation").toString());
         return convertMongoShelfToShelf(mongoShelf);
