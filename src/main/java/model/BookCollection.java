@@ -154,36 +154,48 @@ public class BookCollection {
         collection.deleteOne(new Document("_id", bookID));
     }
 
-    protected static void addHighlightToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
+    protected static void addHighlightToPage(ObjectId bookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
-                new Document().append("_id", BookID),
+                new Document().append("_id", bookID),
                 Updates.combine(
                         Updates.push("pages." + pageNumber + ".highlightCoordinates", coordinate)
                 )
         );
     }
 
-    protected static void addUnderlineToPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
+    protected static void addUnderlineToPage(ObjectId bookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
-                new Document().append("_id", BookID),
+                new Document().append("_id", bookID),
                 Updates.combine(
                         Updates.push("pages." + pageNumber + ".lineCoordinates", coordinate)
                 )
         );
     }
 
-    protected static void removeHighlightFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
+    protected static void addStickyToPage(ObjectId bookID, int pageNumber, StickyNote s) {
         collection.updateOne(
-                new Document().append("_id", BookID),
+                new Document().append("_id", bookID),
+                Updates.combine(
+                        Updates.push("pages."+pageNumber+".stickyNotes", new Document()
+                                .append("coordinate", s.getCoordinate())
+                                .append("content", s.getContent())
+                        )
+                )
+        );
+    }
+
+    protected static void removeHighlightFromPage(ObjectId bookID, int pageNumber, ArrayList<Integer> coordinate) {
+        collection.updateOne(
+                new Document().append("_id", bookID),
                 Updates.combine(
                         Updates.pull("pages." + pageNumber + ".highlightCoordinates", coordinate)
                 )
         );
     }
 
-    protected static void removeUnderlineFromPage(ObjectId BookID, int pageNumber, ArrayList<Integer> coordinate) {
+    protected static void removeUnderlineFromPage(ObjectId bookID, int pageNumber, ArrayList<Integer> coordinate) {
         collection.updateOne(
-                new Document().append("_id", BookID),
+                new Document().append("_id", bookID),
                 Updates.combine(
                         Updates.pull("pages." + pageNumber + ".lineCoordinates", coordinate)
                 )
@@ -349,7 +361,7 @@ public class BookCollection {
                             book.notifyPageUnderlineRemoved(modifiedPageNumber, remainingCoordinates);
                         } else {
                             assert remainingStickyNotes != null;
-                            book.notifyPageStickyRemoved(modifiedPageNumber, remainingCoordinates);
+                            //book.notifyPageStickyRemoved(modifiedPageNumber, );
                         }
                     }
 

@@ -239,7 +239,7 @@ public class Book {
     }
 
 
-    public void notifyPageStickyAdded(int modifiedPageNumber, StickyNote stickyNote) {
+    protected void notifyPageStickyAdded(int modifiedPageNumber, StickyNote stickyNote) {
         int pageIndex = getPageIndexAtBuffer(modifiedPageNumber);
         if(pageIndex == -1) {
             return;
@@ -250,5 +250,14 @@ public class Book {
                 listener.onPageStickyAdded(stickyNote);
             }
         }
+    }
+
+    protected void notifyPageStickyRemoved(int modifiedPageNumber, ArrayList<StickyNote> remainingStickies) {
+
+    }
+
+    public void addStickyToCurrentPage(StickyNote s) {
+        int currentPageNumber = getCurrentPage().getPageNumber();
+        BookCollection.addStickyToPage(ID, currentPageNumber, s);
     }
 }
