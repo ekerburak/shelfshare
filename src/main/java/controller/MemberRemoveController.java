@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
+import model.LoggedInUser;
 import model.Shelf;
 import model.User;
 import org.bson.types.ObjectId;
@@ -30,6 +31,7 @@ public class MemberRemoveController {
         memberList.getItems().clear();
 
         ArrayList<User> users = shelf.getParticipants();
+        users.remove(0);
         for (User user: users) {
             if (usersToDelete.contains(user.getID().toString())) {
                 continue;
@@ -48,6 +50,8 @@ public class MemberRemoveController {
                 // Set the controller as user data for the pane
                 pane.setUserData(controller);
                 items.add(pane);
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
