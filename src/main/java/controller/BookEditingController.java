@@ -84,13 +84,6 @@ public class BookEditingController implements PageListener {
         int newEndX = convertToPercentX(endX);
         return new ArrayList<Integer>(List.of(newStartX, newStartY, newEndX));
     }
-    ArrayList<Integer> convertToPercentCoordinate(ArrayList<Integer> coordinate) {
-        ArrayList<Integer> newCoordinate = new ArrayList<>(coordinate);
-        for(int i = 0; i < newCoordinate.size(); i++) {
-            newCoordinate.set(i, convertToPercentX(newCoordinate.get(i)));
-        }
-        return newCoordinate;
-    }
 
     int convertFromPercentX(int x) {
         return (int)(x * imageView.getBoundsInParent().getWidth() / ORAN + imageView.getLayoutX());
@@ -99,16 +92,14 @@ public class BookEditingController implements PageListener {
         return (int)(y * imageView.getBoundsInParent().getHeight() / ORAN);
     }
 
-    ArrayList<Integer> convertFromPercentCoordinate(int startX, int startY, int endX) {
-        int newStartX = convertFromPercentX(startX);
-        int newStartY = convertFromPercentY(startY);
-        int newEndX = convertFromPercentX(endX);
-        return new ArrayList<Integer>(List.of(newStartX, newStartY, newEndX));
-    }
-    ArrayList<Integer> convertFromPercentCoordinate(ArrayList<Integer> coordinate) {
+    ArrayList<Integer> convertFromPercentCoordinate(ArrayList<Integer> coordinate, String template) {
         ArrayList<Integer> newCoordinate = new ArrayList<>(coordinate);
         for(int i = 0; i < newCoordinate.size(); i++) {
-            newCoordinate.set(i, convertFromPercentX(newCoordinate.get(i)));
+            if (template.charAt(i) == 'X') {
+                newCoordinate.set(i, convertFromPercentX(newCoordinate.get(i)));
+            } else {
+                newCoordinate.set(i, convertFromPercentY(newCoordinate.get(i)));
+            }
         }
         return newCoordinate;
     }
@@ -122,13 +113,17 @@ public class BookEditingController implements PageListener {
             ArrayList<ArrayList<Integer>> percentCoordinates = book.getCurrentPage().getHighlightCoordinates();
             for (int i = 0; i < percentCoordinates.size(); i++) {
                 ArrayList<Integer> coordinate = percentCoordinates.get(i);
-                drawHighlight(convertFromPercentCoordinate(coordinate));
+                drawHighlight(convertFromPercentCoordinate(coordinate, "XYX"));
             }
-
             percentCoordinates = book.getCurrentPage().getLineCoordinates();
             for (int i = 0; i < percentCoordinates.size(); i++) {
                 ArrayList<Integer> coordinate = percentCoordinates.get(i);
-                drawLine(convertFromPercentCoordinate(coordinate));
+                drawLine(convertFromPercentCoordinate(coordinate, "XYX"));
+            }
+            ArrayList<StickyNote> stickyNotes = book.getCurrentPage().getStickyNotes();
+            for (int i = 0; i < stickyNotes.size(); i++) {
+                StickyNote note = new StickyNote(convertFromPercentCoordinate(stickyNotes.get(i).getCoordinate(), "XY"), stickyNotes.get(i).getContent());
+                drawStickyNote(note);
             }
         });
     }
@@ -484,8 +479,6 @@ public class BookEditingController implements PageListener {
                 });
             }
         });
-
-
     }
 
     @Override
@@ -494,7 +487,7 @@ public class BookEditingController implements PageListener {
             ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
             @Override
             public void run() {
-                drawHighlight(convertFromPercentCoordinate(localCoordinate));
+                drawHighlight(convertFromPercentCoordinate(localCoordinate, "XYX"));
             }
         };
         Platform.runLater(runnable);
@@ -506,7 +499,7 @@ public class BookEditingController implements PageListener {
             ArrayList<Integer> localCoordinate = new ArrayList<>(coordinate);
             @Override
             public void run() {
-                drawLine(convertFromPercentCoordinate(localCoordinate));
+                drawLine(convertFromPercentCoordinate(localCoordinate, "XYX"));
             }
         };
         Platform.runLater(runnable);
@@ -520,11 +513,11 @@ public class BookEditingController implements PageListener {
             public void run() {
                 drawPane.getChildren().clear();
                 for (ArrayList<Integer> coordinates: localCoordinates) {
-                    drawHighlight(convertFromPercentCoordinate(coordinates));
+                    drawHighlight(convertFromPercentCoordinate(coordinates, "XYX"));
                 }
                 ArrayList<ArrayList<Integer>> lineCoordinates = book.getCurrentPage().getLineCoordinates();
                 for (ArrayList<Integer> coordinates: lineCoordinates) {
-                    drawLine(convertFromPercentCoordinate(coordinates));
+                    drawLine(convertFromPercentCoordinate(coordinates, "XYX"));
                 }
             }
         };
@@ -539,11 +532,11 @@ public class BookEditingController implements PageListener {
             public void run() {
                 drawPane.getChildren().clear();
                 for (ArrayList<Integer> coordinates: localCoordinates) {
-                    drawLine(convertFromPercentCoordinate(coordinates));
+                    drawLine(convertFromPercentCoordinate(coordinates, "XYX"));
                 }
                 ArrayList<ArrayList<Integer>> highlightCoordinates = book.getCurrentPage().getHighlightCoordinates();
                 for (ArrayList<Integer> coordinates: highlightCoordinates) {
-                    drawHighlight(convertFromPercentCoordinate(coordinates));
+                    drawHighlight(convertFromPercentCoordinate(coordinates, "XYX"));
                 }
 //                ArrayList<StickyNote> stickyNotes = book.getCurrentPage().getStickyNotes();
             }
@@ -557,7 +550,7 @@ public class BookEditingController implements PageListener {
             StickyNote localContent = content;
             @Override
             public void run() {
-                StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(localContent.getCoordinate()), localContent.getContent());
+                StickyNote convertedNote = new StickyNote(convertFromPercentCoordinate(localContent.getCoordinate(), "XY"), localContent.getContent());
                 drawStickyNote(convertedNote);
             }
         };
