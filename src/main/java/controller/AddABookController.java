@@ -43,6 +43,8 @@ public class AddABookController {
     @FXML
     private RadioButton redCover, blueCover, pinkCover;
 
+    private static final int RED_COVER = 0, BLUE_COVER = 1, PINK_COVER = 2;
+
     @FXML
     private Button fileButton, doneButton;
 
@@ -106,15 +108,15 @@ public class AddABookController {
     public void setCoverSelection(){
 //        TODO requires a book model method
         if(coverSelection.getSelectedToggle() == redCover){
-//            shelf.getBooks().get(shelf.getBooks().size()-1).setCover(redCover);
+            shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(RED_COVER);
 
         }
         else if(coverSelection.getSelectedToggle() == blueCover){
-//            shelf.getBooks().get(shelf.getBooks().size()-1).setCover(blueCover);
+            shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(BLUE_COVER);
 
         }
         else if(coverSelection.getSelectedToggle() == pinkCover){
-//            shelf.getBooks().get(shelf.getBooks().size()-1).setCover(pinkCover);
+            shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(PINK_COVER);
 
         }
     }

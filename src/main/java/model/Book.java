@@ -12,6 +12,7 @@ public class Book {
     private boolean isDownloadable;
     private int pageCount; //pages are numbered from 0 to pageCount - 1 inclusive
     private ObjectId discussionChatID;
+    private int coverImageOption;
     private final Object lock = new Object();
 
     private static final int MAX_BUFFER_SIZE = 11;
@@ -44,8 +45,17 @@ public class Book {
         return ChatCollection.getChat(discussionChatID);
     }
 
+    public int getCoverImageOption() {
+        return coverImageOption;
+    }
+
     public void setName(String name) {
         this.name = name;
+        BookCollection.updateProperties(this);
+    }
+
+    public void setCoverImageOption(int coverImageOption) {
+        this.coverImageOption = coverImageOption;
         BookCollection.updateProperties(this);
     }
 
@@ -141,7 +151,7 @@ public class Book {
         }
     }
 
-    public Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID) {
+    public Book(ObjectId ID, String name, String uploaderName, boolean isDownloadable, int pageCount, ObjectId discussionChatID, int coverImageOption) {
         this.ID = ID;
         this.name = name;
         this.uploaderName = uploaderName;
@@ -149,6 +159,7 @@ public class Book {
         this.pageCount = pageCount;
         this.discussionChatID = discussionChatID;
         pageBuffer = new ArrayList<>();
+        this.coverImageOption = coverImageOption;
         goToFirstPage();
     }
 

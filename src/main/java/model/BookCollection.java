@@ -60,7 +60,8 @@ public class BookCollection {
                 mongoBook.getString("uploaderName"),
                 mongoBook.getBoolean("isDownloadable"),
                 mongoBook.getInteger("pageCount"),
-                mongoBook.getObjectId("discussionChatID")
+                mongoBook.getObjectId("discussionChatID"),
+                mongoBook.getInteger("coverImageOption")
         );
     }
 
@@ -93,7 +94,8 @@ public class BookCollection {
                 new Document().append("_id", book.getID()),
                 Updates.combine(
                         Updates.set("isDownloadable", book.getIsDownloadable()),
-                        Updates.set("name", book.getName())
+                        Updates.set("name", book.getName()),
+                        Updates.set("coverImageOption", book.getCoverImageOption())
                 )
         );
     }
@@ -128,6 +130,7 @@ public class BookCollection {
     //returns the mongo id of the added book
     protected static ObjectId addBook(
             String name,
+            int coverImageOption,
             boolean isDownloadable,
             String[] pageImages
     ) {
@@ -147,6 +150,7 @@ public class BookCollection {
         Document mongoBook = new Document()
                 .append("name", name)
                 .append("uploaderName", LoggedInUser.getInstance().getUsername())
+                .append("coverImageOption", coverImageOption)
                 .append("isDownloadable", isDownloadable)
                 .append("pages", mongoPages)
                 .append("pageCount", pageImages.length)
@@ -378,15 +382,6 @@ public class BookCollection {
         }).start();
 
 
-    }
-
-    public static void main(String[] args) {
-        setup();
-        Book book = BookCollection.getAddedBooksByIDs(new ArrayList<ObjectId>(List.of(new ObjectId("675dc91bc16e4836de0f531d")))).get(0);
-        //System.out.println(book.getName());
-        book.startListening();
-        //book.addHighlightToCurrentPage(new ArrayList<Integer>(List.of(1, 2, 3)));
-        //book.addUnderlineToCurrentPage(new ArrayList<Integer>(List.of(1, 2, 3)));
     }
 
     public static void removeStickyFromPage(ObjectId id, int currentPageNumber, StickyNote s) {
