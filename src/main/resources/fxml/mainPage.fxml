@@ -36,7 +36,7 @@
             </Label>
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="159.0" prefWidth="234.0" spacing="30.0">
+      <VBox alignment="CENTER_LEFT" prefHeight="211.0" prefWidth="319.0" spacing="30.0">
          <children>
             <HBox fx:id="exploreYourShelves" alignment="CENTER_LEFT" spacing="10.0">
                <children>
