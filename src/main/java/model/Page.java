@@ -32,7 +32,9 @@ public class Page {
         this.highlightCoordinates = convertMongoCoordinatesToCoordinates(highlightCoordinates);
         this.lineCoordinates = convertMongoCoordinatesToCoordinates(lineCoordinates);
 
-        List<?> mongoStickyNotes = mongoPage.getList("stickyNotes", List.class);
+        List<?> mongoStickyNotes = mongoPage.getList("stickyNotes", Document.class);
+
+        assert mongoStickyNotes != null;
 
         this.stickyNotes = convertMongoStickyNotesToStickyNotes(mongoStickyNotes);
     }
