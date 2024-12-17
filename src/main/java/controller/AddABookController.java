@@ -96,8 +96,6 @@ public class AddABookController {
                             base64Images[i] = convertImageToBase64(image);
                         }
                         System.out.println("entered");
-                        shelf.addBook(name.getText(), false, base64Images);
-                        shelf.getBooks().get(shelf.getBooks().size()-1).setName(name.getText());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -123,9 +121,32 @@ public class AddABookController {
 
     public void setName(){
         System.out.println(name.getText());
+    }
+
+    private void setDoneButton() {
         doneButton.setCursor(javafx.scene.Cursor.HAND);
-        doneButton.setOnMouseClicked(event -> {
-            shelf.getBooks().get(shelf.getBooks().size()-1).setName(name.getText());
+        doneButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(base64Images != null) {
+                    shelf.addBook(name.getText(), false, base64Images);
+                }
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));
+                try {
+                    Pane pane = loader.load();
+                    ShelfController controller = loader.getController();
+                    controller.setShelf(shelf);
+                    CurrentView.updateView(
+                        new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                        pane
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // hide the popup
+                ((Button) mouseEvent.getSource()).getScene().getWindow().hide();
+            }
         });
     }
 
@@ -134,6 +155,6 @@ public class AddABookController {
         selectFile();
         setCoverSelection();
         setName();
-
+        setDoneButton();
     }
 }
