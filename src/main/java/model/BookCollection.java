@@ -384,4 +384,15 @@ public class BookCollection {
         //book.addUnderlineToCurrentPage(new ArrayList<Integer>(List.of(1, 2, 3)));
     }
 
+    public static void removeStickyFromPage(ObjectId id, int currentPageNumber, StickyNote s) {
+        collection.updateOne(
+                new Document().append("_id", id),
+                Updates.combine(
+                        Updates.pull("pages."+currentPageNumber+".stickyNotes", new Document()
+                                .append("coordinate", s.getCoordinate())
+                                .append("content", s.getContent())
+                        )
+                )
+        );
+    }
 }

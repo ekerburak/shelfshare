@@ -269,4 +269,9 @@ public class Book {
         int currentPageNumber = getCurrentPage().getPageNumber();
         BookCollection.addStickyToPage(ID, currentPageNumber, s);
     }
+
+    public void removeStickyFromCurrentPage(StickyNote s) {
+        int currentPageNumber = getCurrentPage().getPageNumber();
+        BookCollection.removeStickyFromPage(ID, currentPageNumber, s);
+    }
 }
