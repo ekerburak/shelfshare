@@ -7,6 +7,7 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
+import org.apache.commons.logging.Log;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.Document;
@@ -144,6 +145,7 @@ public class BookCollection {
         ObjectId discussionChatID = ChatCollection.createChat();
         Document mongoBook = new Document()
                 .append("name", name)
+                .append("uploaderName", LoggedInUser.getInstance().getUsername())
                 .append("isDownloadable", isDownloadable)
                 .append("pages", mongoPages)
                 .append("pageCount", pageImages.length)
