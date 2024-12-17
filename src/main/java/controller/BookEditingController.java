@@ -14,12 +14,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import model.Book;
-import model.PageListener;
-import model.Shelf;
-import model.StickyNote;
+import model.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -65,6 +63,13 @@ public class BookEditingController implements PageListener {
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
         shelfName.setText(shelf.getName());
+        setChatIcon();
+        if(!shelf.getAllowBookAnnotate() && !shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
+            highlightIcon.setVisible(false);
+            underlineIcon.setVisible(false);
+            eraseIcon.setVisible(false);
+            stickyNoteIcon.setVisible(false);
+        }
     }
 
     private int boundX(int x) {
@@ -275,21 +280,25 @@ public class BookEditingController implements PageListener {
     }
 
     private void setChatIcon() {
-        chatIcon.setCursor(Cursor.HAND);
-        chatIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/discussion.fxml"));
-                    Pane pane = loader.load();
-                    DiscussionController controller = loader.getController();
-                    controller.setBook(book);
-                    CurrentView.showPopUp(pane);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if(shelf.getAllowDiscussion() || shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
+            chatIcon.setCursor(Cursor.HAND);
+            chatIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/discussion.fxml"));
+                        Pane pane = loader.load();
+                        DiscussionController controller = loader.getController();
+                        controller.setBook(book);
+                        CurrentView.showPopUp(pane);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            chatIcon.setVisible(false);
+        }
     }
 
     // Add a method to handle sticky note icon click
@@ -378,7 +387,6 @@ public class BookEditingController implements PageListener {
 
         drawPane.getChildren().add(noteLabel);
     }
-
     /**
      * Erases the objects at the given coordinates
      */
@@ -473,7 +481,6 @@ public class BookEditingController implements PageListener {
     @FXML
     public void initialize() {
         setGoBackIcon();
-        setChatIcon();
         leftArrowMechanism(leftArrow);
         rightArrowMechanism(rightArrow);
         highlightIconMechanism(highlightIcon);

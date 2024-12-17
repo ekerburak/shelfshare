@@ -60,10 +60,8 @@ public class AddABookController {
             byte[] bytes = baos.toByteArray();
             encodedfile = Base64.getEncoder().encodeToString(bytes);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return encodedfile;
@@ -85,7 +83,6 @@ public class AddABookController {
                 File file = fileChooser.showOpenDialog(null);
 
                 if(file != null) {
-
                     try {
                         PDDocument document = Loader.loadPDF(file);
                         PDFRenderer renderer = new PDFRenderer(document);

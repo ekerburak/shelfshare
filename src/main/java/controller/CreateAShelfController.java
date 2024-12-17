@@ -35,18 +35,11 @@ public class CreateAShelfController {
             LoggedInUser.joinShelf(shelf.getAdminInvitation());
             // close the window
             create.getScene().getWindow().hide();
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));
-                Pane shelfPane = loader.load();
-                ShelfController controller = loader.getController();
-                controller.setShelf(shelf);
-                CurrentView.updateView(
-                        new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
-                        shelfPane
-                );
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+            // reload the your shelves page
+            CurrentView.updateView(
+                    new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
+                    new FXMLLoader(getClass().getResource("/fxml/yourShelves.fxml"))
+            );
         });
     }
 
