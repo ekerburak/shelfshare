@@ -155,4 +155,15 @@ public class Page {
         };
         Platform.runLater(runnable);
     }
+
+    public void onPageStickyRemoved(ArrayList<StickyNote> remainingStickies) {
+        Runnable runnable = new Runnable() {
+            ArrayList<StickyNote> localStickies = new ArrayList<>(remainingStickies);
+            @Override
+            public void run() {
+                stickyNotes = localStickies;
+            }
+        };
+        Platform.runLater(runnable);
+    }
 }

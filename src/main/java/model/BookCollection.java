@@ -360,8 +360,7 @@ public class BookCollection {
                         } else if(mode == UNDERLINE) {
                             book.notifyPageUnderlineRemoved(modifiedPageNumber, remainingCoordinates);
                         } else {
-                            assert remainingStickyNotes != null;
-                            //book.notifyPageStickyRemoved(modifiedPageNumber, );
+                            book.notifyPageStickyRemoved(modifiedPageNumber, remainingStickyNotes);
                         }
                     }
 

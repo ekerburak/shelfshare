@@ -252,8 +252,17 @@ public class Book {
         }
     }
 
-    protected void notifyPageStickyRemoved(int modifiedPageNumber, ArrayList<StickyNote> remainingStickies) {
-
+    protected void notifyPageStickyRemoved(int pageNumber, ArrayList<StickyNote> remainingStickies) {
+        int pageIndex = getPageIndexAtBuffer(pageNumber);
+        if(pageIndex == -1) {
+            return;
+        }
+        pageBuffer.get(pageIndex).onPageStickyRemoved(remainingStickies);
+        if(pageIndex == currentPageIndex) {
+            for(PageListener listener : currentPageListeners) {
+                listener.onPageStickyRemoved(remainingStickies);
+            }
+        }
     }
 
     public void addStickyToCurrentPage(StickyNote s) {
