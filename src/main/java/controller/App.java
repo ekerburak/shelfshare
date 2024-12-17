@@ -11,7 +11,6 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/sidebar.fxml")),
                 new FXMLLoader(getClass().getResource("/fxml/mainPage.fxml")));
-//        CurrentView.updateView(new FXMLLoader(getClass().getResource("/fxml/settingsAccount.fxml")));
     }
 
     public static void main(String[] args) {

@@ -47,21 +47,21 @@
                      </toggleGroup></RadioButton>
                   <ImageView fitHeight="75.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/redCover.png" />
+                        <Image url="@../assets/cover0.png" />
                      </image>
                   </ImageView>
                   <Pane prefHeight="69.0" prefWidth="77.0" />
                   <RadioButton fx:id="blueCover" mnemonicParsing="false" toggleGroup="$coverSelection" />
                   <ImageView fitHeight="75.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/blueCover.png" />
+                        <Image url="@../assets/cover1.png" />
                      </image>
                   </ImageView>
                   <Pane prefHeight="69.0" prefWidth="77.0" />
                   <RadioButton fx:id="pinkCover" mnemonicParsing="false" toggleGroup="$coverSelection" />
                   <ImageView fitHeight="75.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/pinkCover.png" />
+                        <Image url="@../assets/cover2.png" />
                      </image>
                   </ImageView>
                </children>

@@ -3,6 +3,8 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import model.Book;
@@ -15,13 +17,21 @@ public class BookController {
     @FXML
     private VBox mainBox;
 
+    @FXML
+    private ImageView image;
+
     private Shelf shelf;
+
     private Book book;
 
     public void setBook(Book book) {
         this.book = book;
         setBookName(book.getName());
         setUploaderName(book.getUploaderName());
+        System.out.println(book.getCoverImageOption());
+        Image imageNew = new Image(getClass().getResource("/assets/cover" + book.getCoverImageOption() + ".png").toExternalForm());
+        image.setImage(imageNew);
+
     }
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
