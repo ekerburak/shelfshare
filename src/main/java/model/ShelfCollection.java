@@ -48,7 +48,7 @@ public class ShelfCollection {
                 mongoShelf.getBoolean("allowBookAnnotate"),
                 mongoShelf.getBoolean("allowDiscussion"),
                 mongoShelf.getBoolean("allowInvitation"),
-                mongoShelf.getInteger("popularity"),
+                mongoShelf.getDouble("popularity"),
                 mongoShelf.getString("adminInvitation"),
                 mongoShelf.getString("standardInvitation"),
                 mongoShelf.getObjectId("forumChatID"),
@@ -154,7 +154,7 @@ public class ShelfCollection {
     private static class PopularityComparator implements Comparator<Shelf> {
         @Override
         public int compare(Shelf s1, Shelf s2) {
-            return s2.getPopularity() - s1.getPopularity();
+            return (int)(s2.getPopularity() - s1.getPopularity());
         }
     }
 

@@ -33,7 +33,7 @@ public class Shelf {
     private boolean allowBookAnnotate;
     private boolean allowDiscussion;
     private boolean allowInvitation;
-    private int popularity;
+    private double popularity;
     private String standardInvitation;
     private String adminInvitation;
 
@@ -51,7 +51,7 @@ public class Shelf {
             boolean allowBookAnnotate,
             boolean allowDiscussion,
             boolean allowInvitation,
-            int popularity,
+            double popularity,
             String adminInvitation,
             String standardInvitation,
             ObjectId forumChatID,
@@ -207,7 +207,7 @@ public class Shelf {
     }
 
 
-    public int getPopularity() {
+    public double getPopularity() {
         return popularity;
     }
 
