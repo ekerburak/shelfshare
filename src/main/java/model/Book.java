@@ -160,7 +160,6 @@ public class Book {
         this.discussionChatID = discussionChatID;
         pageBuffer = new ArrayList<>();
         this.coverImageOption = coverImageOption;
-        goToFirstPage();
     }
 
     private int getPageIndexAtBuffer(int pageNumber) {

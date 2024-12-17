@@ -54,6 +54,7 @@ public class BookEditingController implements PageListener {
 
     public void setBook(Book book) {
         this.book = book;
+        book.goToFirstPage();
         book.addCurrentPageListener(this);
         book.startListening();
         bookName.setText(book.getName());
