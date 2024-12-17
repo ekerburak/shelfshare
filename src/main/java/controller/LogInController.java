@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.LoggedInUser;
 import model.UserCollection;
@@ -29,9 +30,34 @@ public class LogInController {
     private TextField emailField, passwordField;
 
     @FXML
-    private Label warningLabel;
+    private Label warningLabel, forgotPassword;
 
 
+    private void openForgotPassword() {
+        forgotPassword.setCursor(Cursor.HAND);
+        forgotPassword.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    // Close the current stage (login popup)
+                    Stage currentStage = (Stage) forgotPassword.getScene().getWindow();
+                    currentStage.close();
+
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/forgotPassword.fxml"));
+
+                    Scene scene = new Scene(root);
+                    Stage newStage = new Stage();
+
+                    newStage.setScene(scene);
+                    newStage.show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
     private void addRegisterPopUp(Button button) {
         button.setCursor(Cursor.HAND);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -93,6 +119,7 @@ public class LogInController {
     public void initialize() {
         addRegisterPopUp(joinNow);
         addLogInMechanism();
+        openForgotPassword();
     }
 
 }
