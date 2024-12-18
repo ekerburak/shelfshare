@@ -127,7 +127,7 @@ public class ShelfCollection {
                 .append("allowBookAnnotate", allowBookAnnotate)
                 .append("allowDiscussion", allowDiscussion)
                 .append("allowInvitation", allowInvitation)
-                .append("popularity", 0)
+                .append("popularity", 0.0)
                 .append("adminInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase())
                 .append("standardInvitation", UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase())
                 .append("addedBooksIDs", new ArrayList<ObjectId>())

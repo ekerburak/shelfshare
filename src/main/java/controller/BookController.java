@@ -54,8 +54,8 @@ public class BookController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/bookEditing.fxml"));
                 Pane pane = loader.load();
                 BookEditingController controller = loader.getController();
-                controller.setBook(book);
                 controller.setShelf(shelf);
+                controller.setBook(book);
                 CurrentView.updateView(pane);
             } catch (Exception e) {
                 e.printStackTrace();

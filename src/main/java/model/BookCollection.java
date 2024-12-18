@@ -101,7 +101,7 @@ public class BookCollection {
     }
 
     //gets all the pages from pageLow to pageHigh (inclusive)
-    protected static ArrayList<Page> getPages(ObjectId bookID, int pageLow, int pageHigh) {
+    public static ArrayList<Page> getPages(ObjectId bookID, int pageLow, int pageHigh) {
 
         Document mongoBook = collection.find(Filters.eq("_id", bookID))
                 .projection(Projections.fields(Projections.slice("pages", pageLow, pageHigh - pageLow + 1)))

@@ -183,14 +183,20 @@ public class Shelf {
         ShelfCollection.updateShelf(this);
     }
 
+    private Object lock = new Object();
+
     public void addBook(String name,int num, boolean isDownloadable, String[] base64Pages) {
-        ObjectId bookID = BookCollection.addBook(name, num, isDownloadable, base64Pages);
-        this.addedBooksIDs.add(bookID);
-        ShelfCollection.updateShelf(this);
+        synchronized (lock) {
+            ObjectId bookID = BookCollection.addBook(name, num, isDownloadable, base64Pages);
+            this.addedBooksIDs.add(bookID);
+            ShelfCollection.updateShelf(this);
+        }
     }
 
     public ArrayList<Book> getBooks() {
-        return BookCollection.getAddedBooksByIDs(addedBooksIDs);
+        synchronized (lock) {
+             return BookCollection.getAddedBooksByIDs(addedBooksIDs);
+        }
     }
 
     public void deleteBook(ObjectId bookID) {

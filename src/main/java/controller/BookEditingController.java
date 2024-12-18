@@ -17,11 +17,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import model.*;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -48,6 +54,9 @@ public class BookEditingController implements PageListener {
     @FXML
     private Pane drawPane;
 
+    @FXML
+    private ImageView downloadIcon;
+
     private int startX, startY;
 
     private int currentSelection = -1;
@@ -58,6 +67,7 @@ public class BookEditingController implements PageListener {
         book.addCurrentPageListener(this);
         book.startListening();
         bookName.setText(book.getName());
+        downloadIcon.setVisible(book.getIsDownloadable() || shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID()));
         renderImage();
     }
 
@@ -479,6 +489,77 @@ public class BookEditingController implements PageListener {
         }
     }
 
+    private static BufferedImage decodeBase64Image(String base64Image) {
+        try {
+            String base64Data = base64Image; // Remove "data:image/...;base64,"
+            byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+            return ImageIO.read(new ByteArrayInputStream(imageBytes));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to decode Base64 image", e);
+        }
+    }
+
+    private void downloadIconMechanism(ImageView downloadIcon) {
+        downloadIcon.setCursor(Cursor.HAND);
+        downloadIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+
+                ArrayList<Page> allPages = BookCollection.getPages(book.getID(), 0, book.getPageCount() - 1);
+                ArrayList<String> allPagesBase64 = new ArrayList<>();
+                for(Page page : allPages) {
+                    allPagesBase64.add(page.getImage());
+                }
+
+                List<BufferedImage> images = new ArrayList<>();
+                for (String base64Image : allPagesBase64) {
+                    images.add(decodeBase64Image(base64Image));
+                }
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Save PDF");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+                File file = fileChooser.showSaveDialog(null);
+
+                if (file != null) {
+                    try {
+                        saveImagesAsPDF(images, file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private static void saveImagesAsPDF(List<BufferedImage> images, File file) throws IOException {
+        try (PDDocument document = new PDDocument()) {
+            for (BufferedImage image : images) {
+                // Convert BufferedImage to PDImageXObject
+                PDImageXObject pdImage = PDImageXObject.createFromFileByContent(convertToFile(image), document);
+
+                // Create a new page
+                PDPage page = new PDPage();
+                document.addPage(page);
+
+                // Draw the image on the page
+                try (var contentStream = new org.apache.pdfbox.pdmodel.PDPageContentStream(document, page)) {
+                    contentStream.drawImage(pdImage, 0, 0, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
+                }
+            }
+
+            // Save the document
+            document.save(file);
+        }
+    }
+
+    private static File convertToFile(BufferedImage image) throws IOException {
+        File tempFile = File.createTempFile("image", ".png");
+        ImageIO.write(image, "png", tempFile);
+        return tempFile;
+    }
+
+
     @FXML
     public void initialize() {
         setGoBackIcon();
@@ -489,6 +570,7 @@ public class BookEditingController implements PageListener {
         eraseIconMechanism(eraseIcon);
         stickyNoteIconMechanism(stickyNoteIcon);
         annotatingMechanism(drawPane);
+        downloadIconMechanism(downloadIcon);
 
         // Add key event handler for left arrow key
         drawPane.sceneProperty().addListener((observable, oldScene, newScene) -> {

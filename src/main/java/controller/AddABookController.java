@@ -6,10 +6,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -49,6 +46,9 @@ public class AddABookController {
     private Button fileButton, doneButton;
 
     String[] base64Images;
+
+    @FXML
+    private CheckBox isDownloadable;
 
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
@@ -108,16 +108,13 @@ public class AddABookController {
     public int getCoverSelection(){
 //        TODO requires a book model method
         if(coverSelection.getSelectedToggle() == redCover){
-            shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(RED_COVER);
             return RED_COVER;
         }
         else if(coverSelection.getSelectedToggle() == blueCover){
-            shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(BLUE_COVER);
             return BLUE_COVER;
 
         }
         else if(coverSelection.getSelectedToggle() == pinkCover){
-            shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(PINK_COVER);
             return PINK_COVER;
 
         }
@@ -134,7 +131,8 @@ public class AddABookController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if(base64Images != null) {
-                    shelf.addBook(name.getText(),getCoverSelection(), false, base64Images);
+                    int coverSelection = getCoverSelection();
+                    shelf.addBook(name.getText(), coverSelection, false, base64Images);
                 }
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));

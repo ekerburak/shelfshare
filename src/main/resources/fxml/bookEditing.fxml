@@ -79,6 +79,11 @@
                         <Image url="@../assets/ink_eraser.png" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="downloadIcon" fitHeight="58.0" fitWidth="40.0" layoutX="20.0" layoutY="290.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/download.png" />
+                     </image>
+                  </ImageView>
                </children>
                <HBox.margin>
                   <Insets />
