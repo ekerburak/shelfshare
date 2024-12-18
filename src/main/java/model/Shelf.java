@@ -183,8 +183,8 @@ public class Shelf {
         ShelfCollection.updateShelf(this);
     }
 
-    public void addBook(String name, boolean isDownloadable, String[] base64Pages) {
-        ObjectId bookID = BookCollection.addBook(name, 0, isDownloadable, base64Pages);
+    public void addBook(String name,int num, boolean isDownloadable, String[] base64Pages) {
+        ObjectId bookID = BookCollection.addBook(name, num, isDownloadable, base64Pages);
         this.addedBooksIDs.add(bookID);
         ShelfCollection.updateShelf(this);
     }

@@ -105,20 +105,23 @@ public class AddABookController {
             }});
     }
 
-    public void setCoverSelection(){
+    public int getCoverSelection(){
 //        TODO requires a book model method
         if(coverSelection.getSelectedToggle() == redCover){
             shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(RED_COVER);
-
+            return RED_COVER;
         }
         else if(coverSelection.getSelectedToggle() == blueCover){
             shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(BLUE_COVER);
+            return BLUE_COVER;
 
         }
         else if(coverSelection.getSelectedToggle() == pinkCover){
             shelf.getBooks().get(shelf.getBooks().size()-1).setCoverImageOption(PINK_COVER);
+            return PINK_COVER;
 
         }
+        return 0;
     }
 
     public void setName(){
@@ -131,7 +134,7 @@ public class AddABookController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if(base64Images != null) {
-                    shelf.addBook(name.getText(), false, base64Images);
+                    shelf.addBook(name.getText(),getCoverSelection(), false, base64Images);
                 }
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));
@@ -155,7 +158,6 @@ public class AddABookController {
     public void initialize() {
         setShelf(shelf);
         selectFile();
-        setCoverSelection();
         setName();
         setDoneButton();
     }
