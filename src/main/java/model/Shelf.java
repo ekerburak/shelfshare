@@ -182,15 +182,10 @@ public class Shelf {
         UserCollection.removeFromAddedShelves(userID, ID);
         try {
             Thread.sleep(1000);
-        } catch(InterruptedException e) {
-            ;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         ShelfCollection.updateShelf(this);
-        try {
-            Thread.sleep(1000);
-        } catch(InterruptedException e) {
-            ;
-        }
     }
 
     private Object lock = new Object();

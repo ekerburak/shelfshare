@@ -49,7 +49,7 @@ public class LoggedInUser extends User {
             System.out.println("GET ADDED SHELVES");
             ensureLogIn();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 ;
             }
@@ -87,7 +87,9 @@ public class LoggedInUser extends User {
                 return;
             }
             LoggedInUser.addedShelvesIDs.add(shelf.getID());
+
             shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
+
             UserCollection.updateLoggedInUser();
         }
     }
@@ -99,10 +101,11 @@ public class LoggedInUser extends User {
                 addedShelvesIDs.remove(shelf.getID());
                 shelf.kickUser(instance.getID());
                 try {
-                    Thread.sleep(1000);
-                } catch(InterruptedException e) {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
                     ;
                 }
+                UserCollection.updateLoggedInUser();
             }
         }
     }
