@@ -177,8 +177,11 @@ public class ShelfController {
 
                         InvitationController controller = loader.getController();
                         controller.setOnlyView(shelf.getStandardInvitation());
-                        controller.setEdit(shelf.getAdminInvitation());
-
+                        if(shelf.getAdminsIDs().contains(LoggedInUser.getInstance().getID())) {
+                            controller.setEdit(shelf.getAdminInvitation());
+                        } else {
+                            controller.setEdit("****************");
+                        }
                         CurrentView.showPopUp(root);
                     } catch (IOException e) {
                         e.printStackTrace();
