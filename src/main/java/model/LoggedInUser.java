@@ -45,8 +45,11 @@ public class LoggedInUser extends User {
     }
 
     public static Shelf[] getAddedShelves() {
-        ensureLogIn();
-        return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new ObjectId[0]));
+        synchronized (lock) {
+            System.out.println("GET ADDED SHELVES");
+            ensureLogIn();
+            return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new ObjectId[0]));
+        }
     }
 
     @Override
@@ -67,22 +70,31 @@ public class LoggedInUser extends User {
         UserCollection.updateLoggedInUser();
     }
 
+    private static final Object lock = new Object();
+
     public static void joinShelf(String invitation) {
-        ensureLogIn();
-        Shelf shelf = ShelfCollection.getShelfWithInvitation(invitation);
-        if(addedShelvesIDs.contains(shelf.getID())) {
-            return;
+        synchronized (lock) {
+
+            System.out.println("JOIN SHELF");
+            ensureLogIn();
+            Shelf shelf = ShelfCollection.getShelfWithInvitation(invitation);
+            if(addedShelvesIDs.contains(shelf.getID())) {
+                return;
+            }
+            LoggedInUser.addedShelvesIDs.add(shelf.getID());
+            shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
+            UserCollection.updateLoggedInUser();
         }
-        LoggedInUser.addedShelvesIDs.add(shelf.getID());
-        shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
-        UserCollection.updateLoggedInUser();
     }
     public static void leaveShelf(Shelf shelf) {
-        ensureLogIn();
-        if(shelf.getParticipantsIDs().contains(instance.getID())) {
-            addedShelvesIDs.remove(shelf.getID());
-            shelf.kickUser(instance.getID());
-            UserCollection.updateLoggedInUser();
+        synchronized (lock) {
+            ensureLogIn();
+            System.out.println("LEAVE SHELF");
+            if(shelf.getParticipantsIDs().contains(instance.getID())) {
+                addedShelvesIDs.remove(shelf.getID());
+                shelf.kickUser(instance.getID());
+                UserCollection.updateLoggedInUser();
+            }
         }
     }
 
