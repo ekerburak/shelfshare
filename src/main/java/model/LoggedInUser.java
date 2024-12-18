@@ -48,6 +48,11 @@ public class LoggedInUser extends User {
         synchronized (lock) {
             System.out.println("GET ADDED SHELVES");
             ensureLogIn();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                ;
+            }
             return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new ObjectId[0]));
         }
     }
@@ -93,6 +98,11 @@ public class LoggedInUser extends User {
             if(shelf.getParticipantsIDs().contains(instance.getID())) {
                 addedShelvesIDs.remove(shelf.getID());
                 shelf.kickUser(instance.getID());
+                try {
+                    Thread.sleep(1000);
+                } catch(InterruptedException e) {
+                    ;
+                }
             }
         }
     }
