@@ -45,7 +45,6 @@ public class LoggedInUser extends User {
     }
 
     public static Shelf[] getAddedShelves() {
-        synchronized (lock) {
             System.out.println("GET ADDED SHELVES");
             ensureLogIn();
             try {
@@ -54,7 +53,6 @@ public class LoggedInUser extends User {
                 ;
             }
             return ShelfCollection.getShelvesWithIDs(addedShelvesIDs.toArray(new ObjectId[0]));
-        }
     }
 
     @Override
@@ -75,10 +73,7 @@ public class LoggedInUser extends User {
         UserCollection.updateLoggedInUser();
     }
 
-    private static final Object lock = new Object();
-
     public static void joinShelf(String invitation) {
-        synchronized (lock) {
 
             System.out.println("JOIN SHELF");
             ensureLogIn();
@@ -89,10 +84,9 @@ public class LoggedInUser extends User {
             LoggedInUser.addedShelvesIDs.add(shelf.getID());
             shelf.addUser(instance.getID(), shelf.getAdminInvitation().equals(invitation));
             UserCollection.updateLoggedInUser();
-        }
+
     }
     public static void leaveShelf(Shelf shelf) {
-        synchronized (lock) {
             ensureLogIn();
             System.out.println("LEAVE SHELF");
             if(shelf.getParticipantsIDs().contains(instance.getID())) {
@@ -104,7 +98,6 @@ public class LoggedInUser extends User {
                     ;
                 }
             }
-        }
     }
 
     public static boolean changePassword(String oldPassword, String newPassword) {
