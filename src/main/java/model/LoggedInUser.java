@@ -93,7 +93,6 @@ public class LoggedInUser extends User {
             if(shelf.getParticipantsIDs().contains(instance.getID())) {
                 addedShelvesIDs.remove(shelf.getID());
                 shelf.kickUser(instance.getID());
-                UserCollection.updateLoggedInUser();
             }
         }
     }

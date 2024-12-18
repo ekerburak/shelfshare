@@ -180,7 +180,17 @@ public class Shelf {
         participantsIDs.remove(userID);
         adminsIDs.remove(userID);
         UserCollection.removeFromAddedShelves(userID, ID);
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {
+            ;
+        }
         ShelfCollection.updateShelf(this);
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {
+            ;
+        }
     }
 
     private Object lock = new Object();

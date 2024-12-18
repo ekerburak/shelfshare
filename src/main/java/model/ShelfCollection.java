@@ -89,27 +89,31 @@ public class ShelfCollection {
         return convertMongoShelfToShelf(mongoShelf);
     }
 
+    private static final Object lock = new Object();
+
     protected static void updateShelf(Shelf shelf) {
-        System.out.println("Updating shelf " + shelf);
-        collection.updateOne(
-                new Document().append("_id", shelf.getID()),
-                Updates.combine(
-                        Updates.set("name", shelf.getName()),
-                        Updates.set("isPublic", shelf.getIsPublic()),
-                        Updates.set("allowBookAdd", shelf.getAllowBookAdd()),
-                        Updates.set("allowBookAnnotate", shelf.getAllowBookAnnotate()),
-                        Updates.set("allowDiscussion", shelf.getAllowDiscussion()),
-                        Updates.set("allowInvitation", shelf.getAllowInvitation()),
-                        Updates.set("popularity", shelf.getPopularity()),
-                        Updates.set("adminInvitation", shelf.getAdminInvitation()),
-                        Updates.set("standardInvitation", shelf.getStandardInvitation()),
-                        Updates.set("forumChatID", shelf.getForumChatID()),
-                        Updates.set("addedBooksIDs", shelf.getAddedBooksIDs()),
-                        Updates.set("participantsIDs", shelf.getParticipantsIDs()),
-                        Updates.set("adminsIDs", shelf.getAdminsIDs()),
-                        Updates.set("ratedParticipantsIDs", shelf.getRatedParticipantsIDs())
-                )
-        );
+       synchronized (lock) {
+           System.out.println("Updating shelf " + shelf);
+           collection.updateOne(
+                   new Document().append("_id", shelf.getID()),
+                   Updates.combine(
+                           Updates.set("name", shelf.getName()),
+                           Updates.set("isPublic", shelf.getIsPublic()),
+                           Updates.set("allowBookAdd", shelf.getAllowBookAdd()),
+                           Updates.set("allowBookAnnotate", shelf.getAllowBookAnnotate()),
+                           Updates.set("allowDiscussion", shelf.getAllowDiscussion()),
+                           Updates.set("allowInvitation", shelf.getAllowInvitation()),
+                           Updates.set("popularity", shelf.getPopularity()),
+                           Updates.set("adminInvitation", shelf.getAdminInvitation()),
+                           Updates.set("standardInvitation", shelf.getStandardInvitation()),
+                           Updates.set("forumChatID", shelf.getForumChatID()),
+                           Updates.set("addedBooksIDs", shelf.getAddedBooksIDs()),
+                           Updates.set("participantsIDs", shelf.getParticipantsIDs()),
+                           Updates.set("adminsIDs", shelf.getAdminsIDs()),
+                           Updates.set("ratedParticipantsIDs", shelf.getRatedParticipantsIDs())
+                   )
+           );
+       }
     }
 
     public static Shelf createShelf(
