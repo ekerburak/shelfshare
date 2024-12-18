@@ -73,7 +73,7 @@ public class UserCollection {
         } else {
             filter = Filters.in("addedShelvesIDs", shelfID);
         }
-        collection.updateOne(
+        collection.updateMany(
                 filter,
                 Updates.pull("addedShelvesIDs", shelfID)
         );
