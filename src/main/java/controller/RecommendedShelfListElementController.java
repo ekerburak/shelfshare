@@ -26,6 +26,14 @@ public class RecommendedShelfListElementController {
         numberOfMember.setText(number);
     }
 
+    public int getNumberOfMember() {
+        return Integer.parseInt(numberOfMember.getText());
+    }
+
+    public float getRating() {
+        return Float.parseFloat(rating.getText());
+    }
+
     public void setRating(String rate) { rating.setText(rate); }
 
     public Button getJoinButton() {

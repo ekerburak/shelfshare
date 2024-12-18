@@ -132,7 +132,7 @@ public class AddABookController {
             public void handle(MouseEvent mouseEvent) {
                 if(base64Images != null) {
                     int coverSelection = getCoverSelection();
-                    shelf.addBook(name.getText(), coverSelection, false, base64Images);
+                    shelf.addBook(name.getText(), coverSelection, isDownloadable.isSelected(), base64Images);
                 }
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shelf.fxml"));

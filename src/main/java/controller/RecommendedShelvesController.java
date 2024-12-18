@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -28,6 +29,9 @@ public class RecommendedShelvesController {
     private TextField recommendedFilterField;
 
     @FXML
+    private Button ratingSort, userSort;
+
+    @FXML
     private ImageView backIcon;
 
     private final ObservableList<Pane> items = FXCollections.observableArrayList();
@@ -42,10 +46,33 @@ public class RecommendedShelvesController {
             );
         });
     }
+    private void setRatingSort() {
+        ratingSort.setCursor(javafx.scene.Cursor.HAND);
+        ratingSort.setOnMouseClicked(e -> {
+           items.sort((pane1, pane2) -> {
+                RecommendedShelfListElementController controller1 = (RecommendedShelfListElementController) pane1.getUserData();
+                RecommendedShelfListElementController controller2 = (RecommendedShelfListElementController) pane2.getUserData();
+                return Float.compare(controller2.getRating(), controller1.getRating());
+            });
+        });
+    }
+
+    private void setUserSort() {
+        userSort.setCursor(javafx.scene.Cursor.HAND);
+        userSort.setOnMouseClicked(e -> {
+           items.sort((pane1, pane2) -> {
+                RecommendedShelfListElementController controller1 = (RecommendedShelfListElementController) pane1.getUserData();
+                RecommendedShelfListElementController controller2 = (RecommendedShelfListElementController) pane2.getUserData();
+                return Integer.compare(controller2.getNumberOfMember(), controller1.getNumberOfMember());
+            });
+        });
+    }
 
     @FXML
     public void initialize() {
         setBackIcon();
+        setRatingSort();
+        setUserSort();
         for (Shelf shelf : shelves) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RecommendedShelfListElement.fxml"));
