@@ -61,3 +61,6 @@ Utilize maven to read out the contents of the pom.xml file to resolve dependenci
 3. **Run the application**:
 Run the App.java to start ShelfShare on your local machine.
 
+
+### WARNING: API keys are removed in one of the final commits. They were solely for demo purposes. Therefore, the app will not start unless you provide appropriate API keys (for MongoDB and Postmark).
+
