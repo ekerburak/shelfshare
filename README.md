@@ -1,6 +1,6 @@
 # ShelfShare GitHub Repository
 
-Welcome to the **ShelfShare** GitHub repository! 🎉 **ShelfShare** is a collaborative platform that transforms reading into a community-driven experience. Whether you want to annotate, share, or discuss your favorite books, ShelfShare has got you covered. 📚✨
+Welcome to the **ShelfShare** GitHub repository! 🎉 **ShelfShare** is a collaborative platform that transforms reading into a community-driven experience. Whether you want to annotate, share, or discuss your favorite books, ShelfShare covers you. 📚✨
 
 ---
 
@@ -14,7 +14,7 @@ ShelfShare is an intuitive desktop application that enables users to:
 - **Track reading progress** and share it with friends.
 - **Discover new books** via public shelves.
 
-With ShelfShare, reading becomes not just an individual activity but a community experience. It's perfect for book clubs, student groups, or anyone who loves to read and share!
+With ShelfShare, reading becomes an individual activity and a community experience. It's perfect for book clubs, student groups, or anyone who loves reading and sharing!
 
 ---
 
@@ -22,7 +22,7 @@ With ShelfShare, reading becomes not just an individual activity but a community
 
 1. **Shelves**  
    - **Private and Public Shelves:** Keep your shelves accessible only to friends or share them with the world.  
-   - **Permissions:** Decide who can edit or just view your books.  
+   - **Permissions:** Decide who can edit or view your books.  
    - **Forums:** Each shelf has its dedicated forum for discussions.
 
 2. **Book Editing**  
@@ -43,7 +43,7 @@ With ShelfShare, reading becomes not just an individual activity but a community
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Java JDK (version X.X or above)
+- Java JDK 
 - IDE like IntelliJ IDEA or Eclipse
 - Basic understanding of Java and GUI development
 
@@ -51,12 +51,12 @@ With ShelfShare, reading becomes not just an individual activity but a community
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/YourRepo/ShelfShare.git
+   git clone https://github.com/ekerburak/shelfshare.git
    cd ShelfShare
 
 2. **Build the project**:
 Open the project in your preferred IDE and resolve all dependencies.
 
 3. **Run the application**:
-Run the Main class to start ShelfShare on your local machine.
+Run the App.java to start ShelfShare on your local machine.
 
