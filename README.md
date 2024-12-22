@@ -55,7 +55,8 @@ With ShelfShare, reading becomes an individual activity and a community experien
    cd ShelfShare
 
 2. **Build the project**:
-Open the project in your preferred IDE and resolve all dependencies.
+Open the project in your preferred IDE.
+Utilize maven to read out the contents of the pom.xml file to resolve dependencies.
 
 3. **Run the application**:
 Run the App.java to start ShelfShare on your local machine.
