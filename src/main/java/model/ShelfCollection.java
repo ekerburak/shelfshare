@@ -155,11 +155,17 @@ public class ShelfCollection {
         }
     }
 
-    private static class PopularityComparator implements Comparator<Shelf> {
-        @Override
-        public int compare(Shelf s1, Shelf s2) {
-            return (int)(s2.getPopularity() - s1.getPopularity());
-        }
+
+    private static void manualSort(ArrayList<Shelf> shelves) {
+        //bubble sort
+        for(int i = 0; i < shelves.size(); i++)
+            for(int j = 0; j < shelves.size(); j++)
+                if(shelves.get(i).getPopularity() < shelves.get(j).getPopularity()) {
+                    Shelf temp = shelves.get(i);
+                    shelves.set(i, shelves.get(j));
+                    shelves.set(j, temp);
+                }
+
     }
 
     //THE REQUIREMENT OF USING SORT IS SATISFIED HERE
@@ -187,7 +193,7 @@ public class ShelfCollection {
         for(Document mongoShelf: allMongoShelves) {
             sortList.add(convertMongoShelfToShelf(mongoShelf));
         }
-        sortList.sort(new PopularityComparator());
+        manualSort(sortList);
         return new ArrayList<Shelf>(sortList.subList(0, Math.min(limit, sortList.size())));
     }
 

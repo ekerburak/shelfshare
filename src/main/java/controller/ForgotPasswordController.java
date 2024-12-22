@@ -129,8 +129,8 @@ public class ForgotPasswordController {
                         "</html>\n";
                 String newPassword = generateNewPassword();
                 // send the email
-                ApiClient client = Postmark.getApiClient("1282d095-606b-47e1-9d05-306d9c67e4f1");
-                Message message = new Message("isiner.eker@ug.bilkent.edu.tr", email.getText(), "New password generation request", String.format(template, newPassword));
+                ApiClient client = Postmark.getApiClient("<DELETED FOR SECURITY REASONS>");
+                Message message = new Message("<DELETED FOR SECURITY REASONS>", email.getText(), "New password generation request", String.format(template, newPassword));
                 try {
                     MessageResponse response = client.deliverMessage(message);
                 } catch (PostmarkException ex) {

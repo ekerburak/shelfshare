@@ -9,7 +9,7 @@ import org.bson.Document;
 
 
 class DatabaseConnector {
-    private static final String connString = "mongodb+srv://burakekercs:cherryontop@cherryontop.mm8yh.mongodb.net/?retryWrites=true&w=majority&appName=CherryOnTop";
+    private static final String connString = "<STRING DELETED FOR SECURITY REASONS>";
     private static MongoDatabase database;
     private static MongoClient client;
 
